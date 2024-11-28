@@ -1,0 +1,279 @@
+import {
+  Box,
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Link,
+} from "@mui/material";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "../components/Image.tsx";
+import { registerUser } from "../services/user_api.ts";
+
+// Define a schema using Zod for validation
+const schema = z.object({
+  firstName: z.string().min(3, "First Name is required"),
+  lastName: z.string().min(3, "Last Name is required"),
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  target: z.string().min(1, "Target is required"),
+  activity: z.string().min(1, "Activity is required"),
+});
+
+// Define the TypeScript interface for form data based on the schema
+type RegisterFormData = z.infer<typeof schema>;
+
+function RegisterPage() {
+  // Destructure the useForm hook with zodResolver and schema validation
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(schema),
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
+    try {
+      // API call or data handling here
+      const response = await registerUser(data);
+      if (response.status === 201) console.log("Successful");
+    } catch (error: any) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const target = watch("target");
+  const activity = watch("activity");
+
+  return (
+    <Grid
+      container
+      spacing={6}
+      sx={{
+        height: {
+          xs: "15vh",
+          md: "100vh",
+        },
+        mt: {
+          md: 0,
+          lg: 0,
+        },
+        display: {
+          xs: "flex",
+        },
+        justifyContent: {
+          xs: "center",
+        },
+        alignItems: {
+          xs: "center",
+        },
+      }}
+    >
+      <Grid
+        item
+        xs={12}
+        md={6}
+        lg={6}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          p: 2,
+        }}
+      >
+        <Box
+          component="form"
+          noValidate
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: "400px",
+            p: 3,
+          }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Typography component="h1" variant="h5" align="left" width="100%">
+            Let's Get You Started!
+          </Typography>
+          <Typography
+            component="h1"
+            variant="h5"
+            align="left"
+            sx={{ fontFamily: "Arial, sans-serif", fontWeight: "bold" }}
+            width="100%"
+          >
+            Create an Account
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+            {" "}
+            <TextField
+              margin="normal"
+              required
+              id="firstName"
+              label="First Name"
+              autoComplete="given-name"
+              {...register("firstName")}
+              error={!!errors.firstName}
+              helperText={errors.firstName?.message}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+            <TextField
+              margin="normal"
+              required
+              id="lastName"
+              label="Last Name"
+              autoComplete="family-name"
+              {...register("lastName")}
+              error={!!errors.lastName}
+              helperText={errors.lastName?.message}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </Box>
+
+          <TextField
+            margin="normal"
+            required
+            id="email"
+            label="Email Address"
+            {...register("email")}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+              },
+            }}
+          />
+          <TextField
+            margin="normal"
+            required
+            type="password"
+            id="password"
+            label="Password"
+            {...register("password")}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+              },
+            }}
+          />
+          <Divider sx={{ width: "100%", my: 2 }} />
+
+          <FormControl
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "10px",
+              },
+              mb: 2,
+            }}
+          >
+            <InputLabel id="yourTargetLabel">Target</InputLabel>
+            <Select
+              labelId="yourTargetLabel"
+              id="yourTarget"
+              value={target || ""}
+              label="Target"
+              {...register("target")}
+            >
+              <MenuItem value="Lose weight">Lose weight</MenuItem>
+              <MenuItem value="Gain weight">Gain weight</MenuItem>
+              <MenuItem value="Improve flexibility">
+                Improve flexibility
+              </MenuItem>
+              <MenuItem value="General fitness">General fitness</MenuItem>
+              <MenuItem value="Build Muscle">Build Muscle</MenuItem>
+              <MenuItem value="Rehabilitation/Recovery">
+                Rehabilitation/Recovery
+              </MenuItem>
+            </Select>
+            {errors.target && (
+              <Typography color="error">{errors.target.message}</Typography>
+            )}
+          </FormControl>
+
+          <FormControl
+            fullWidth
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "10px",
+              },
+              mb: 2,
+            }}
+          >
+            <InputLabel id="activity">Activity</InputLabel>
+            <Select
+              labelId="activity"
+              id="activity"
+              value={activity || ""}
+              label="Activity"
+              {...register("activity")}
+            >
+              <MenuItem value="Yoga">Yoga</MenuItem>
+              <MenuItem value="Climbing">Climbing</MenuItem>
+              <MenuItem value="Strength training">Strength training</MenuItem>
+              <MenuItem value="Cross-fit">Cross-fit</MenuItem>
+              <MenuItem value="Cardio Training">Cardio Training</MenuItem>
+              <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
+            </Select>
+            {errors.activity && (
+              <Typography color="error">{errors.activity.message}</Typography>
+            )}
+          </FormControl>
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              mb: 1,
+              borderRadius: "6px",
+              height: "3rem",
+              textTransform: "none",
+            }}
+            disabled={!isValid}
+          >
+            Create An Account
+          </Button>
+          <Grid item xs={12} md={12}>
+            <Typography>
+              Already have an account?{" "}
+              <Link href="/login" variant="body2">
+                Login Here
+              </Link>
+            </Typography>
+          </Grid>
+        </Box>
+      </Grid>
+      <Image />
+    </Grid>
+  );
+}
+
+export default RegisterPage;

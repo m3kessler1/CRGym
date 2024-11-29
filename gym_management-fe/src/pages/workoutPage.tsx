@@ -23,22 +23,17 @@ const Workouts: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: "100%",
-        overflow: "hidden",
-        p: 3, // Prevents horizontal scrolling
-      }}
-    >
+    <>
       <Grid
         container
         spacing={2}
         sx={{
           display: "flex",
           width: "100%",
-          ml: 0,
+          mt: -3,
+          mb: 0,
           mr: 0,
-          m: 0,
+          ml: 0,
           p: 0, // Remove default margin
         }}
       >
@@ -50,7 +45,7 @@ const Workouts: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          p: 1,
+          pt: 2,
         }}
       >
         <Pagination
@@ -61,7 +56,7 @@ const Workouts: React.FC = () => {
           size="large"
         />
       </Box>
-    </Box>
+    </>
   );
 };
 

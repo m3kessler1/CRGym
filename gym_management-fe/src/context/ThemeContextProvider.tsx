@@ -32,7 +32,7 @@ export const useThemeContext = () => useContext(ThemeContext);
 const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({
   children,
 }) => {
-  const storedMode = (localStorage.getItem("mode") as ThemeMode) || "dark";
+  const storedMode = (localStorage.getItem("mode") as ThemeMode) || "light";
   const [mode, setMode] = useState<ThemeMode>(storedMode);
 
   useEffect(() => {
@@ -44,6 +44,9 @@ const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({
       mode,
       primary: {
         main: "#8ED902", // Custom primary color
+      },
+      secondary: {
+        main: "#8ED902", // Custom secondary color
       },
     },
     typography: {

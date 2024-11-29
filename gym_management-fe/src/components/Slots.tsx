@@ -2,7 +2,7 @@ import * as React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 interface SlotsProps {
   testimonials: any; // Replace 'any' with your testimonial type if available

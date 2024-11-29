@@ -33,9 +33,8 @@ const Coaches: React.FC = () => {
       {/* Coaches Grid */}
       <Grid
         container
-        spacing={6}
+        spacing={2}
         sx={{
-          p: 1,
           display: "flex",
         }}
       >
@@ -49,7 +48,7 @@ const Coaches: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          p: 1,
+          p: 2,
         }}
       >
         <Pagination

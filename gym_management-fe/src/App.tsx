@@ -8,7 +8,14 @@ import React from "react";
 const App: React.FC = () => {
   return (
     <ThemeContextProvider>
-      <Box sx={{ m: 0, height: "100vh", width: "100vw" }}>
+      <Box
+        sx={{
+          m: 0,
+          height: "100%",
+          width: "100%",
+          overflowX: "hidden",
+        }}
+      >
         <AppRoutes />
       </Box>
     </ThemeContextProvider>

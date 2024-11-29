@@ -78,7 +78,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                   src={logo}
                   alt="Logo"
                   style={{
-                    height: "2rem", // Consistent height
+                    height: "2rem", // Consistent heightAvat
                     filter: mode === "dark" ? "invert(1)" : "none",
                   }}
                 />
@@ -107,7 +107,11 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
               </Tabs>
 
               {/* Theme Toggle Button */}
-              <IconButton sx={{ color: "primary.main" }} onClick={toggleTheme}>
+              <IconButton
+                sx={{ color: "primary.main" }}
+                onClick={toggleTheme}
+                data-testid="theme-toggle"
+              >
                 {mode === "light" ? (
                   <Brightness7Icon fontSize="large" />
                 ) : (
@@ -116,8 +120,17 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
               </IconButton>
 
               {/* Profile Avatar */}
-              <IconButton onClick={handleClick} sx={{ color: "primary.main" }}>
-                <Avatar sx={{ bgcolor: "primary.main" }}>A</Avatar>
+              <IconButton
+                onClick={handleClick}
+                sx={{ color: "primary.main" }}
+                data-testid="profile-button"
+              >
+                <Avatar
+                  data-testid="profile-avatar"
+                  sx={{ bgcolor: "primary.main" }}
+                >
+                  A
+                </Avatar>
               </IconButton>
             </Toolbar>
 
@@ -136,7 +149,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
         {/* Alert Component */}
         <Grid item xs={12}>
-          <AlertComp message={`My Account`} />
+          <AlertComp message={`Hello!`} />
         </Grid>
       </Grid>
     );

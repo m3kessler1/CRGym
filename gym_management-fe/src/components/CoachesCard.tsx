@@ -13,20 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { Suspense } from "react";
 
 // Define the props interface
-interface CoachesCardProps {
-  cardHeight?: string | number; // Optional height for the card
-  mediaHeight?: string | number; // Optional height for the media section
-  cardWidth?: string | number; // Optional width for the card
-  booking?: boolean; // Indicates if the "Repeat Previous Workout" button should be displayed
-}
 
 // CoachesCard component
-const CoachesCard: React.FC<CoachesCardProps> = ({
-  cardHeight,
-  mediaHeight,
-  cardWidth,
-  booking,
-}) => {
+const CoachesCard: React.FC = () => {
   const navigate = useNavigate();
 
   // Handle booking navigation
@@ -37,22 +26,30 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
   return (
     <Grid
       item
-      xs={6}
+      xs={12}
+      sm={6}
       md={3}
       lg={3}
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      spacing={0}
     >
       <Card
         sx={{
           borderRadius: "16px",
-          height: cardHeight || "100%", // Default to 100% if cardHeight is undefined
-          width: cardWidth || "85%", // Default to 90% if cardWidth is undefined
+          height: "100%",
+          width: { xs: "100%", sm: "90%", md: "100%", lg: "80%" },
+          maxWidth: { xs: "100%", sm: "400px", md: "400px", lg: "400px" },
+          margin: "0 auto",
         }}
       >
         {/* Media Section */}
-        <Suspense fallback={<Box sx={{ height: mediaHeight || 240 }} />}>
+        <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
-            sx={{ height: mediaHeight || 240 }}
+            sx={{ height: 240 }}
             image="/Images/Avatar.svg"
             title="Coach Avatar"
             component="img"
@@ -90,7 +87,8 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
             display: "flex",
             flexDirection: "column",
             p: [0, 2],
-            gap: booking ? 2 : 0,
+            gap: 2,
+            mb: 1,
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
@@ -108,22 +106,6 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
           >
             Book Workout
           </Button>
-          {booking && (
-            <Button
-              variant="contained"
-              size="medium"
-              fullWidth
-              sx={{
-                backgroundColor: "white",
-                color: "black",
-                fontFamily: "Lexend, Arial, sans-serif",
-                textTransform: "none",
-              }}
-              onClick={handleBookWorkout}
-            >
-              Repeat Previous Workout
-            </Button>
-          )}
         </Box>
       </Card>
     </Grid>

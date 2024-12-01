@@ -26,7 +26,8 @@ const WorkoutCard: React.FC = () => {
         sx={{
           borderRadius: "16px",
           p: 1,
-          minHeight: "240px", // Set a minimum height to maintain consistency
+          minHeight: "220px", // Set a minimum height to maintain consistency
+          minWidth: "664px",
           display: "flex",
           flexDirection: "column",
         }}
@@ -68,13 +69,11 @@ const WorkoutCard: React.FC = () => {
           </Box>
           <Typography variant="h6" sx={{ pt: 1, pb: 2 }}>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Reprehenderit, odit provident. Temporibus ex nam vero ipsa ducimus
-            aspernatur! Sequi similique dignissimos a possimus quos minus
-            praesentium laudantium explicabo rerum reiciendis.
+            Reprehenderit, odit provident.
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "left", width: "50%" }}>
-            <EventAvailableIcon fontSize="large" />
-            <Typography variant="h6" sx={{ ml: 1 }}>
+            <EventAvailableIcon fontSize="medium" />
+            <Typography variant="body1" sx={{ ml: 1 }}>
               July 9, 12:30
             </Typography>
           </Box>

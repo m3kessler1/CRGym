@@ -1,11 +1,11 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import SignUpImage from "../assets/SignUpImage.svg";
 import React from "react";
 
-const Image: React.FC<{ width?: string; height?: string }> = ({
-  width = "70%",
-  height = "95%",
-}) => {
+const Image: React.FC<{
+  width?: string;
+  height?: string;
+}> = ({ width = "70%", height = "95%" }) => {
   return (
     <Grid
       item
@@ -22,16 +22,47 @@ const Image: React.FC<{ width?: string; height?: string }> = ({
     >
       <Box
         sx={{
-          backgroundImage: `url(${SignUpImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          position: "relative",
           width: width,
           height: height,
           borderRadius: "2rem",
           mb: 2,
           boxShadow: 5,
+          overflow: "hidden",
         }}
-      ></Box>
+      >
+        <Box
+          sx={{
+            backgroundImage: `url(${SignUpImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        ></Box>
+        <Typography
+          variant="h4"
+          sx={{
+            position: "absolute",
+            top: "70%",
+            left: "40%",
+            width: "95%",
+            transform: "translate(-40%, -10%)",
+            color: "white",
+            textShadow: "1px 1px 2px black",
+          }}
+        >
+          "The path to triumph is paved with the{" "}
+          <Typography component="span" color="primary" variant="inherit">
+            strength to train
+          </Typography>{" "}
+          hard and the perseverance to{" "}
+          <Typography component="span" color="primary" variant="inherit">
+            rise each time you fall.
+          </Typography>
+          "
+        </Typography>
+      </Box>
     </Grid>
   );
 };

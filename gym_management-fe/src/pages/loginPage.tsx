@@ -99,7 +99,9 @@ function LoginPage() {
             label="Email Address"
             {...register("email")}
             error={!!errors.email}
-            helperText={errors.email?.message}
+            helperText={
+              errors.email ? errors.email.message : "e.g. username@domain.com"
+            }
             fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {
@@ -115,7 +117,11 @@ function LoginPage() {
             label="Password"
             {...register("password")}
             error={!!errors.password}
-            helperText={errors.password?.message}
+            helperText={
+              errors.password
+                ? errors.password.message
+                : "At least one capital letter required"
+            }
             fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {

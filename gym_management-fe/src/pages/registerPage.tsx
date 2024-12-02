@@ -22,7 +22,10 @@ const schema = z.object({
   firstName: z.string().min(3, "First Name is required"),
   lastName: z.string().min(3, "Last Name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
   target: z.string().min(1, "Target is required"),
   activity: z.string().min(1, "Activity is required"),
 });
@@ -99,19 +102,29 @@ function RegisterPage() {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            maxWidth: "400px",
+            maxWidth: "496px",
             p: 3,
           }}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Typography component="h1" variant="h5" align="left" width="100%">
-            Let's Get You Started!
-          </Typography>
           <Typography
             component="h1"
-            variant="h5"
+            variant="body1"
             align="left"
-            sx={{ fontFamily: "Arial, sans-serif", fontWeight: "bold" }}
+            width="100%"
+            sx={{ marginBottom: 2, fontWeight: "300" }}
+          >
+            LET'S GET YOU STARTED
+          </Typography>
+
+          <Typography
+            component="h1"
+            variant="h4"
+            align="left"
+            sx={{
+              fontWeight: "500",
+              marginBottom: 2,
+            }}
             width="100%"
           >
             Create an Account
@@ -124,9 +137,12 @@ function RegisterPage() {
               id="firstName"
               label="First Name"
               autoComplete="given-name"
+              placeholder="Enter your first name"
               {...register("firstName")}
               error={!!errors.firstName}
-              helperText={errors.firstName?.message}
+              helperText={
+                errors.firstName ? errors.firstName.message : "e.g. Johnson"
+              }
               fullWidth
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -139,10 +155,13 @@ function RegisterPage() {
               required
               id="lastName"
               label="Last Name"
+              placeholder="Enter your last name"
               autoComplete="family-name"
               {...register("lastName")}
               error={!!errors.lastName}
-              helperText={errors.lastName?.message}
+              helperText={
+                errors.lastName ? errors.lastName.message : "e.g. Doe"
+              }
               fullWidth
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -157,9 +176,12 @@ function RegisterPage() {
             required
             id="email"
             label="Email Address"
+            placeholder="Enter your email"
             {...register("email")}
             error={!!errors.email}
-            helperText={errors.email?.message}
+            helperText={
+              errors.email ? errors.email.message : "e.g. username@domain.com"
+            }
             fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {
@@ -173,9 +195,14 @@ function RegisterPage() {
             type="password"
             id="password"
             label="Password"
+            placeholder="Enter your password"
             {...register("password")}
             error={!!errors.password}
-            helperText={errors.password?.message}
+            helperText={
+              errors.password
+                ? errors.password.message
+                : "At least one capital letter required"
+            }
             fullWidth
             sx={{
               "& .MuiOutlinedInput-root": {
@@ -198,7 +225,7 @@ function RegisterPage() {
             <Select
               labelId="yourTargetLabel"
               id="yourTarget"
-              value={target || ""}
+              value={target || "Lose weight"}
               label="Target"
               {...register("target")}
             >
@@ -224,14 +251,14 @@ function RegisterPage() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "10px",
               },
-              mb: 2,
+              mb: 3,
             }}
           >
             <InputLabel id="activity">Activity</InputLabel>
             <Select
               labelId="activity"
               id="activity"
-              value={activity || ""}
+              value={activity || "Yoga"}
               label="Activity"
               {...register("activity")}
             >
@@ -252,7 +279,7 @@ function RegisterPage() {
             variant="contained"
             fullWidth
             sx={{
-              mb: 1,
+              mb: 2,
               borderRadius: "6px",
               height: "3rem",
               textTransform: "none",
@@ -264,8 +291,17 @@ function RegisterPage() {
           <Grid item xs={12} md={12}>
             <Typography>
               Already have an account?{" "}
-              <Link href="/login" variant="body2">
-                Login Here
+              <Link
+                href="/login"
+                variant="body2"
+                sx={{
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "#fff" : "#000",
+                  textDecorationColor: (theme) =>
+                    theme.palette.mode === "dark" ? "#fff" : "#000",
+                }}
+              >
+                LOGIN HERE
               </Link>
             </Typography>
           </Grid>

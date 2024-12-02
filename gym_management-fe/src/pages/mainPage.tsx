@@ -15,12 +15,7 @@ const MainPage: React.FC = () => {
       }}
     >
       <Grid item xs={12} md={12} lg={12}>
-        <CustomAppBar
-          positioning="fixed"
-          logo={logoImg}
-          height={"5rem"}
-          name={"Aditya Singh"}
-        />
+        <CustomAppBar positioning="fixed" logo={logoImg} height={"5rem"} />
       </Grid>
       <Grid item xs={12} md={12} lg={12}>
         <Outlet />

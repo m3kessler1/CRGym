@@ -92,18 +92,9 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                 indicatorColor="primary"
                 sx={{ flexGrow: 1 }}
               >
-                <Tab
-                  label="Home"
-                  sx={{ fontSize: "1.1rem", fontWeight: "bold" }}
-                />
-                <Tab
-                  label="Workouts"
-                  sx={{ fontSize: "1.1rem", fontWeight: "bold" }}
-                />
-                <Tab
-                  label="Coaches"
-                  sx={{ fontSize: "1.1rem", fontWeight: "bold" }}
-                />
+                <Tab label="Home" sx={{ fontSize: "1.1rem" }} />
+                <Tab label="Workouts" sx={{ fontSize: "1.1rem" }} />
+                <Tab label="Coaches" sx={{ fontSize: "1.1rem" }} />
               </Tabs>
 
               {/* Theme Toggle Button */}

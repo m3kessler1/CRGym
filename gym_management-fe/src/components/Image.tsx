@@ -5,7 +5,7 @@ import React from "react";
 const Image: React.FC<{
   width?: string;
   height?: string;
-}> = ({ width = "70%", height = "95%" }) => {
+}> = ({ width = "75%", height = "95%" }) => {
   return (
     <Grid
       item
@@ -47,6 +47,8 @@ const Image: React.FC<{
             top: "70%",
             left: "40%",
             width: "95%",
+            justifyContent: "center",
+            alignItems: "center",
             transform: "translate(-40%, -10%)",
             color: "white",
             textShadow: "1px 1px 2px black",

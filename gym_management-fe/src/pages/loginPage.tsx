@@ -75,26 +75,34 @@ function LoginPage() {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: "496px",
             p: 3,
           }}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Typography component="h1" variant="h5" align="left" width="100%">
-            WELCOME BACK!
+          <Typography
+            component="h1"
+            variant="body1"
+            align="left"
+            width="100%"
+            sx={{ fontWeight: "300" }}
+          >
+            WELCOME BACK
           </Typography>
+
           <Typography
             component="h1"
             variant="h5"
             align="left"
-            sx={{ fontFamily: "Arial, sans-serif", fontWeight: "bold" }}
+            sx={{
+              fontWeight: "500",
+            }}
             width="100%"
           >
-            Log In Your Account
+            Log In to Your Account
           </Typography>
           <TextField
             margin="normal"
-            required
             id="email"
             label="Email Address"
             {...register("email")}
@@ -111,10 +119,10 @@ function LoginPage() {
           />
           <TextField
             margin="normal"
-            required
             type="password"
             id="password"
             label="Password"
+            placeholder="Enter your password"
             {...register("password")}
             error={!!errors.password}
             helperText={
@@ -145,9 +153,18 @@ function LoginPage() {
           </Button>
           <Grid item xs={12} md={12}>
             <Typography>
-              Don't have an Account?{" "}
-              <Link href="/register" variant="body2">
-                Create New Account
+              Don't have an account?{" "}
+              <Link
+                href="/register"
+                variant="body2"
+                sx={{
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "#fff" : "#000",
+                  textDecorationColor: (theme) =>
+                    theme.palette.mode === "dark" ? "#fff" : "#000",
+                }}
+              >
+                CREATE NEW ACCOUNT
               </Link>
             </Typography>
           </Grid>

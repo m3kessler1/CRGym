@@ -112,18 +112,17 @@ function RegisterPage() {
             variant="body1"
             align="left"
             width="100%"
-            sx={{ marginBottom: 2, fontWeight: "300" }}
+            sx={{ fontWeight: "300" }}
           >
             LET'S GET YOU STARTED
           </Typography>
 
           <Typography
             component="h1"
-            variant="h4"
+            variant="h5"
             align="left"
             sx={{
               fontWeight: "500",
-              marginBottom: 2,
             }}
             width="100%"
           >
@@ -133,7 +132,6 @@ function RegisterPage() {
             {" "}
             <TextField
               margin="normal"
-              required
               id="firstName"
               label="First Name"
               autoComplete="given-name"
@@ -152,7 +150,6 @@ function RegisterPage() {
             />
             <TextField
               margin="normal"
-              required
               id="lastName"
               label="Last Name"
               placeholder="Enter your last name"
@@ -173,7 +170,6 @@ function RegisterPage() {
 
           <TextField
             margin="normal"
-            required
             id="email"
             label="Email Address"
             placeholder="Enter your email"
@@ -191,7 +187,6 @@ function RegisterPage() {
           />
           <TextField
             margin="normal"
-            required
             type="password"
             id="password"
             label="Password"
@@ -218,7 +213,7 @@ function RegisterPage() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "10px",
               },
-              mb: 2,
+              mb: { lg: 2, md: 0 },
             }}
           >
             <InputLabel id="yourTargetLabel">Target</InputLabel>
@@ -251,7 +246,7 @@ function RegisterPage() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "10px",
               },
-              mb: 3,
+              mb: 2,
             }}
           >
             <InputLabel id="activity">Activity</InputLabel>
@@ -279,7 +274,7 @@ function RegisterPage() {
             variant="contained"
             fullWidth
             sx={{
-              mb: 2,
+              mb: { lg: 2, md: 0 },
               borderRadius: "6px",
               height: "3rem",
               textTransform: "none",

@@ -45,7 +45,7 @@ const Workouts: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          pt: 2,
+          p: 2,
         }}
       >
         <Pagination

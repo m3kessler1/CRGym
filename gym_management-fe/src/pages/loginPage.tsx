@@ -37,22 +37,17 @@ function LoginPage() {
       spacing={6}
       sx={{
         height: {
-          xs: "15vh", // 40vh for xs screens
+          sm: "auto",
+          xs: "auto", // 40vh for xs screens
           md: "100vh", // 100vh for larger screens
         },
         mt: {
           md: 0,
           lg: 0,
         },
-        display: {
-          xs: "flex",
-        },
-        justifyContent: {
-          xs: "center",
-        },
-        alignItems: {
-          xs: "center",
-        },
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Grid

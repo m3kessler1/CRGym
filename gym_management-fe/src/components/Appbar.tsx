@@ -16,6 +16,7 @@ import ProfileTooltip from "./ProfileTooltip";
 import { useThemeContext } from "../context/ThemeContextProvider";
 import { useNavigate } from "react-router-dom";
 import AlertComp from "./Alert";
+import BaseImage from "../assets/BaseImage.svg";
 
 // Define props for the component
 interface CustomAppBarProps {

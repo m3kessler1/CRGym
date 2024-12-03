@@ -45,13 +45,14 @@ const Image: React.FC<{
           sx={{
             position: "absolute",
             top: "70%",
-            left: "40%",
+            left: "44%",
             width: "95%",
             justifyContent: "center",
             alignItems: "center",
             transform: "translate(-40%, -10%)",
             color: "white",
             textShadow: "1px 1px 2px black",
+            fontSize: { xs: "1.2rem", sm: "1.5rem", md: "1.7rem" },
           }}
         >
           "The path to triumph is paved with the{" "}

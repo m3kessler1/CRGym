@@ -1,5 +1,6 @@
 import { Box, Alert, Typography } from "@mui/material";
 import React from "react";
+import BaseImage from "../assets/Base.svg";
 
 interface AlertCompProps {
   message: string;
@@ -11,7 +12,12 @@ const AlertComp: React.FC<AlertCompProps> = ({ message }) => {
       <Alert
         variant="filled"
         icon={false}
-        sx={{ backgroundColor: "primary.main" }}
+        sx={{
+          backgroundImage: `url(${BaseImage})`, // Add your image path here
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <Typography
           variant="h5"

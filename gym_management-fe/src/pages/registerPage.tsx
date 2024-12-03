@@ -64,22 +64,18 @@ function RegisterPage() {
       spacing={6}
       sx={{
         height: {
-          xs: "15vh",
+          xs: "auto",
           md: "100vh",
         },
         mt: {
+          xs: 4,
           md: 0,
           lg: 0,
         },
-        display: {
-          xs: "flex",
-        },
-        justifyContent: {
-          xs: "center",
-        },
-        alignItems: {
-          xs: "center",
-        },
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        pb: { xs: 4 },
       }}
     >
       <Grid
@@ -213,7 +209,7 @@ function RegisterPage() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "10px",
               },
-              mb: { lg: 2, md: 0 },
+              mb: { lg: 2, md: 0, xs: 2, sm: 2 },
             }}
           >
             <InputLabel id="yourTargetLabel">Target</InputLabel>
@@ -274,7 +270,7 @@ function RegisterPage() {
             variant="contained"
             fullWidth
             sx={{
-              mb: { lg: 2, md: 0 },
+              mb: { lg: 2, md: 0, xs: 2, sm: 2 },
               borderRadius: "6px",
               height: "3rem",
               textTransform: "none",

@@ -26,15 +26,12 @@ const Workouts: React.FC = () => {
     <>
       <Grid
         container
-        spacing={2}
+        spacing={6}
         sx={{
           display: "flex",
           width: "100%",
-          mt: -3,
-          mb: 0,
-          mr: 0,
-          ml: 0,
-          p: 0, // Remove default margin
+          pr: 2,
+          pl: 2,
         }}
       >
         {displayedComponents}

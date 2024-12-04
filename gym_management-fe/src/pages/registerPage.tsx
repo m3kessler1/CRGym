@@ -19,12 +19,13 @@ import { registerUser } from "../services/user_api.ts";
 
 // Define a schema using Zod for validation
 const schema = z.object({
-  firstName: z.string().min(3, "First Name is required"),
-  lastName: z.string().min(3, "Last Name is required"),
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().min(1, "Last Name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters long")
+    .regex(/^\S*$/, "Password must not contain spaces")
+    .length(16, "Password must be exactly 16 characters long")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
   target: z.string().min(1, "Target is required"),
   activity: z.string().min(1, "Activity is required"),

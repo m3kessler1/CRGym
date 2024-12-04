@@ -14,9 +14,9 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import ProfileTooltip from "./ProfileTooltip";
 import { useThemeContext } from "../context/ThemeContextProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AlertComp from "./Alert";
-import BaseImage from "../assets/BaseImage.svg";
+import { useReducer } from "react";
 
 // Define props for the component
 interface CustomAppBarProps {
@@ -33,19 +33,64 @@ const AppBar = styled(MuiAppBar)<{ color: string; height?: string }>(
   })
 );
 
+// Add reducer types and state
+type NavigationState = {
+  activeTab: number;
+};
+
+type NavigationAction = {
+  type: "SET_TAB";
+  payload: number;
+};
+
+// Add reducer function
+const navigationReducer = (
+  state: NavigationState,
+  action: NavigationAction
+): NavigationState => {
+  switch (action.type) {
+    case "SET_TAB":
+      return { ...state, activeTab: action.payload };
+    default:
+      return state;
+  }
+};
+
 const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
   ({ positioning = "fixed", logo, height = "4rem" }) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For tooltip
+    const location = useLocation();
+
+    // Create a function to get initial tab based on current route
+    const getInitialTab = () => {
+      const routes = ["/home", "/workouts", "/coaches"];
+      const currentPath = location.pathname;
+      const index = routes.indexOf(currentPath);
+      return index >= 0 ? index : 0;
+    };
+
+    // Initialize reducer with current route's tab
+    const [state, dispatch] = useReducer(navigationReducer, {
+      activeTab: getInitialTab(),
+    });
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { toggleTheme, mode } = useThemeContext();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState(0); // Default active tab index
+
+    // Add effect to sync tab with route on hard refresh
+    React.useEffect(() => {
+      const currentTab = getInitialTab();
+      if (state.activeTab !== currentTab) {
+        dispatch({ type: "SET_TAB", payload: currentTab });
+      }
+    }, [location.pathname]);
 
     // Handle tab change and navigation
     const handleTabChange = (
       _event: React.SyntheticEvent,
       newValue: number
     ) => {
-      setActiveTab(newValue);
+      dispatch({ type: "SET_TAB", payload: newValue });
 
       // Navigate based on the selected tab
       const routes = ["/home", "/workouts", "/coaches"];
@@ -87,7 +132,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
               {/* Tabs */}
               <Tabs
-                value={activeTab}
+                value={state.activeTab}
                 onChange={handleTabChange}
                 textColor="primary"
                 indicatorColor="primary"

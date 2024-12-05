@@ -49,188 +49,184 @@ function MyAccount() {
   const activity = watch("activity");
 
   return (
-    <>
+    <Grid
+      container
+      sx={{
+        height: { md: "70vh", xs: "100%" }, // Set the grid container to fill the viewport height
+        width: "100%",
+      }}
+    >
       <Grid
-        container
-        sx={{
-          height: { md: "70vh", xs: "100%" }, // Set the grid container to fill the viewport height
-          width: "100%",
-        }}
+        item
+        xs={12}
+        md={12}
+        lg={12}
+        sx={{ display: "flex", height: "100%", width: "100%" }}
       >
-        <Grid
-          item
-          xs={12}
-          md={12}
-          lg={12}
-          sx={{ display: "flex", height: "100%", width: "100%" }}
-        >
-          <Grid item xs={4} md={3} lg={3} sx={{ p: 3 }}>
-            <Typography
+        <Grid item xs={4} md={3} lg={3} sx={{ p: 3 }}>
+          <Typography
+            sx={{
+              borderLeft: `0.2rem solid ${theme.palette.primary.main}`,
+              width: "100%",
+              height: "15%",
+              display: "flex",
+              justifyContent: "left",
+              p: 1,
+              alignItems: "center",
+              fontWeight: "bold",
+            }}
+          >
+            General Information
+          </Typography>
+          <Box sx={{ width: { xs: "100%", md: "50%" }, pt: 2 }}>
+            <Logout padding={0} />
+          </Box>
+        </Grid>
+        <Grid item xs={8} md={4} lg={4} sx={{ p: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              maxWidth: "400px",
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <TextField
+              margin="normal"
+              required
+              id="name"
+              autoComplete="name"
+              {...register("name")}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              fullWidth
               sx={{
-                borderLeft: `0.2rem solid ${theme.palette.primary.main}`,
-                width: "100%",
-                height: "15%",
-                display: "flex",
-                justifyContent: "left",
-                p: 1,
-                alignItems: "center",
-                fontWeight: "bold",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+              value={"Aditya Singh"}
+            />
+            <TextField
+              margin="normal"
+              required
+              id="email"
+              {...register("email")}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+              value={"adityyasinggh@gmail.com"}
+              disabled
+            />
+            <TextField
+              margin="normal"
+              required
+              type="password"
+              id="password"
+              {...register("password")}
+              value={"********"}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+              disabled
+            />
+            <Divider sx={{ width: "100%", my: 2 }} />
+
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mb: 2,
               }}
             >
-              General Information
-            </Typography>
-            <Box sx={{ width: { xs: "100%", md: "50%" }, pt: 2 }}>
-              <Logout padding={0} />
-            </Box>
-          </Grid>
-          <Grid item xs={8} md={4} lg={4} sx={{ p: 3 }}>
+              <InputLabel id="yourTargetLabel">Target</InputLabel>
+              <Select
+                labelId="yourTargetLabel"
+                id="yourTarget"
+                value={target || ""}
+                label="Target"
+                {...register("target")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="10">Ten</MenuItem>
+                <MenuItem value="20">Twenty</MenuItem>
+                <MenuItem value="30">Thirty</MenuItem>
+              </Select>
+              {errors.target && (
+                <Typography color="error">{errors.target.message}</Typography>
+              )}
+            </FormControl>
+
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mb: 2,
+              }}
+            >
+              <InputLabel id="activity">Activity</InputLabel>
+              <Select
+                labelId="activity"
+                id="activity"
+                value={activity || ""}
+                label="Activity"
+                {...register("activity")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="10">Ten</MenuItem>
+                <MenuItem value="20">Twenty</MenuItem>
+                <MenuItem value="30">Thirty</MenuItem>
+              </Select>
+              {errors.activity && (
+                <Typography color="error">{errors.activity.message}</Typography>
+              )}
+            </FormControl>
             <Box
-              component="form"
-              noValidate
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                justifyContent: "right",
                 width: "100%",
-                maxWidth: "400px",
               }}
-              onSubmit={handleSubmit(onSubmit)}
             >
-              <TextField
-                margin="normal"
-                required
-                id="name"
-                autoComplete="name"
-                {...register("name")}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-                fullWidth
+              <Button
+                type="submit"
+                variant="outlined"
+                disabled={!isValid}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-                value={"Aditya Singh"}
-              />
-              <TextField
-                margin="normal"
-                required
-                id="email"
-                {...register("email")}
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-                value={"adityyasinggh@gmail.com"}
-                disabled
-              />
-              <TextField
-                margin="normal"
-                required
-                type="password"
-                id="password"
-                {...register("password")}
-                value={"********"}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-                disabled
-              />
-              <Divider sx={{ width: "100%", my: 2 }} />
-
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                  },
-                  mb: 2,
+                  borderRadius: "10px",
+                  width: { xs: "100%", md: "auto" },
                 }}
               >
-                <InputLabel id="yourTargetLabel">Target</InputLabel>
-                <Select
-                  labelId="yourTargetLabel"
-                  id="yourTarget"
-                  value={target || ""}
-                  label="Target"
-                  {...register("target")}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="10">Ten</MenuItem>
-                  <MenuItem value="20">Twenty</MenuItem>
-                  <MenuItem value="30">Thirty</MenuItem>
-                </Select>
-                {errors.target && (
-                  <Typography color="error">{errors.target.message}</Typography>
-                )}
-              </FormControl>
-
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                  },
-                  mb: 2,
-                }}
-              >
-                <InputLabel id="activity">Activity</InputLabel>
-                <Select
-                  labelId="activity"
-                  id="activity"
-                  value={activity || ""}
-                  label="Activity"
-                  {...register("activity")}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="10">Ten</MenuItem>
-                  <MenuItem value="20">Twenty</MenuItem>
-                  <MenuItem value="30">Thirty</MenuItem>
-                </Select>
-                {errors.activity && (
-                  <Typography color="error">
-                    {errors.activity.message}
-                  </Typography>
-                )}
-              </FormControl>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "right",
-                  width: "100%",
-                }}
-              >
-                <Button
-                  type="submit"
-                  variant="outlined"
-                  disabled={!isValid}
-                  sx={{
-                    borderRadius: "10px",
-                    width: { xs: "100%", md: "auto" },
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </Box>
+                Save Changes
+              </Button>
             </Box>
-          </Grid>
+          </Box>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
 

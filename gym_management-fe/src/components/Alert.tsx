@@ -8,30 +8,28 @@ interface AlertCompProps {
 
 const AlertComp: React.FC<AlertCompProps> = ({ message }) => {
   return (
-    <Box>
-      <Alert
-        variant="filled"
-        icon={false}
+    <Alert
+      variant="filled"
+      icon={false}
+      sx={{
+        backgroundImage: `url(${BaseImage})`, // Add your image path here
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <Typography
+        variant="h5"
         sx={{
-          backgroundImage: `url(${BaseImage})`, // Add your image path here
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          justifyContent: "center",
+          alignItems: "start",
+          fontFamily: "lexend",
+          p: 4,
         }}
       >
-        <Typography
-          variant="h5"
-          sx={{
-            justifyContent: "center",
-            alignItems: "start",
-            fontFamily: "lexend",
-            p: 4,
-          }}
-        >
-          {message}
-        </Typography>
-      </Alert>
-    </Box>
+        {message}
+      </Typography>
+    </Alert>
   );
 };
 

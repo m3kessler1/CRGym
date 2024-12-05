@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import RegisterPage from "../pages/registerPage.tsx";
 import LoginPage from "../pages/loginPage.tsx";
-import HomePage from "../pages/homePage.js";
+import HomePage from "../pages/homePage.tsx";
 import MyAccount from "../pages/accountPage.tsx";
 import Workouts from "../pages/workoutPage.tsx";
 import Coaches from "../pages/coachesPage.tsx";
@@ -17,7 +17,7 @@ function AppRoutes(): JSX.Element {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={<MainPage />}>

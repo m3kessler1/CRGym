@@ -5,7 +5,6 @@ import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import CoachesCard from "../components/CoachesCard";
 import Slot from "../components/Slots.tsx";
 
 const BookCoachPage: React.FC = () => {
@@ -19,14 +18,7 @@ const BookCoachPage: React.FC = () => {
         p: 6,
       }}
     >
-      <Grid item sx={{ position: "fixed" }}>
-        <CoachesCard
-          cardHeight={630}
-          mediaHeight={300}
-          cardWidth="85%"
-          booking={true}
-        />
-      </Grid>
+      <Grid item sx={{ position: "fixed" }}></Grid>
       <Grid container item xs={5} md={9} lg={9}>
         <Grid
           item

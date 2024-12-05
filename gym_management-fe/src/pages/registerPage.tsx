@@ -15,7 +15,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "../components/Image.tsx";
-import { registerUser } from "../services/user_api.ts";
+import { registerUser } from "../services/usersService.ts";
 
 // Define a schema using Zod for validation
 const schema = z.object({

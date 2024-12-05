@@ -23,7 +23,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 interface FeedbackDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (feedback: { rating: number; comment: string }) => void;
+  onSubmit: (feedback: { rating: number; comment?: string }) => void;
 }
 
 // Add Zod schema
@@ -32,7 +32,9 @@ const feedbackSchema = z.object({
   comment: z
     .string()
     .min(3, "Comment must be at least 3 characters")
-    .max(500, "Comment must not exceed 500 characters"),
+    .max(500, "Comment must not exceed 500 characters")
+    .optional()
+    .or(z.literal("")), // Allow empty string
 });
 
 const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({

@@ -109,7 +109,12 @@ const WorkoutCard: React.FC = () => {
               Reprehenderit, odit provident.
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "left", width: "50%" }}>
-              <EventAvailableIcon fontSize="medium" />
+              <EventAvailableIcon
+                fontSize="medium"
+                sx={{
+                  color: "grey.500",
+                }}
+              />
               <Typography variant="body1" sx={{ ml: 1 }}>
                 July 9, 12:30
               </Typography>

@@ -1,15 +1,29 @@
 import React, { useState } from "react";
-import { Grid, Pagination, Box } from "@mui/material";
+import { Grid, Pagination, Box, Typography } from "@mui/material";
 import CoachesCard from "../components/CoachesCard";
+import useFetchCoaches from "../hooks/useFetchCoaches";
+import SkeletonCoachPage from "../components/Skeleton/SkeletonCoachPage";
+
+interface Coach {
+  id: number;
+  name: string;
+  profilePicture?: string;
+  specialization: string;
+  shortSummary: string;
+  ratings: number;
+}
 
 const Coaches: React.FC = () => {
-  // Mock data for demonstration (can be replaced with API data)
-  const coachesData = Array(50)
-    .fill(null)
-    .map((_, index) => ({
-      id: index + 1,
-      name: `Coach ${index + 1}`,
-    }));
+  const { data: coaches, loading, error } = useFetchCoaches();
+
+  const coachesData = (coaches || []).map((coach: Coach) => ({
+    id: coach.id,
+    name: coach.name || "",
+    image: coach.profilePicture || "",
+    description: coach.specialization || "",
+    shortSummary: coach.shortSummary || "",
+    ratings: coach.ratings || 0,
+  }));
 
   const itemsPerPage = 8; // Number of items per page
   const [page, setPage] = useState(1); // Current page
@@ -17,48 +31,44 @@ const Coaches: React.FC = () => {
   // Calculate total pages
   const totalPages = Math.ceil(coachesData.length / itemsPerPage);
 
-  // Get the data for the current page
   const currentPageData = coachesData.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
 
-  // Handle page change
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
-  return (
+  return loading ? (
+    <SkeletonCoachPage />
+  ) : (
     <Box>
-      {/* Coaches Grid */}
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          display: "flex",
-        }}
-      >
-        {currentPageData.map((coach) => (
-          <CoachesCard key={coach.id} />
-        ))}
-      </Grid>
+      {coachesData.length === 0 ? (
+        <Typography variant="h5" align="center" sx={{ mt: 4 }}>
+          No coaches available at the moment
+        </Typography>
+      ) : (
+        <>
+          {/* Coaches Grid */}
+          <Grid container spacing={2} sx={{ display: "flex" }}>
+            {currentPageData.map((coach) => (
+              <CoachesCard key={coach.id} {...coach} />
+            ))}
+          </Grid>
 
-      {/* Pagination */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          p: 2,
-        }}
-      >
-        <Pagination
-          count={totalPages} // Total number of pages
-          page={page} // Current page
-          onChange={handlePageChange} // Page change handler
-          color="primary"
-          size="large" // Primary color for the pagination
-        />
-      </Box>
+          {/* Pagination */}
+          <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+            />
+          </Box>
+        </>
+      )}
     </Box>
   );
 };

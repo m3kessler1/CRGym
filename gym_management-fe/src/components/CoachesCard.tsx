@@ -13,9 +13,22 @@ import { useNavigate } from "react-router-dom";
 import { Suspense } from "react";
 
 // Define the props interface
+interface CoachesCardProps {
+  name: string;
+  image: string;
+  description: string;
+  shortSummary: string;
+  ratings: number;
+}
 
 // CoachesCard component
-const CoachesCard: React.FC = () => {
+const CoachesCard: React.FC<CoachesCardProps> = ({
+  name,
+  image,
+  description,
+  shortSummary,
+  ratings,
+}) => {
   const navigate = useNavigate();
 
   // Handle booking navigation
@@ -50,7 +63,7 @@ const CoachesCard: React.FC = () => {
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image="/Images/Avatar.svg"
+            image={image}
             title="Coach Avatar"
             component="img"
           />
@@ -60,23 +73,22 @@ const CoachesCard: React.FC = () => {
           <Box sx={{ display: "flex" }}>
             <Box>
               <Typography gutterBottom variant="h6">
-                Aditya Singh
+                {name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Certified personal yoga trainer
+                {description}
               </Typography>
             </Box>
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography>4.6</Typography>
+            <Typography>{ratings}</Typography>
             <Rating name="read-only" value={1} max={1} readOnly />
           </Box>
 
           <Box sx={{ pt: 3 }}>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              A Yoga Expert dedicated to crafting personalized workout plans
-              that align with your goals.
+              {shortSummary}
             </Typography>
           </Box>
         </CardContent>

@@ -64,7 +64,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
           <CardMedia
             sx={{ height: 240 }}
             image={image}
-            title="Coach Avatar"
+            title={name}
             component="img"
           />
         </Suspense>

@@ -7,7 +7,7 @@ import {
 import RegisterPage from "../pages/registerPage.tsx";
 import LoginPage from "../pages/loginPage.tsx";
 import HomePage from "../pages/homePage.tsx";
-import MyAccount from "../pages/accountPage.tsx";
+import MyAccount from "../pages/accountMainPage.tsx";
 import Workouts from "../pages/workoutPage.tsx";
 import Coaches from "../pages/coachesPage.tsx";
 import BookCoach from "../pages/bookCoachPage.tsx";

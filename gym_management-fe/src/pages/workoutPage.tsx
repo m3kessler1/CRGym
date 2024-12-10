@@ -29,9 +29,10 @@ const Workouts: React.FC = () => {
         spacing={6}
         sx={{
           display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           width: "100%",
-          pr: 2,
-          pl: 2,
+          pl: 5,
         }}
       >
         {displayedComponents}

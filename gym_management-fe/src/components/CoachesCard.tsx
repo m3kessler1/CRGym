@@ -66,6 +66,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
             image={image}
             title={name}
             component="img"
+            alt={name}
           />
         </Suspense>
         {/* Card Content */}

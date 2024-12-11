@@ -162,6 +162,7 @@ function GeneralInformation() {
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "8px",
                     },
+                    mb: 4,
                   }}
                 />
               </Grid>
@@ -173,7 +174,7 @@ function GeneralInformation() {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "10px",
                 },
-                mb: 2,
+                mb: 6,
               }}
             >
               <InputLabel id="yourTargetLabel">Your Target</InputLabel>

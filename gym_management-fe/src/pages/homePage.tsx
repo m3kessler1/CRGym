@@ -68,163 +68,157 @@ const HomePage: React.FC = () => {
   const coach = watch("coach");
 
   return (
-    <Box sx={{ pl: 5 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-          <Typography variant="h4">Achieve your fitness goals!</Typography>
-          <Typography variant="h4">Find a workout and book today.</Typography>
-        </Grid>
+    <Grid container spacing={2} sx={{ p: 3 }}>
+      <Grid item xs={12} md={12}>
+        <Typography variant="h4">Achieve your fitness goals!</Typography>
+        <Typography variant="h4">Find a workout and book today.</Typography>
+      </Grid>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ width: "100%" }}
-        >
-          <Grid container spacing={2} sx={{ ml: 0, mt: 2 }}>
-            <Grid item xs={12} md={12}>
-              <Typography fontWeight={300}>BOOK A WORKOUT</Typography>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                  },
-                  mt: 1,
-                }}
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ width: "100%" }}
+      >
+        <Grid container spacing={2} sx={{ ml: 0, mt: 2 }}>
+          <Grid item xs={12} md={12}>
+            <Typography fontWeight={300}>BOOK A WORKOUT</Typography>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mt: 1,
+              }}
+            >
+              <InputLabel id="activity">Activity</InputLabel>
+              <Select
+                labelId="activity"
+                id="activity"
+                value={activity || "All"}
+                label="Activity"
+                {...register("activity")}
               >
-                <InputLabel id="activity">Activity</InputLabel>
-                <Select
-                  labelId="activity"
-                  id="activity"
-                  value={activity || "All"}
-                  label="Activity"
-                  {...register("activity")}
-                >
-                  <MenuItem value="All">All</MenuItem>
-                  <MenuItem value="Yoga">Yoga</MenuItem>
-                  <MenuItem value="Climbing">Climbing</MenuItem>
-                  <MenuItem value="Strength training">
-                    Strength training
-                  </MenuItem>
-                  <MenuItem value="Cross-fit">Cross-fit</MenuItem>
-                  <MenuItem value="Cardio Training">Cardio Training</MenuItem>
-                  <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
-                </Select>
-                {errors.activity && (
-                  <Typography color="error">
-                    {errors.activity.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="Select Date"
-                    value={watch("date") || dayjs(DateTime.now().toJSDate())}
-                    slotProps={{
-                      textField: {
-                        ...register("date"),
-                        sx: {
-                          "& .MuiOutlinedInput-root": {
-                            borderRadius: "10px",
-                          },
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Yoga">Yoga</MenuItem>
+                <MenuItem value="Climbing">Climbing</MenuItem>
+                <MenuItem value="Strength training">Strength training</MenuItem>
+                <MenuItem value="Cross-fit">Cross-fit</MenuItem>
+                <MenuItem value="Cardio Training">Cardio Training</MenuItem>
+                <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
+              </Select>
+              {errors.activity && (
+                <Typography color="error">{errors.activity.message}</Typography>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="Select Date"
+                  value={watch("date") || dayjs(DateTime.now().toJSDate())}
+                  slotProps={{
+                    textField: {
+                      ...register("date"),
+                      sx: {
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
                         },
                       },
-                    }}
-                    onChange={(newValue) => {
-                      if (newValue && dayjs.isDayjs(newValue)) {
-                        setValue("date", newValue);
-                      }
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                  },
-                  mt: 1,
-                }}
-              >
-                <InputLabel id="time">Time</InputLabel>
-                <Select
-                  labelId="time"
-                  id="time"
-                  value={time}
-                  label="Time"
-                  {...register("time")}
-                >
-                  {timeOptions.map((timeOption, index) => (
-                    <MenuItem key={index} value={timeOption}>
-                      {timeOption}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.time && (
-                  <Typography color="error">{errors.time.message}</Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                  },
-                  mt: 1,
-                }}
-              >
-                <InputLabel id="coach">Coach</InputLabel>
-                <Select
-                  labelId="coach"
-                  id="coach"
-                  value={coach}
-                  label="Coach"
-                  {...register("coach")}
-                >
-                  {coachNames.map((coachName, index) => (
-                    <MenuItem key={index} value={coachName}>
-                      {coachName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.coach && (
-                  <Typography color="error">{errors.coach.message}</Typography>
-                )}
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <Button
-                variant="contained"
-                type="submit"
-                sx={{
-                  width: "224px",
-                  height: "53px",
-                  borderRadius: "10px",
-                  mt: 1,
-                }}
-              >
-                Find Workout
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Typography fontWeight={300} sx={{ mt: 2 }}>
-                AVAILABLE WORKOUTS
-              </Typography>
-            </Grid>
+                    },
+                  }}
+                  onChange={(newValue) => {
+                    if (newValue && dayjs.isDayjs(newValue)) {
+                      setValue("date", newValue);
+                    }
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </Grid>
-        </Box>
-      </Grid>
-    </Box>
+          <Grid item xs={12} md={2}>
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mt: 1,
+              }}
+            >
+              <InputLabel id="time">Time</InputLabel>
+              <Select
+                labelId="time"
+                id="time"
+                value={time}
+                label="Time"
+                {...register("time")}
+              >
+                {timeOptions.map((timeOption, index) => (
+                  <MenuItem key={index} value={timeOption}>
+                    {timeOption}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.time && (
+                <Typography color="error">{errors.time.message}</Typography>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mt: 1,
+              }}
+            >
+              <InputLabel id="coach">Coach</InputLabel>
+              <Select
+                labelId="coach"
+                id="coach"
+                value={coach}
+                label="Coach"
+                {...register("coach")}
+              >
+                {coachNames.map((coachName, index) => (
+                  <MenuItem key={index} value={coachName}>
+                    {coachName}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.coach && (
+                <Typography color="error">{errors.coach.message}</Typography>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Button
+              variant="contained"
+              type="submit"
+              sx={{
+                width: "224px",
+                height: "53px",
+                borderRadius: "10px",
+                mt: 1,
+              }}
+            >
+              Find Workout
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Typography fontWeight={300} sx={{ mt: 2 }}>
+              AVAILABLE WORKOUTS
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+    </Grid>
   );
 };
 

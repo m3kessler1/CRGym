@@ -15,7 +15,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "../components/Image.tsx";
-import { registerUser } from "../services/usersService.ts";
+import { registerUser } from "../services/clientService.ts";
 
 // Define a schema using Zod for validation
 const schema = z.object({
@@ -25,7 +25,7 @@ const schema = z.object({
   password: z
     .string()
     .regex(/^\S*$/, "Password must not contain spaces")
-    .length(16, "Password must be exactly 16 characters long")
+    .length(8, "Password must be exactly 8 characters long")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
   target: z.string().min(1, "Target is required"),
   activity: z.string().min(1, "Activity is required"),
@@ -210,7 +210,7 @@ function RegisterPage() {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "10px",
               },
-              mb: { lg: 2, md: 0, xs: 2, sm: 2 },
+              mb: { lg: 2, md: 2, xs: 2, sm: 2 },
             }}
           >
             <InputLabel id="yourTargetLabel">Target</InputLabel>

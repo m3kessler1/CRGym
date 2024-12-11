@@ -48,7 +48,6 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
         justifyContent: "center",
         alignItems: "center",
       }}
-      spacing={0}
     >
       <Card
         sx={{

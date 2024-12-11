@@ -119,7 +119,7 @@ const HomePage: React.FC = () => {
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={1.7}>
+            <Grid item xs={12} md={2}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker

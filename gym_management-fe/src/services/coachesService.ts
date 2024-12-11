@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://48r3v9wnr6.execute-api.eu-west-1.amazonaws.com/stage/';
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
-// Function to fetch coaches
 export const fetchCoaches = async () => {
-  const response = await axios.get(`${BASE_URL}/coaches`);
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/coaches`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching coaches:", error);
+    throw error;
+  }
 };

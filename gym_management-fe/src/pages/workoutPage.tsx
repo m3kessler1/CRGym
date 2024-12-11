@@ -33,27 +33,32 @@ const Workouts: React.FC = () => {
           alignItems: "center",
           width: "100%",
           pl: 5,
+          mb: 2,
         }}
       >
         {displayedComponents}
       </Grid>
 
       {/* Pagination controls */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          p: 2,
-        }}
-      >
-        <Pagination
-          count={Math.ceil(totalItems / itemsPerPage)} // Total number of pages
-          page={page}
-          onChange={handleChange}
-          color="primary"
-          size="large"
-        />
-      </Box>
+      {totalItems > 6 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            p: 2,
+          }}
+        >
+          <Pagination
+            count={Math.ceil(totalItems / itemsPerPage)} // Total number of pages
+            page={page}
+            onChange={handleChange}
+            color="primary"
+            size="large"
+          />
+        </Box>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

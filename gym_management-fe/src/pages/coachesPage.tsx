@@ -57,16 +57,19 @@ const Coaches: React.FC = () => {
             ))}
           </Grid>
 
-          {/* Pagination */}
-          <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-              size="large"
-            />
-          </Box>
+          {coachesData.length > 8 ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
         </>
       )}
     </Box>

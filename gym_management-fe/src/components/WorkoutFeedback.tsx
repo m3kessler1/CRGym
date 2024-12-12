@@ -101,8 +101,8 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
             <Grid item xs={7} md={7} sx={{ display: "flex" }}>
               <Grid item xs={3.2} md={3.2}>
                 <Avatar
-                  src="/Images/Avatar.svg"
-                  sx={{ width: "90%", height: "95%" }}
+                  src="/Images/image1.svg"
+                  sx={{ width: "90%", height: "90%" }}
                 ></Avatar>
               </Grid>
               <Grid item xs={8.8} md={8.8}>

@@ -16,10 +16,10 @@ interface Coach {
 const Coaches: React.FC = () => {
   const { data: coaches, loading, error } = useFetchCoaches();
 
-  const coachesData = (coaches || []).map((coach: Coach) => ({
+  const coachesData = (coaches || []).map((coach: Coach, index: number) => ({
     id: coach.id,
     name: coach.name || "",
-    image: coach.profilePicture || "",
+    image: "image" + (index + 1),
     description: coach.specialization || "",
     shortSummary: coach.shortSummary || "",
     ratings: coach.ratings || 0,

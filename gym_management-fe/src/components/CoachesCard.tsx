@@ -35,11 +35,11 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
   const handleBookWorkout = () => {
     navigate("/book-coach");
   };
-
+  console.log(image);
   return (
     <Grid
       item
-      xs={12}
+      xs={6}
       sm={6}
       md={3}
       lg={3}
@@ -62,7 +62,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image={image}
+            image={`/Images/${image}.svg`}
             title={name}
             component="img"
             alt={name}

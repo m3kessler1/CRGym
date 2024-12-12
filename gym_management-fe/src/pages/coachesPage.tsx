@@ -19,7 +19,7 @@ const Coaches: React.FC = () => {
   const coachesData = (coaches || []).map((coach: Coach, index: number) => ({
     id: coach.id,
     name: coach.name || "",
-    image: "image" + (index + 1),
+    image: "image" + ((index + 1) % 9),
     description: coach.specialization || "",
     shortSummary: coach.shortSummary || "",
     ratings: coach.ratings || 0,

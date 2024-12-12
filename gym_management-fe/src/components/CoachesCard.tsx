@@ -35,7 +35,6 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
   const handleBookWorkout = () => {
     navigate("/book-coach");
   };
-  console.log(image);
   return (
     <Grid
       item

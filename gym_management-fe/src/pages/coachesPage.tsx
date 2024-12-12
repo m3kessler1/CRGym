@@ -25,7 +25,7 @@ const Coaches: React.FC = () => {
     ratings: coach.ratings || 0,
   }));
 
-  const itemsPerPage = 8; // Number of items per page
+  const itemsPerPage = coachesData.length >= 8 ? 8 : coachesData.length; // Number of items per page
   const [page, setPage] = useState(1); // Current page
 
   // Calculate total pages

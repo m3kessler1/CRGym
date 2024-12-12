@@ -3,7 +3,7 @@ import WorkoutCard from "../components/WorkoutCard.tsx";
 import { useState } from "react";
 
 const Workouts: React.FC = () => {
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
   const totalItems = 8;
   const [page, setPage] = useState<number>(1);
 

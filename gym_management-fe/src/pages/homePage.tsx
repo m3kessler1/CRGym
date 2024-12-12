@@ -83,7 +83,16 @@ const HomePage: React.FC = () => {
           <Grid item xs={12} md={12}>
             <Typography fontWeight={300}>BOOK A WORKOUT</Typography>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid
+            item
+            xs={12}
+            md={3}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <FormControl
               fullWidth
               sx={{
@@ -114,7 +123,16 @@ const HomePage: React.FC = () => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid
+            item
+            xs={12}
+            md={2}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
@@ -139,7 +157,16 @@ const HomePage: React.FC = () => {
               </DemoContainer>
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid
+            item
+            xs={12}
+            md={2}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <FormControl
               fullWidth
               sx={{
@@ -168,7 +195,16 @@ const HomePage: React.FC = () => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid
+            item
+            xs={12}
+            md={3}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <FormControl
               fullWidth
               sx={{
@@ -205,6 +241,11 @@ const HomePage: React.FC = () => {
                 width: "224px",
                 height: "53px",
                 borderRadius: "10px",
+
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
                 mt: 1,
               }}
             >

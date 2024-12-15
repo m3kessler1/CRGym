@@ -1,9 +1,22 @@
-import { Box, Grid, Typography, TextField, Button, Link } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  LinearProgress,
+} from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import Image from "../components/Image.tsx";
+import useLoginUser from "../hooks/useLoginUser"; // Import the custom hook
+import { useSnackbar } from "notistack"; // Import useSnackbar
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { setUser } from "../redux/userSlice"; // Import your action to set user data
+import Cookies from "js-cookie";
 
 // Define schema using Zod
 const schema = z.object({
@@ -16,6 +29,8 @@ type FormData = z.infer<typeof schema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
+  const { login, loading: loginLoading } = useLoginUser(); // Destructure the login function and loading state
   const {
     register,
     handleSubmit,
@@ -24,14 +39,59 @@ function LoginPage() {
     resolver: zodResolver(schema),
     mode: "onChange",
   });
+  const dispatch = useDispatch(); // Initialize useDispatch
 
   // Handle form submission
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data); // Post form data
-    navigate("/home"); // Navigate to home after submission
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const response = await login(data.email, data.password); // Call the login function with email and password
+      if (response.status === 200) {
+        const { token, ...userData } = response.data; // Destructure to exclude token
+
+        // Store token in HTTP-only cookie
+        Cookies.set("authToken", token, {
+          expires: 1, // 1 day
+          secure: true,
+          sameSite: "strict",
+        });
+
+        // Store user data in Redux
+        dispatch(setUser(userData));
+
+        enqueueSnackbar("Login successful! Welcome back!", {
+          // Show success message
+          variant: "success",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+        });
+
+        // Navigate to home after a brief delay to show the skeleton
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000); // Adjust the delay as needed
+      }
+    } catch (err) {
+      console.error("Login failed:", err); // Handle any errors if needed
+      enqueueSnackbar(
+        "Login failed. Please check your credentials and try again.", // Show error message
+        {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+        }
+      );
+    }
   };
 
-  return (
+  return loginLoading ? (
+    <Box sx={{ pt: 50, pl: 20, pr: 20 }}>
+      <LinearProgress color="primary" />
+    </Box>
+  ) : (
     <Grid
       container
       spacing={6}
@@ -121,9 +181,7 @@ function LoginPage() {
             {...register("password")}
             error={!!errors.password}
             helperText={
-              errors.password
-                ? errors.password.message
-                : "At least one capital letter required"
+              errors.password ? errors.password.message : "Password is required"
             }
             fullWidth
             sx={{

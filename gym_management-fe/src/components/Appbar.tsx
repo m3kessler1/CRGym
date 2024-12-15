@@ -6,6 +6,7 @@ import {
   IconButton,
   Avatar,
   Tabs,
+  Button,
   Tab,
   Grid,
 } from "@mui/material";
@@ -16,7 +17,10 @@ import ProfileTooltip from "./ProfileTooltip";
 import { useThemeContext } from "../context/ThemeContextProvider";
 import { useNavigate, useLocation } from "react-router-dom";
 import AlertComp from "./Alert";
-import { useReducer } from "react";
+import { useReducer } from "react"; // Import type
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 // Define props for the component
 interface CustomAppBarProps {
@@ -59,13 +63,35 @@ const navigationReducer = (
 const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
   ({ positioning = "fixed", logo, height = "4rem" }) => {
     const location = useLocation();
+    const userData = useSelector((state: RootState) => state.user);
+    const isAuthenticated = !!Cookies.get("authToken");
 
     // Create a function to get initial tab based on current route
     const getInitialTab = () => {
-      const routes = ["/home", "/workouts", "/coaches"];
       const currentPath = location.pathname;
-      const index = routes.indexOf(currentPath);
-      return index >= 0 ? index : 0;
+
+      // Define routes and their corresponding tab indices
+      if (isAuthenticated) {
+        switch (currentPath) {
+          case "/home":
+            return 0;
+          case "/workouts":
+            return 1;
+          case "/coaches":
+            return 2;
+          default:
+            return 0;
+        }
+      } else {
+        switch (currentPath) {
+          case "/home":
+            return 0;
+          case "/coaches":
+            return 1;
+          default:
+            return 0;
+        }
+      }
     };
 
     // Initialize reducer with current route's tab
@@ -92,10 +118,27 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
     ) => {
       dispatch({ type: "SET_TAB", payload: newValue });
 
-      // Navigate based on the selected tab
-      const routes = ["/home", "/workouts", "/coaches"];
-      if (routes[newValue]) {
-        navigate(routes[newValue]);
+      if (isAuthenticated) {
+        switch (newValue) {
+          case 0:
+            navigate("/home");
+            break;
+          case 1:
+            navigate("/workouts");
+            break;
+          case 2:
+            navigate("/coaches");
+            break;
+        }
+      } else {
+        switch (newValue) {
+          case 0:
+            navigate("/home");
+            break;
+          case 1:
+            navigate("/coaches");
+            break;
+        }
       }
     };
 
@@ -139,7 +182,9 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                 sx={{ flexGrow: 1 }}
               >
                 <Tab label="Home" sx={{ fontSize: "1.1rem" }} />
-                <Tab label="Workouts" sx={{ fontSize: "1.1rem" }} />
+                {isAuthenticated && (
+                  <Tab label="Workouts" sx={{ fontSize: "1.1rem" }} />
+                )}
                 <Tab label="Coaches" sx={{ fontSize: "1.1rem" }} />
               </Tabs>
 
@@ -157,18 +202,36 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
               </IconButton>
 
               {/* Profile Avatar */}
-              <IconButton
-                onClick={handleClick}
-                sx={{ color: "primary.main" }}
-                data-testid="profile-button"
-              >
-                <Avatar
-                  data-testid="profile-avatar"
-                  sx={{ bgcolor: "primary.main" }}
+              {isAuthenticated ? (
+                <IconButton
+                  onClick={handleClick}
+                  sx={{ color: "primary.main" }}
+                  data-testid="profile-button"
                 >
-                  A
-                </Avatar>
-              </IconButton>
+                  <Avatar
+                    data-testid="profile-avatar"
+                    sx={{
+                      bgcolor: "primary.main",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    {userData.firstName.charAt(0)}
+                  </Avatar>
+                </IconButton>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={() => navigate("/login")}
+                  sx={{
+                    borderRadius: "8px",
+                    textTransform: "none",
+                  }}
+                >
+                  Login
+                </Button>
+              )}
             </Toolbar>
 
             {/* Profile Tooltip */}
@@ -186,7 +249,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
         {/* Alert Component */}
         <Grid item xs={12}>
-          <AlertComp message={`Hello!`} />
+          <AlertComp />
         </Grid>
       </Grid>
     );

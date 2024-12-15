@@ -14,7 +14,7 @@ interface Coach {
 }
 
 const Coaches: React.FC = () => {
-  const { data: coaches, loading, error } = useFetchCoaches();
+  const { data: coaches, loading } = useFetchCoaches();
 
   const coachesData = (coaches || []).map((coach: Coach, index: number) => ({
     id: coach.id,

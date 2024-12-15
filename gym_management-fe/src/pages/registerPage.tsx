@@ -15,7 +15,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "../components/Image.tsx";
-import { registerUser } from "../services/clientService.ts";
+import useRegisterUser from "../hooks/useRegisterUser";
+import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 // Define a schema using Zod for validation
 const schema = z.object({
@@ -25,16 +27,19 @@ const schema = z.object({
   password: z
     .string()
     .regex(/^\S*$/, "Password must not contain spaces")
-    .length(8, "Password must be exactly 8 characters long")
+    .min(8, "Password must be at least 8 characters long")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
   target: z.string().min(1, "Target is required"),
-  activity: z.string().min(1, "Activity is required"),
+  preferableActivity: z.string().min(1, "Activity is required"),
 });
 
 // Define the TypeScript interface for form data based on the schema
 type RegisterFormData = z.infer<typeof schema>;
 
 function RegisterPage() {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   // Destructure the useForm hook with zodResolver and schema validation
   const {
     register,
@@ -46,18 +51,45 @@ function RegisterPage() {
     mode: "onChange",
   });
 
+  const { registerUser } = useRegisterUser(); // Get the function from the hook
+
   const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
     try {
-      // API call or data handling here
-      const response = await registerUser(data);
-      if (response.status === 201) console.log("Successful");
+      await registerUser({
+        ...data,
+        preferableActivity: data.preferableActivity,
+      });
+
+      // Show success message
+      enqueueSnackbar("Account has been created successfully! 😀", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+
+      // Navigate after a delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error: any) {
-      console.log(error.response.data.message);
+      enqueueSnackbar(
+        error.response?.data?.message ||
+          "We're experiencing technical difficulties. Please try again later.",
+        {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+        }
+      );
     }
   };
 
   const target = watch("target");
-  const activity = watch("activity");
+  const preferableActivity = watch("preferableActivity");
 
   return (
     <Grid
@@ -246,13 +278,13 @@ function RegisterPage() {
               mb: 2,
             }}
           >
-            <InputLabel id="activity">Activity</InputLabel>
+            <InputLabel id="preferableActivity">Activity</InputLabel>
             <Select
               labelId="activity"
               id="activity"
-              value={activity || "Yoga"}
+              value={preferableActivity || "Yoga"}
               label="Activity"
-              {...register("activity")}
+              {...register("preferableActivity")}
             >
               <MenuItem value="Yoga">Yoga</MenuItem>
               <MenuItem value="Climbing">Climbing</MenuItem>
@@ -261,8 +293,10 @@ function RegisterPage() {
               <MenuItem value="Cardio Training">Cardio Training</MenuItem>
               <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
             </Select>
-            {errors.activity && (
-              <Typography color="error">{errors.activity.message}</Typography>
+            {errors.preferableActivity && (
+              <Typography color="error">
+                {errors.preferableActivity.message}
+              </Typography>
             )}
           </FormControl>
 

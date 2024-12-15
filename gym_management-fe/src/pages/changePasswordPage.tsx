@@ -10,7 +10,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import usePasswordUser from "../hooks/usePasswordUser";
+import { enqueueSnackbar } from "notistack";
+import { setUser } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 type FormData = {
   oldPassword: string;
@@ -31,23 +37,55 @@ const schema = z
 
 function ChangePassword() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const userData = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const { updatePasswordUser } = usePasswordUser();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      oldPassword: "aaaaaaaa",
+      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data); // post
+  useEffect(() => {
+    if (userData.password) {
+      setValue("oldPassword", userData.password);
+    }
+  }, [userData.password, setValue]);
+
+  const onSubmit = async (data: FormData) => {
+    const newData: { newPassword: string } = {
+      newPassword: data.newPassword,
+    };
+
+    try {
+      await updatePasswordUser(newData);
+      dispatch(setUser({ ...userData, password: newData.newPassword }));
+      enqueueSnackbar("Password updated successfully!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    } catch (error) {
+      console.error("Error updating password:", error);
+      enqueueSnackbar("Error updating password:", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    }
   };
 
   return (
@@ -76,7 +114,8 @@ function ChangePassword() {
                   fullWidth
                   disabled
                   id="oldPassword"
-                  label="Old Password"
+                  label="Current Password"
+                  value={userData.password}
                   type={showPassword ? "text" : "password"}
                   autoComplete="oldPassword"
                   {...register("oldPassword")}

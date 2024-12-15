@@ -1,12 +1,10 @@
-import { Box, Alert, Typography } from "@mui/material";
-import React from "react";
+import { Alert, Typography } from "@mui/material";
 import BaseImage from "../assets/Base.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-interface AlertCompProps {
-  message: string;
-}
-
-const AlertComp: React.FC<AlertCompProps> = ({ message }) => {
+const AlertComp = () => {
+  const userData = useSelector((state: RootState) => state.user);
   return (
     <Alert
       variant="filled"
@@ -27,7 +25,7 @@ const AlertComp: React.FC<AlertCompProps> = ({ message }) => {
           p: 4,
         }}
       >
-        {message}
+        {`Hello! ${userData.firstName}`}
       </Typography>
     </Alert>
   );

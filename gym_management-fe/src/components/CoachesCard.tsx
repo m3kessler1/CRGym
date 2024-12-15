@@ -38,7 +38,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
   return (
     <Grid
       item
-      xs={6}
+      xs={12}
       sm={6}
       md={3}
       lg={3}

@@ -14,6 +14,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import useUpdateUser from "../hooks/useUpdateUser";
+import { enqueueSnackbar } from "notistack";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, UserState } from "../redux/userSlice";
 
 type FormData = {
   firstName: string;
@@ -21,7 +25,7 @@ type FormData = {
   email?: string;
   password?: string;
   target: string;
-  activity: string;
+  preferableActivity: string;
   profileImage?: File;
 };
 
@@ -29,10 +33,13 @@ const schema = z.object({
   firstName: z.string().min(3, "First Name is required"),
   lastName: z.string().min(3, "Last Name is required"),
   target: z.string().min(1, "Target is required"),
-  activity: z.string().min(1, "Activity is required"),
+  preferableActivity: z.string().min(1, "Preferable Activity is required"),
 });
 
 function GeneralInformation() {
+  const userData = useSelector((state: { user: UserState }) => state.user);
+  const dispatch = useDispatch();
+  const { update } = useUpdateUser();
   const [previewImage, setPreviewImage] = useState<string>(
     "/images/profile.png"
   );
@@ -46,18 +53,39 @@ function GeneralInformation() {
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
-      firstName: "Aditya",
-      lastName: "Singh",
-      target: "",
-      activity: "",
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      target: userData.target,
+      preferableActivity: userData.preferableActivity,
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data); // post
+  const onSubmit = async (data: FormData) => {
+    try {
+      await update(data);
+      dispatch(
+        setUser({ ...data, email: userData.email, role: userData.role })
+      );
+      enqueueSnackbar("User updated successfully!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      enqueueSnackbar("Error updating user:", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    }
   };
   const target = watch("target");
-  const activity = watch("activity");
+  const preferableActivity = watch("preferableActivity");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -104,10 +132,10 @@ function GeneralInformation() {
 
           <Box sx={{ ml: 1, mb: 4 }}>
             <Typography variant="h6" fontSize="16px">
-              Aditya Singh (Client)
+              {userData.firstName} {userData.lastName} (Client)
             </Typography>
             <Typography variant="body1" fontSize="16px" fontWeight="300">
-              adityyasinggh@gmail.com
+              {userData.email}
             </Typography>
           </Box>
         </Grid>
@@ -214,9 +242,9 @@ function GeneralInformation() {
               <Select
                 labelId="activity"
                 id="activity"
-                value={activity || ""}
+                value={preferableActivity || ""}
                 label="Preferable Activity"
-                {...register("activity")}
+                {...register("preferableActivity")}
               >
                 <MenuItem value="Yoga">Yoga</MenuItem>
                 <MenuItem value="Climbing">Climbing</MenuItem>
@@ -225,8 +253,10 @@ function GeneralInformation() {
                 <MenuItem value="Cardio Training">Cardio Training</MenuItem>
                 <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
               </Select>
-              {errors.activity && (
-                <Typography color="error">{errors.activity.message}</Typography>
+              {errors.preferableActivity && (
+                <Typography color="error">
+                  {errors.preferableActivity.message}
+                </Typography>
               )}
             </FormControl>
             <Box

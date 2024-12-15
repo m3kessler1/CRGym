@@ -6,6 +6,8 @@ import { Typography } from "@mui/material";
 import Logout from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
 import MyAccount from "../assets/MyAccount.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface ProfileTooltipProps {
   anchorEl: HTMLElement | null;
@@ -25,7 +27,7 @@ export default function ProfileTooltip({
     navigate("/my-account");
     handleClose(); // Close the menu after navigation
   };
-
+  const userData = useSelector((state: RootState) => state.user);
   return (
     <Box>
       <Menu
@@ -70,8 +72,20 @@ export default function ProfileTooltip({
             p: [2, 2, 1, 2],
           }}
         >
-          <Typography variant="h6" fontWeight="bold" fontFamily="unset">
-            Aditya Singh
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            fontFamily="unset"
+            noWrap
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+              whiteSpace: "nowrap",
+            }}
+            title={`${userData.firstName} ${userData.lastName} (Client)`}
+          >
+            {userData.firstName} {userData.lastName}
           </Typography>
           <Typography
             variant="h6"
@@ -80,12 +94,15 @@ export default function ProfileTooltip({
               overflow: "hidden",
               textOverflow: "ellipsis",
               mb: 1,
-              width: "90%", // Add width constraint
-              textAlign: "center", // Center the text
-              fontSize: "1rem", // Reduce font size
+              width: "90%",
+              maxWidth: "200px",
+              textAlign: "center",
+              fontSize: "1rem",
+              whiteSpace: "nowrap",
             }}
+            title={userData.email}
           >
-            adityya@gmail.com
+            {userData.email}
           </Typography>
         </Box>
         <Box

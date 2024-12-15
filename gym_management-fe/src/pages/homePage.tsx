@@ -16,9 +16,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { DateTime } from "luxon";
 import dayjs from "dayjs";
+import HomeCard from "../components/homeCard";
 
 const generateTimeOptions = () => {
-  const times: string[] = [];
+  const times: string[] = ["All"];
   let time = DateTime.now().startOf("day"); // Start at 12:00 AM
 
   for (let hour = 0; hour < 24; hour++) {
@@ -47,7 +48,7 @@ const HomePage: React.FC = () => {
     defaultValues: {
       activity: "All",
       date: dayjs(DateTime.now().toJSDate()),
-      time: generateTimeOptions()[(new Date().getHours() + 1) % 24],
+      time: "All",
       coach: "All",
     },
   });
@@ -68,7 +69,7 @@ const HomePage: React.FC = () => {
   const coach = watch("coach");
 
   return (
-    <Grid container spacing={2} sx={{ p: 3 }}>
+    <Grid container spacing={2} sx={{ pl: 3, pr: 3 }}>
       <Grid item xs={12} md={12}>
         <Typography variant="h4">Achieve your fitness goals!</Typography>
         <Typography variant="h4">Find a workout and book today.</Typography>
@@ -125,10 +126,11 @@ const HomePage: React.FC = () => {
           </Grid>
           <Grid
             item
-            xs={12}
+            xs={6}
             md={2}
+            sm={6}
             sx={{
-              display: "flex",
+              display: { md: "flex" },
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -159,7 +161,7 @@ const HomePage: React.FC = () => {
           </Grid>
           <Grid
             item
-            xs={12}
+            xs={6}
             md={2}
             sx={{
               display: "flex",
@@ -233,7 +235,16 @@ const HomePage: React.FC = () => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid
+            item
+            xs={12}
+            md={2}
+            sx={{
+              display: { xs: "flex" },
+              justifyContent: { xs: "center", md: "flex-start" },
+              alignItems: { xs: "center", md: "flex-start" },
+            }}
+          >
             <Button
               variant="contained"
               type="submit"
@@ -256,6 +267,11 @@ const HomePage: React.FC = () => {
             <Typography fontWeight={300} sx={{ mt: 2 }}>
               AVAILABLE WORKOUTS
             </Typography>
+          </Grid>
+          <Grid item xs={12} md={12} sx={{ display: "flex", flexWrap: "wrap" }}>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <HomeCard key={index} />
+            ))}
           </Grid>
         </Grid>
       </Box>

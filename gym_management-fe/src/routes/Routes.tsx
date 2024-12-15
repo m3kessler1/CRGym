@@ -12,21 +12,57 @@ import Workouts from "../pages/workoutPage.tsx";
 import Coaches from "../pages/coachesPage.tsx";
 import BookCoach from "../pages/bookCoachPage.tsx";
 import MainPage from "../pages/mainPage.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
 
 function AppRoutes(): JSX.Element {
+  const isAuthenticated = !!document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken=")); // Check for auth token
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<MainPage />}>
-          <Route index element={<Navigate to="/home" />} />
-          <Route path="home" element={<HomePage />} />
-          <Route path="my-account" element={<MyAccount />} />
-          <Route path="workouts" element={<Workouts />} />
-          <Route path="coaches" element={<Coaches />} />
-          <Route path="book-coach" element={<BookCoach />} />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            isAuthenticated ? <Navigate to="/home" replace /> : <RegisterPage />
+          }
+        />
+        <Route element={<MainPage />}>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/coaches" element={<Coaches />} />
+
+          <Route
+            path="/my-account"
+            element={
+              <ProtectedRoute>
+                <MyAccount />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/workouts"
+            element={
+              <ProtectedRoute>
+                <Workouts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/book-coach"
+            element={
+              <ProtectedRoute>
+                <BookCoach />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </Router>

@@ -25,7 +25,11 @@ const AlertComp = () => {
           p: 4,
         }}
       >
-        {`Hello! ${userData.firstName}`}
+        {`Hello${
+          userData.firstName
+            ? `, ${userData.firstName} ${userData.lastName}!`
+            : "!"
+        }`}
       </Typography>
     </Alert>
   );

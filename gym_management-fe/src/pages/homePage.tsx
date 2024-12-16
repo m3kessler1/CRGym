@@ -69,7 +69,16 @@ const HomePage: React.FC = () => {
   const coach = watch("coach");
 
   return (
-    <Grid container spacing={2} sx={{ pl: 3, pr: 3 }}>
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        pl: 2,
+      }}
+    >
       <Grid item xs={12} md={12}>
         <Typography variant="h4">Achieve your fitness goals!</Typography>
         <Typography variant="h4">Find a workout and book today.</Typography>
@@ -78,7 +87,7 @@ const HomePage: React.FC = () => {
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", pl: 2, pr: 2 }}
       >
         <Grid container spacing={2} sx={{ ml: 0, mt: 2 }}>
           <Grid item xs={12} md={12}>

@@ -1,19 +1,47 @@
-import { Grid, Pagination, Box } from "@mui/material";
+import { Grid, Pagination, Box, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard.tsx";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store.ts";
+import {
+  fetchBookedWorkouts,
+  fetchUserWorkouts,
+} from "../services/workoutService.ts";
+import SkeletonWorkoutPage from "../components/Skeleton/SkeletonWorkoutPage.tsx";
+import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 const Workouts: React.FC = () => {
   const itemsPerPage = 8;
   const totalItems = 8;
   const [page, setPage] = useState<number>(1);
-
-  const components = Array(totalItems)
-    .fill(null)
-    .map((_, index) => <WorkoutCard key={index} />);
+  const userData = useSelector((state: RootState) => state.user);
+  const [workouts, setWorkouts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetchBookedWorkouts(
+          Cookies.get("authToken") || ""
+        );
+        setWorkouts(response);
+      } catch (error) {
+        console.error("Error fetching workouts:", error);
+        enqueueSnackbar("Error fetching workouts", { variant: "error" });
+        setWorkouts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchWorkouts();
+  }, []);
+  const components = (workouts || []).map((workout, index) => (
+    <WorkoutCard key={index} workout={workout} />
+  ));
 
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const displayedComponents = components.slice(startIndex, endIndex);
+  const displayedComponents = (components || []).slice(startIndex, endIndex);
 
   const handleChange = (
     _event: React.ChangeEvent<unknown>,
@@ -24,40 +52,68 @@ const Workouts: React.FC = () => {
 
   return (
     <>
-      <Grid
-        container
-        spacing={6}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          pl: 5,
-          mb: 2,
-        }}
-      >
-        {displayedComponents}
-      </Grid>
-
-      {/* Pagination controls */}
-      {totalItems > 6 ? (
-        <Box
+      {isLoading ? (
+        <Grid
+          container
+          spacing={6}
           sx={{
-            display: "flex",
-            justifyContent: "center",
-            p: 2,
+            width: "100%",
+            pl: 5,
+            mb: 2,
           }}
         >
-          <Pagination
-            count={Math.ceil(totalItems / itemsPerPage)} // Total number of pages
-            page={page}
-            onChange={handleChange}
-            color="primary"
-            size="large"
-          />
-        </Box>
+          <SkeletonWorkoutPage />
+        </Grid>
       ) : (
-        <></>
+        <>
+          <Grid
+            container
+            spacing={6}
+            sx={{
+              width: "100%",
+              pl: 5,
+              mb: 2,
+            }}
+          >
+            {(workouts || []).length > 0 ? (
+              displayedComponents
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                  p: 2,
+                }}
+              >
+                <Typography variant="h6">No workouts found</Typography>
+              </Box>
+            )}
+          </Grid>
+
+          {/* Pagination controls */}
+          {(workouts || []).length > 6 ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 2,
+              }}
+            >
+              <Pagination
+                count={Math.ceil(totalItems / itemsPerPage)} // Total number of pages
+                page={page}
+                onChange={handleChange}
+                color="primary"
+                size="large"
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </>
   );

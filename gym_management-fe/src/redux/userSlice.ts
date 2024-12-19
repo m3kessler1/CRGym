@@ -10,6 +10,7 @@ export interface UserState {
   role: string;
   password?: string;
   profileImage?: File;
+  selectedLanguage: string;
 }
 
 const initialState: UserState = {
@@ -20,6 +21,7 @@ const initialState: UserState = {
   target: '',
   role: '',
   password: '',
+  selectedLanguage: 'en',
 };
 
 export const userSlice = createSlice({

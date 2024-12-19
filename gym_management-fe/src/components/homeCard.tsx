@@ -4,7 +4,6 @@ import {
   CardContent,
   Typography,
   Chip,
-  Stack,
   CardActions,
   Button,
   Avatar,
@@ -15,15 +14,19 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 
 import StarIcon from "@mui/icons-material/Star";
+import dayjs from "dayjs";
 
-function HomeCard() {
+interface HomeCardProps {
+  workout: any;
+}
+
+function HomeCard({ workout }: HomeCardProps) {
   // Create a variable to hold the mapped Grid items
-  const timeSlots = Array(8)
-    .fill(0)
-    .map((_, index) => (
-      <Grid item xs={3} md={2} lg={2} key={index}>
+  const timeSlots = (workout["freeSlots"] || []).map(
+    (slot: any, index: number) => (
+      <Grid item xs={3} md={2} lg={3} key={index} sx={{ mb: 1 }}>
         <Chip
-          label={`${index + 10}:00 - ${index + 11}:00 AM`}
+          label={`${slot}`}
           variant="filled"
           sx={{
             maxHeight: "28px",
@@ -37,16 +40,17 @@ function HomeCard() {
           }}
         />
       </Grid>
-    ));
+    )
+  );
 
   return (
-    <Grid item xs={12} md={6} sx={{ pb: 1, pr: 2, pt: 1 }}>
+    <Grid item xs={12} md={6} sx={{ p: 1 }}>
       <Card
         sx={{
           borderRadius: "16px",
-          minWidth: "100%",
-          minHeight: "100%",
-          margin: "0 auto",
+          width: "100%",
+          height: "100%",
+          maxWidth: "664px",
         }}
       >
         <CardContent
@@ -56,22 +60,23 @@ function HomeCard() {
             flexDirection: "column",
             gap: 1,
             pb: 0,
+            px: 2,
           }}
         >
           <Grid container spacing={2} sx={{ mb: 0 }}>
-            <Grid item xs={7} md={7} sx={{ display: "flex" }}>
-              <Grid item xs={3.2} md={3.2}>
+            <Grid item xs={7} md={7} sx={{ display: "flex", gap: 1 }}>
+              <Grid item xs={2} md={2}>
                 <Avatar
-                  src="/Images/image1.svg"
-                  sx={{ width: "88px", height: "88px" }}
+                  src={`/Images/${workout["coachName"]["profilePicture"]}`}
+                  sx={{ width: "75px", height: "75px" }}
                 />
               </Grid>
-              <Grid item xs={8.8} md={8.8}>
+              <Grid item xs={10} md={10} sx={{ ml: 2 }}>
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  Kristin Watson
+                  {workout["coachName"]["name"]}
                 </Typography>
                 <Typography variant="body2" fontWeight={300} fontSize="14px">
-                  Certified personal yoga trainer
+                  {workout["coachName"]["tittle"]}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -84,7 +89,7 @@ function HomeCard() {
                     gap: 0.5,
                   }}
                 >
-                  4.96
+                  {workout["coachName"]["ratings"]}
                   <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
                 </Typography>
               </Grid>
@@ -94,73 +99,82 @@ function HomeCard() {
               xs={5}
               md={5}
               sx={{
-                alignItems: "flex-start",
+                alignItems: "flex-end",
                 display: "flex",
                 flexDirection: "column",
               }}
             >
-              <Typography
-                variant="body2"
-                fontWeight={500}
-                fontSize="14px"
+              <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  whiteSpace: "nowrap",
+                  flexDirection: "column",
+                  border: (theme) => `1px solid ${theme.palette.primary.main}`,
+                  padding: 2,
+                  borderRadius: "10px",
                 }}
               >
-                <FitnessCenterIcon
-                  sx={{ fontSize: "small", color: "grey.500" }}
-                />
-                Type :{" "}
-                <Typography variant="body2" fontWeight={300} component="span">
-                  Yoga
+                <Typography
+                  variant="body2"
+                  fontWeight={500}
+                  fontSize="14px"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <FitnessCenterIcon
+                    sx={{ fontSize: "small", color: "grey.500" }}
+                  />
+                  Type :{" "}
+                  <Typography variant="body2" fontWeight={300} component="span">
+                    {workout["sport"]}
+                  </Typography>
                 </Typography>
-              </Typography>
-              <Typography
-                variant="body2"
-                fontWeight={500}
-                fontSize="14px"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <QueryBuilderIcon
-                  sx={{ fontSize: "small", color: "grey.500" }}
-                />
-                Time :{" "}
-                <Typography variant="body2" fontWeight={300} component="span">
-                  1h
+                <Typography
+                  variant="body2"
+                  fontWeight={500}
+                  fontSize="14px"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <QueryBuilderIcon
+                    sx={{ fontSize: "small", color: "grey.500" }}
+                  />
+                  Time :{" "}
+                  <Typography variant="body2" fontWeight={300} component="span">
+                    {workout["time"]}
+                  </Typography>
                 </Typography>
-              </Typography>
-              <Typography
-                variant="body2"
-                fontWeight={500}
-                fontSize="14px"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <EventAvailableIcon
-                  sx={{ fontSize: "small", color: "grey.500" }}
-                />
-                Date :{" "}
-                <Typography variant="body2" fontWeight={300} component="span">
-                  July 9th, 12:30 AM
+                <Typography
+                  variant="body2"
+                  fontWeight={500}
+                  fontSize="14px"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <EventAvailableIcon
+                    sx={{ fontSize: "small", color: "grey.500" }}
+                  />
+                  Date :{" "}
+                  <Typography variant="body2" fontWeight={300} component="span">
+                    {dayjs(workout["date"]).format("MMMM D[th], h:mm A")}
+                  </Typography>
                 </Typography>
-              </Typography>
+              </Box>
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="body2" fontWeight={300} fontSize="14px">
-                A Yoga Expert dedicated to crafting personalized workout plans
-                that align with your goals.
+                {workout["coachName"]["shortSummary"]}
               </Typography>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -176,7 +190,6 @@ function HomeCard() {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
-                gap: 1,
               }}
             >
               {timeSlots}

@@ -9,6 +9,8 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { cancelWorkout } from "../services/workoutService";
+import Cookies from "js-cookie";
 
 interface WorkoutDialogProps {
   open: boolean;
@@ -16,6 +18,7 @@ interface WorkoutDialogProps {
   onClose: () => void;
   onFinishWorkout: () => void;
   onCancelWorkout: () => void;
+  workoutId: string;
 }
 
 const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
@@ -24,9 +27,20 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
   onClose,
   onFinishWorkout,
   onCancelWorkout,
+  workoutId,
 }) => {
+  const token = Cookies.get("authToken") || "";
   const handleResumeWorkout = () => {
     onClose();
+  };
+
+  const handleCancelWorkout = async () => {
+    try {
+      await cancelWorkout(workoutId, token);
+      onCancelWorkout();
+    } catch (error) {
+      console.error("Error cancelling workout:", error);
+    }
   };
 
   const getDialogContent = () => {
@@ -138,7 +152,9 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
             fontWeight: "bold",
             borderRadius: "8px",
           }}
-          onClick={dialogType === "cancel" ? onCancelWorkout : onFinishWorkout}
+          onClick={
+            dialogType === "cancel" ? handleCancelWorkout : onFinishWorkout
+          }
         >
           {dialogType === "cancel" ? "Cancel Workout" : "Finish Workout"}
         </Button>

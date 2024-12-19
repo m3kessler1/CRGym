@@ -12,32 +12,41 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { DateTime } from "luxon";
 import dayjs from "dayjs";
 import HomeCard from "../components/homeCard";
+import { fetchWorkouts } from "../services/workoutService";
+import useFetchCoaches from "../hooks/useFetchCoaches";
+import { useThemeContext } from "../context/ThemeContextProvider";
+import SkeletonHomeCard from "../components/Skeleton/SkeletonHomePage";
+
+interface Coach {
+  id: number;
+  name: string;
+}
 
 const generateTimeOptions = () => {
   const times: string[] = ["All"];
   let time = DateTime.now().startOf("day"); // Start at 12:00 AM
 
   for (let hour = 0; hour < 24; hour++) {
-    times.push(time.toFormat("h:mm a")); // Format to 1:00 AM, 2:00 AM, etc.
+    times.push(time.toFormat("hh:mm a")); // Format to 1:00 AM, 2:00 AM, etc.
     time = time.plus({ hours: 1 }); // Add an hour
   }
   return times;
 };
 
 const HomePage: React.FC = () => {
+  const { mode } = useThemeContext();
   const timeOptions = generateTimeOptions();
-  const coachNames: string[] = [
-    "All",
-    "John Doe",
-    "Jane Doe",
-    "John Smith",
-    "Jane Smith",
-  ];
+  const { data: coaches } = useFetchCoaches();
+  const [isLoading, setIsLoading] = useState(false);
+  const coachName = (coaches || []).map((coach: Coach) => ({
+    id: coach.id,
+    name: coach.name || "",
+  }));
   const {
     register,
     handleSubmit,
@@ -52,10 +61,36 @@ const HomePage: React.FC = () => {
       coach: "All",
     },
   });
+  const [workouts, setWorkouts] = useState<any[]>([]);
+  const [searchData, setSearchData] = useState<any>(null);
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    const newData = {
+      activity: data.activity,
+      date: dayjs(data.date).format("YYYY, MMMM DD"),
+      time: data.time,
+      coach: data.coach,
+    };
+    setSearchData(newData);
   };
+
+  useEffect(() => {
+    const fetchWorkoutData = async () => {
+      if (searchData) {
+        try {
+          setIsLoading(true);
+          const response = await fetchWorkouts(searchData);
+          setWorkouts(response);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching workouts:", error);
+          setWorkouts([]);
+          setIsLoading(false);
+        }
+      }
+    };
+    fetchWorkoutData();
+  }, [searchData]);
 
   type FormData = {
     activity: string;
@@ -66,7 +101,7 @@ const HomePage: React.FC = () => {
 
   const activity = watch("activity");
   const time = watch("time");
-  const coach = watch("coach");
+  const selectedCoach = watch("coach");
 
   return (
     <Grid
@@ -79,9 +114,9 @@ const HomePage: React.FC = () => {
         pl: 2,
       }}
     >
-      <Grid item xs={12} md={12}>
-        <Typography variant="h4">Achieve your fitness goals!</Typography>
-        <Typography variant="h4">Find a workout and book today.</Typography>
+      <Grid item xs={12} md={12} sx={{ ml: 2 }}>
+        <Typography variant="h4">{"Achieve your fitness goals!"}</Typography>
+        <Typography variant="h4">{"Find a workout and book today."}</Typography>
       </Grid>
 
       <Box
@@ -229,13 +264,14 @@ const HomePage: React.FC = () => {
               <Select
                 labelId="coach"
                 id="coach"
-                value={coach}
+                value={selectedCoach}
                 label="Coach"
                 {...register("coach")}
               >
-                {coachNames.map((coachName, index) => (
-                  <MenuItem key={index} value={coachName}>
-                    {coachName}
+                <MenuItem value="All">All</MenuItem>
+                {coachName.map((coach) => (
+                  <MenuItem key={coach.id} value={coach.id}>
+                    {coach.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -272,16 +308,44 @@ const HomePage: React.FC = () => {
               Find Workout
             </Button>
           </Grid>
-          <Grid item xs={12} md={12}>
-            <Typography fontWeight={300} sx={{ mt: 2 }}>
-              AVAILABLE WORKOUTS
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={12} sx={{ display: "flex", flexWrap: "wrap" }}>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <HomeCard key={index} />
-            ))}
-          </Grid>
+
+          {isLoading ? (
+            <SkeletonHomeCard />
+          ) : workouts.length > 0 ? (
+            <>
+              <Grid item xs={12} md={12}>
+                <Typography fontWeight={300}>AVAILABLE WORKOUTS</Typography>
+              </Grid>
+              {workouts.map((workout, index) => (
+                <HomeCard key={index} workout={workout} />
+              ))}
+            </>
+          ) : (
+            <Grid
+              item
+              xs={12}
+              md={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <img
+                style={{
+                  filter: mode === "dark" ? "invert(1)" : "none",
+                }}
+                src="/Images/no-workouts.svg"
+                alt="No workouts found"
+              />
+              <Typography variant="h6">No workouts available</Typography>
+              <Typography variant="body1">
+                It looks like there are no available slots. Please try refining
+                your search.
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Grid>

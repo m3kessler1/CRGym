@@ -64,7 +64,12 @@ function GeneralInformation() {
     try {
       await update(data);
       dispatch(
-        setUser({ ...data, email: userData.email, role: userData.role })
+        setUser({
+          ...data,
+          email: userData.email,
+          role: userData.role,
+          selectedLanguage: userData.selectedLanguage,
+        })
       );
       enqueueSnackbar("User updated successfully!", {
         variant: "success",

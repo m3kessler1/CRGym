@@ -20,15 +20,18 @@ import StarIcon from "@mui/icons-material/Star";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 interface FeedbackDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (feedback: { rating: number; comment?: string }) => void;
+  userName: string;
 }
 
 // Add Zod schema
 const feedbackSchema = z.object({
-  rating: z.number().min(1, "Rating is required").max(5),
+  rating: z.number().min(1).max(5),
   comment: z
     .string()
     .min(3, "Comment must be at least 3 characters")
@@ -41,6 +44,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   open,
   onClose,
   onSubmit,
+  userName,
 }) => {
   const [rating, setRating] = React.useState<number | null>(0);
   const [comment, setComment] = React.useState("");
@@ -48,10 +52,15 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
     rating?: string;
     comment?: string;
   }>({});
-
+  const userData = useSelector((state: RootState) => state.user);
   const handleSubmit = () => {
+    console.log("Submitting feedback...");
     try {
-      const validatedData = feedbackSchema.parse({ rating, comment });
+      const validatedData =
+        userData.role == "Client"
+          ? feedbackSchema.parse({ rating, comment })
+          : feedbackSchema.parse({ rating: 1, comment: comment });
+      console.log("Received Feedback Data:", validatedData);
       onSubmit(validatedData);
       setRating(0);
       setComment("");
@@ -92,7 +101,9 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           <CloseIcon />
         </IconButton>
         <DialogContentText fontSize="14px">
-          Please rate your workout experience below
+          {userData.role == "Client"
+            ? "Please rate your workout experience below"
+            : "Please rate the Client's performance below"}
         </DialogContentText>
       </DialogTitle>
       <DialogContent>
@@ -101,31 +112,55 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
             <Grid item xs={7} md={7} sx={{ display: "flex" }}>
               <Grid item xs={3.2} md={3.2}>
                 <Avatar
-                  src="/Images/image1.svg"
-                  sx={{ width: "90%", height: "90%" }}
+                  src={
+                    userData.role == "Client"
+                      ? "/Images/image1.svg"
+                      : "/Images/image9.svg"
+                  }
+                  sx={{
+                    width: userData.role == "Client" ? "90%" : "70px",
+                    height: userData.role == "Client" ? "90%" : "70px",
+                  }}
                 ></Avatar>
               </Grid>
-              <Grid item xs={8.8} md={8.8}>
+              <Grid
+                item
+                xs={8.8}
+                md={8.8}
+                sx={{
+                  mt: userData.role == "Client" ? 0 : 1,
+                  ml: userData.role == "Client" ? 0 : 1,
+                }}
+              >
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  Kristin Watson
+                  {userData.role == "Client" ? "Kristin Watson" : userName}
                 </Typography>
+
                 <Typography variant="body2" fontWeight={300} fontSize="14px">
-                  Certified personal yoga trainer
+                  {userData.role == "Client"
+                    ? "Certified personal yoga trainer"
+                    : "Client"}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  fontWeight={300}
-                  fontSize="14px"
-                  marginTop={1}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 0.5,
-                  }}
-                >
-                  4.96
-                  <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
-                </Typography>
+                {userData.role == "Client" ? (
+                  <>
+                    <Typography
+                      variant="body2"
+                      fontWeight={300}
+                      fontSize="14px"
+                      marginTop={1}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                      }}
+                    >
+                      4.96
+                      <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
+                    </Typography>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Grid>
             </Grid>
             <Grid
@@ -206,57 +241,61 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Rating
-                value={rating}
-                onChange={(_, newValue) => {
-                  setRating(newValue);
-                  setErrors((prev) => ({ ...prev, rating: undefined }));
-                }}
-                size="large"
-                sx={{
-                  "& .MuiRating-icon": {
-                    marginRight: "10px",
-                    borderRadius: "80px",
-                    padding: "8px",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.04)",
+          {userData.role == "Client" ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Rating
+                  value={rating}
+                  onChange={(_, newValue) => {
+                    setRating(newValue);
+                    setErrors((prev) => ({ ...prev, rating: undefined }));
+                  }}
+                  size="large"
+                  sx={{
+                    "& .MuiRating-icon": {
+                      marginRight: "10px",
+                      borderRadius: "80px",
+                      padding: "8px",
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     },
-                  },
-                  "& .MuiRating-iconFilled": {
-                    color: "#FDD63B",
-                    "& svg": {
-                      borderRadius: "50%",
+                    "& .MuiRating-iconFilled": {
+                      color: "#FDD63B",
+                      "& svg": {
+                        borderRadius: "50%",
+                      },
                     },
-                  },
-                  "& .MuiRating-iconEmpty": {
-                    color: "#D9D9D9",
-                    "& svg": {
-                      borderRadius: "50%",
+                    "& .MuiRating-iconEmpty": {
+                      color: "#D9D9D9",
+                      "& svg": {
+                        borderRadius: "50%",
+                      },
                     },
-                  },
-                }}
-              />
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: 300, fontSize: "14px" }}
-              >
-                {rating}/5 stars
-              </Typography>
-            </Box>
-            {errors.rating && (
-              <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
-                {errors.rating}
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 300, fontSize: "14px" }}
+                >
+                  {rating}/5 stars
+                </Typography>
               </Box>
-            )}
-          </Box>
+              {errors.rating && (
+                <Box sx={{ color: "error.main", fontSize: "0.75rem", mt: 1 }}>
+                  {errors.rating}
+                </Box>
+              )}
+            </Box>
+          ) : (
+            <></>
+          )}
           <TextField
             label="Add your comments"
             multiline
@@ -287,7 +326,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           }}
           fullWidth
           variant="contained"
-          disabled={!rating}
+          disabled={userData.role == "Client" && !rating}
         >
           Submit Feedback
         </Button>

@@ -2,9 +2,9 @@ import { Box, Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { clearUser } from "../redux/userSlice";
 import { persistor } from "../redux/store";
+import { clearUser } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
 interface LogoutProps {
   padding: number | string | [number, number, number, number];
   handleClose?: () => void;
@@ -19,9 +19,10 @@ const Logout: React.FC<LogoutProps> = ({
   width,
 }) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleClose = (): void => {
     Cookies.remove("authToken");
+    dispatch(clearUser());
     persistor.purge();
     navigate("/home");
     window.location.reload();

@@ -15,12 +15,15 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import ProfileTooltip from "./ProfileTooltip";
 import { useThemeContext } from "../context/ThemeContextProvider";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AlertComp from "./Alert";
 import { useReducer } from "react"; // Import type
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { Link } from "react-router-dom";
+import TranslateIcon from "@mui/icons-material/Translate";
+import LanguageSelector from "./languageSelector";
 
 // Define props for the component
 interface CustomAppBarProps {
@@ -65,6 +68,8 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
     const location = useLocation();
     const userData = useSelector((state: RootState) => state.user);
     const isAuthenticated = !!Cookies.get("authToken");
+    const [open, setOpen] = React.useState(false);
+    const handleOpenLanguageSelector = () => setOpen(true);
 
     // Create a function to get initial tab based on current route
     const getInitialTab = () => {
@@ -72,15 +77,25 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
       // Define routes and their corresponding tab indices
       if (isAuthenticated) {
-        switch (currentPath) {
-          case "/home":
-            return 0;
-          case "/workouts":
-            return 1;
-          case "/coaches":
-            return 2;
-          default:
-            return 0;
+        if (userData.role === "Client") {
+          switch (currentPath) {
+            case "/home":
+              return 0;
+            case "/workouts":
+              return 1;
+            case "/coaches":
+              return 2;
+            default:
+              return 0; // Default to home for clients
+          }
+        } else {
+          // Updated logic for non-client roles
+          switch (currentPath) {
+            case "/workouts":
+              return 0; // Default to workouts if the role isn't client // Redirect to workouts if home or coaches is accessed
+            default:
+              return 0; // Default to workouts for any other path
+          }
         }
       } else {
         switch (currentPath) {
@@ -101,7 +116,6 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { toggleTheme, mode } = useThemeContext();
-    const navigate = useNavigate();
 
     // Add effect to sync tab with route on hard refresh
     React.useEffect(() => {
@@ -111,37 +125,6 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
       }
     }, [location.pathname]);
 
-    // Handle tab change and navigation
-    const handleTabChange = (
-      _event: React.SyntheticEvent,
-      newValue: number
-    ) => {
-      dispatch({ type: "SET_TAB", payload: newValue });
-
-      if (isAuthenticated) {
-        switch (newValue) {
-          case 0:
-            navigate("/home");
-            break;
-          case 1:
-            navigate("/workouts");
-            break;
-          case 2:
-            navigate("/coaches");
-            break;
-        }
-      } else {
-        switch (newValue) {
-          case 0:
-            navigate("/home");
-            break;
-          case 1:
-            navigate("/coaches");
-            break;
-        }
-      }
-    };
-
     // Handle avatar (profile) icon click
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
@@ -150,6 +133,14 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
     // Close the tooltip
     const handleClose = () => {
       setAnchorEl(null);
+    };
+
+    // Handle tab change and navigation
+    const handleTabChange = (
+      _event: React.SyntheticEvent,
+      newValue: number
+    ) => {
+      dispatch({ type: "SET_TAB", payload: newValue });
     };
 
     return (
@@ -181,11 +172,30 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                 indicatorColor="primary"
                 sx={{ flexGrow: 1 }}
               >
-                <Tab label="Home" sx={{ fontSize: "1.1rem" }} />
-                {isAuthenticated && (
-                  <Tab label="Workouts" sx={{ fontSize: "1.1rem" }} />
+                {(userData.role === "Client" || !isAuthenticated) && (
+                  <Tab
+                    component={Link}
+                    to="/home"
+                    label="Home"
+                    sx={{ fontSize: "1.1rem" }}
+                  />
                 )}
-                <Tab label="Coaches" sx={{ fontSize: "1.1rem" }} />
+                {isAuthenticated && (
+                  <Tab
+                    component={Link}
+                    to="/workouts"
+                    label="Workouts"
+                    sx={{ fontSize: "1.1rem" }}
+                  />
+                )}
+                {(userData.role === "Client" || !isAuthenticated) && (
+                  <Tab
+                    component={Link}
+                    to="/coaches"
+                    label="Coaches"
+                    sx={{ fontSize: "1.1rem" }}
+                  />
+                )}
               </Tabs>
 
               {/* Theme Toggle Button */}
@@ -199,6 +209,12 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                 ) : (
                   <Brightness4Icon fontSize="large" />
                 )}
+              </IconButton>
+              <IconButton
+                sx={{ color: "primary.main" }}
+                onClick={handleOpenLanguageSelector}
+              >
+                <TranslateIcon fontSize="large" />
               </IconButton>
 
               {/* Profile Avatar */}
@@ -221,16 +237,17 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                   </Avatar>
                 </IconButton>
               ) : (
-                <Button
-                  variant="contained"
-                  onClick={() => navigate("/login")}
-                  sx={{
-                    borderRadius: "8px",
-                    textTransform: "none",
-                  }}
-                >
-                  Login
-                </Button>
+                <Link to="/login" style={{ textDecoration: "none" }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "8px",
+                      textTransform: "none",
+                    }}
+                  >
+                    Login
+                  </Button>
+                </Link>
               )}
             </Toolbar>
 
@@ -251,6 +268,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
         <Grid item xs={12}>
           <AlertComp />
         </Grid>
+        <LanguageSelector open={open} setOpen={setOpen} />
       </Grid>
     );
   }

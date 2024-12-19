@@ -13,7 +13,12 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import WorkoutDialog from "./WorkoutDialog";
 import WorkoutFeedback from "./WorkoutFeedback";
 
-type EventStatus = "" | "finish" | "feedback" | "cancel";
+type EventStatus =
+  | "SCHEDULED"
+  | "WAITING_FOR_FEEDBACK"
+  | "FEEDBACK_SUBMITTED"
+  | "FINISHED"
+  | "CANCELLED";
 
 type WorkoutAction =
   | { type: "FINISH_WORKOUT" }
@@ -34,11 +39,11 @@ function workoutReducer(
 ): WorkoutState {
   switch (action.type) {
     case "FINISH_WORKOUT":
-      return { ...state, status: "finish", openDialog: false };
+      return { ...state, status: "FINISHED", openDialog: false };
     case "CANCEL_WORKOUT":
-      return { ...state, status: "cancel", openDialog: false };
+      return { ...state, status: "CANCELLED", openDialog: false };
     case "LEAVE_FEEDBACK":
-      return { ...state, status: "feedback" };
+      return { ...state, status: "FEEDBACK_SUBMITTED" };
     case "OPEN_DIALOG":
       return { ...state, openDialog: true, dialogType: action.payload };
     case "CLOSE_DIALOG":
@@ -48,9 +53,10 @@ function workoutReducer(
   }
 }
 
-const WorkoutCard: React.FC = () => {
+const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
+  console.log(workout.status);
   const [state, dispatch] = React.useReducer(workoutReducer, {
-    status: "",
+    status: workout.status,
     openDialog: false,
     dialogType: null,
   });
@@ -72,26 +78,29 @@ const WorkoutCard: React.FC = () => {
           <CardContent sx={{ flex: 1 }}>
             <Box sx={{ display: "flex" }}>
               <Typography variant="h6" fontWeight={"bold"}>
-                Yoga
+                {workout.sport}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Chip
                 label={
-                  state.status === ""
-                    ? "Scheduled"
-                    : state.status === "finish"
+                  state.status === "SCHEDULED"
+                    ? "Schedule"
+                    : state.status === "WAITING_FOR_FEEDBACK"
                     ? "Waiting for feedback"
-                    : state.status === "feedback"
+                    : state.status === "FEEDBACK_SUBMITTED" ||
+                      state.status === "FINISHED"
                     ? "Finished"
                     : "Canceled"
                 }
                 sx={{
                   backgroundColor:
-                    state.status === ""
+                    state.status === "SCHEDULED"
                       ? "#009ECC"
-                      : state.status === "finish"
+                      : state.status === "WAITING_FOR_FEEDBACK"
                       ? "#6C6F80"
-                      : state.status === "feedback"
+                      : state.status === "FEEDBACK_SUBMITTED"
+                      ? "#FDD63B"
+                      : state.status === "FINISHED"
                       ? "#FDD63B"
                       : "#FF4242",
                   color: "#fff",
@@ -105,8 +114,7 @@ const WorkoutCard: React.FC = () => {
               />
             </Box>
             <Typography variant="h6" sx={{ pt: 1, pb: 2 }}>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Reprehenderit, odit provident.
+              {workout.Summary}
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "left", width: "50%" }}>
               <EventAvailableIcon
@@ -116,7 +124,7 @@ const WorkoutCard: React.FC = () => {
                 }}
               />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                July 9, 12:30
+                {workout.date}
               </Typography>
             </Box>
           </CardContent>
@@ -130,7 +138,7 @@ const WorkoutCard: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {state.status === "" ? (
+            {state.status === "SCHEDULED" ? (
               <>
                 <Button
                   variant="contained"
@@ -158,7 +166,7 @@ const WorkoutCard: React.FC = () => {
                   Finish Workout
                 </Button>
               </>
-            ) : state.status === "finish" ? (
+            ) : state.status === "WAITING_FOR_FEEDBACK" ? (
               <Button
                 variant="contained"
                 size="medium"
@@ -180,7 +188,11 @@ const WorkoutCard: React.FC = () => {
         open={state.openDialog}
         dialogType={state.dialogType}
         onClose={() => dispatch({ type: "CLOSE_DIALOG" })}
-        onFinishWorkout={() => dispatch({ type: "FINISH_WORKOUT" })}
+        workoutId={workout.workoutId}
+        onFinishWorkout={() => {
+          dispatch({ type: "FINISH_WORKOUT" });
+          dispatch({ type: "LEAVE_FEEDBACK" });
+        }}
         onCancelWorkout={() => dispatch({ type: "CANCEL_WORKOUT" })}
       />
 
@@ -189,9 +201,10 @@ const WorkoutCard: React.FC = () => {
         onClose={() => setFeedbackDialogOpen(false)}
         onSubmit={(feedback) => {
           console.log("Feedback submitted:", feedback);
-          dispatch({ type: "LEAVE_FEEDBACK" });
+          dispatch({ type: "FINISH_WORKOUT" });
           setFeedbackDialogOpen(false);
         }}
+        userName={workout.userName}
       />
     </>
   );

@@ -69,7 +69,11 @@ function LoginPage() {
 
         // Navigate to home after a brief delay to show the skeleton
         setTimeout(() => {
-          navigate("/home");
+          if (userData.role === "Client") {
+            navigate("/home");
+          } else {
+            navigate("/workouts");
+          }
         }, 1000); // Adjust the delay as needed
       }
     } catch (err) {

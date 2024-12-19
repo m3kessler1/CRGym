@@ -43,7 +43,7 @@ function workoutReducer(
     case "CANCEL_WORKOUT":
       return { ...state, status: "CANCELLED", openDialog: false };
     case "LEAVE_FEEDBACK":
-      return { ...state, status: "FEEDBACK_SUBMITTED" };
+      return { ...state, status: "WAITING_FOR_FEEDBACK" };
     case "OPEN_DIALOG":
       return { ...state, openDialog: true, dialogType: action.payload };
     case "CLOSE_DIALOG":
@@ -155,16 +155,6 @@ const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
                 >
                   Cancel Workout
                 </Button>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{ fontWeight: "bold", borderRadius: "8px" }}
-                  onClick={() =>
-                    dispatch({ type: "OPEN_DIALOG", payload: "finish" })
-                  }
-                >
-                  Finish Workout
-                </Button>
               </>
             ) : state.status === "WAITING_FOR_FEEDBACK" ? (
               <Button
@@ -185,12 +175,15 @@ const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
       </Grid>
 
       <WorkoutDialog
+        coachId={workout.coachId}
+        userName={workout.userName}
         open={state.openDialog}
         dialogType={state.dialogType}
         onClose={() => dispatch({ type: "CLOSE_DIALOG" })}
         workoutId={workout.workoutId}
         onFinishWorkout={() => {
           dispatch({ type: "FINISH_WORKOUT" });
+          dispatch({ type: "OPEN_DIALOG", payload: "finish" });
           dispatch({ type: "LEAVE_FEEDBACK" });
         }}
         onCancelWorkout={() => dispatch({ type: "CANCEL_WORKOUT" })}
@@ -204,6 +197,9 @@ const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
           dispatch({ type: "FINISH_WORKOUT" });
           setFeedbackDialogOpen(false);
         }}
+        coachName={workout.coachName}
+        workoutId={workout.workoutId}
+        coachId={workout.coachId}
         userName={workout.userName}
       />
     </>

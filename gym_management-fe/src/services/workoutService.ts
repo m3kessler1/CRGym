@@ -60,3 +60,23 @@ export const cancelWorkout = async (workoutId: string, token: string) => {
     throw error;
   }
 };
+
+export const finishWorkout = async (comment: string, rating: number,coachId: string, workoutId: string,  token: string) => {
+  console.log("Finishing workout:", coachId, comment, rating, workoutId, token);
+  try {
+    const response = await axios.post(`${BASE_URL}/feedbacks`, {
+      coachId: coachId,
+      comment: comment,
+      rating: rating.toString(),
+      workoutId: workoutId,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error finishing workout:", error);
+    throw error;
+  }
+};

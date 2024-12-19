@@ -1,12 +1,7 @@
 import { Grid, Pagination, Box, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard.tsx";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store.ts";
-import {
-  fetchBookedWorkouts,
-  fetchUserWorkouts,
-} from "../services/workoutService.ts";
+import { fetchBookedWorkouts } from "../services/workoutService.ts";
 import SkeletonWorkoutPage from "../components/Skeleton/SkeletonWorkoutPage.tsx";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
@@ -14,7 +9,6 @@ const Workouts: React.FC = () => {
   const itemsPerPage = 8;
   const totalItems = 8;
   const [page, setPage] = useState<number>(1);
-  const userData = useSelector((state: RootState) => state.user);
   const [workouts, setWorkouts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {

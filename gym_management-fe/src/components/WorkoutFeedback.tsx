@@ -22,11 +22,17 @@ import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { finishWorkout } from "../services/workoutService";
+import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 interface FeedbackDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (feedback: { rating: number; comment?: string }) => void;
   userName: string;
+  workoutId: string;
+  coachId: string;
+  coachName: string;
 }
 
 // Add Zod schema
@@ -45,6 +51,9 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   onClose,
   onSubmit,
   userName,
+  workoutId,
+  coachId,
+  coachName,
 }) => {
   const [rating, setRating] = React.useState<number | null>(0);
   const [comment, setComment] = React.useState("");
@@ -53,7 +62,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
     comment?: string;
   }>({});
   const userData = useSelector((state: RootState) => state.user);
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Submitting feedback...");
     try {
       const validatedData =
@@ -61,11 +70,36 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           ? feedbackSchema.parse({ rating, comment })
           : feedbackSchema.parse({ rating: 1, comment: comment });
       console.log("Received Feedback Data:", validatedData);
-      onSubmit(validatedData);
-      setRating(0);
-      setComment("");
-      setErrors({});
-      onClose();
+      try {
+        await finishWorkout(
+          validatedData.comment || "",
+          validatedData.rating,
+          coachId,
+          workoutId,
+          Cookies.get("authToken") || ""
+        );
+        onSubmit(validatedData);
+        setRating(0);
+        setComment("");
+        setErrors({});
+        onClose();
+        enqueueSnackbar("Feedback submitted successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+        });
+      } catch (error) {
+        console.error("Error finishing workout:", error);
+        enqueueSnackbar("Error finishing workout", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+        });
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formattedErrors: Record<string, string> = {};
@@ -133,7 +167,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                 }}
               >
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  {userData.role == "Client" ? "Kristin Watson" : userName}
+                  {userData.role == "Client" ? coachName : userName}
                 </Typography>
 
                 <Typography variant="body2" fontWeight={300} fontSize="14px">

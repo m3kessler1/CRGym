@@ -9,6 +9,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Checkbox,
   Link,
 } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -30,7 +31,8 @@ const schema = z.object({
     .min(8, "Password must be at least 8 characters long")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
   target: z.string().min(1, "Target is required"),
-  preferableActivity: z.string().min(1, "Activity is required"),
+  isCoach: z.boolean(),
+  activity: z.string().min(1, "Activity is required"),
 });
 
 // Define the TypeScript interface for form data based on the schema
@@ -57,7 +59,7 @@ function RegisterPage() {
     try {
       await registerUser({
         ...data,
-        preferableActivity: data.preferableActivity,
+        activity: data.activity,
       });
 
       // Show success message
@@ -89,7 +91,7 @@ function RegisterPage() {
   };
 
   const target = watch("target");
-  const preferableActivity = watch("preferableActivity");
+  const activity = watch("activity");
 
   return (
     <Grid
@@ -234,6 +236,24 @@ function RegisterPage() {
               },
             }}
           />
+          <Box
+            sx={{
+              justifyContent: "flex-start",
+              alignItems: "center",
+              display: "flex",
+              width: "100%",
+            }}
+          >
+            <Checkbox
+              checked={true}
+              //onChange={}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+            <Typography variant="body2" color="textSecondary">
+              Are you a Coach?
+            </Typography>
+          </Box>
+
           <Divider sx={{ width: "100%", my: 2 }} />
 
           <FormControl
@@ -278,13 +298,13 @@ function RegisterPage() {
               mb: 2,
             }}
           >
-            <InputLabel id="preferableActivity">Activity</InputLabel>
+            <InputLabel id="activity">Activity</InputLabel>
             <Select
               labelId="activity"
               id="activity"
-              value={preferableActivity || "Yoga"}
+              value={activity || "Yoga"}
               label="Activity"
-              {...register("preferableActivity")}
+              {...register("activity")}
             >
               <MenuItem value="Yoga">Yoga</MenuItem>
               <MenuItem value="Climbing">Climbing</MenuItem>
@@ -293,10 +313,8 @@ function RegisterPage() {
               <MenuItem value="Cardio Training">Cardio Training</MenuItem>
               <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
             </Select>
-            {errors.preferableActivity && (
-              <Typography color="error">
-                {errors.preferableActivity.message}
-              </Typography>
+            {errors.activity && (
+              <Typography color="error">{errors.activity.message}</Typography>
             )}
           </FormControl>
 

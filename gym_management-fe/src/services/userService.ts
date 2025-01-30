@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export interface RegisterData {
   firstName: string;
@@ -6,14 +6,15 @@ export interface RegisterData {
   email: string;
   password: string;
   target: string;
-  preferableActivity: string;
+  activity: string;
 }
 
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const registerUser = async (data: RegisterData) => {
+  console.log("BASE_URL", data, "BASE_URL ", BASE_URL);
   try {
-    const response = await axios.post(`${BASE_URL}/user`, data);
+    const response = await axios.post(`${BASE_URL}/register`, data);
     return response;
   } catch (error) {
     console.error("Error registering user:", error);
@@ -23,7 +24,10 @@ export const registerUser = async (data: RegisterData) => {
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/user/login`, { email, password });
+    const response = await axios.post(`${BASE_URL}/login`, {
+      email,
+      password,
+    });
     return response;
   } catch (error) {
     console.error("Error logging in user:", error);
@@ -31,9 +35,12 @@ export const loginUser = async (email: string, password: string) => {
   }
 };
 
-export const updateUser = async (data: Partial<RegisterData>, token: string) => {
+export const updateUser = async (
+  data: Partial<RegisterData>,
+  token: string
+) => {
   try {
-    const response = await axios.put(`${BASE_URL}/user/update`, data, {
+    const response = await axios.put(`${BASE_URL}/users/update`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -58,5 +65,3 @@ export const updatePassword = async (data: object, token: string) => {
     throw error;
   }
 };
-
-

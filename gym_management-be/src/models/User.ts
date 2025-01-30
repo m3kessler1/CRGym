@@ -1,9 +1,10 @@
 // src/models/User.ts
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
 
 // User interface
 export interface IUser extends Document {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   target: string;
@@ -13,7 +14,8 @@ export interface IUser extends Document {
 // Mongoose schema
 const userSchema: Schema = new Schema(
   {
-    name: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     target: { type: String, required: true },
@@ -24,5 +26,5 @@ const userSchema: Schema = new Schema(
   }
 );
 
-const User = mongoose.model<IUser>('User', userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 export default User;

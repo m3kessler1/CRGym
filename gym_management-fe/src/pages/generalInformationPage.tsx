@@ -25,7 +25,7 @@ type FormData = {
   email?: string;
   password?: string;
   target: string;
-  preferableActivity: string;
+  activity: string;
   profileImage?: File;
 };
 
@@ -33,7 +33,7 @@ const schema = z.object({
   firstName: z.string().min(3, "First Name is required"),
   lastName: z.string().min(3, "Last Name is required"),
   target: z.string().min(1, "Target is required"),
-  preferableActivity: z.string().min(1, "Preferable Activity is required"),
+  activity: z.string().min(1, "Preferable Activity is required"),
 });
 
 function GeneralInformation() {
@@ -56,21 +56,24 @@ function GeneralInformation() {
       firstName: userData.firstName,
       lastName: userData.lastName,
       target: userData.target,
-      preferableActivity: userData.preferableActivity,
+      activity: userData.activity,
     },
   });
 
   const onSubmit = async (data: FormData) => {
+    console.log("data", data);
     try {
       await update(data);
       dispatch(
         setUser({
           ...data,
           email: userData.email,
-          role: userData.role,
+          isCoach: userData.isCoach,
           selectedLanguage: userData.selectedLanguage,
+          activity: data.activity,
         })
       );
+
       enqueueSnackbar("User updated successfully!", {
         variant: "success",
         anchorOrigin: {
@@ -90,7 +93,7 @@ function GeneralInformation() {
     }
   };
   const target = watch("target");
-  const preferableActivity = watch("preferableActivity");
+  const activity = watch("activity");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -102,7 +105,7 @@ function GeneralInformation() {
       reader.readAsDataURL(file);
     }
   };
-
+  console.log("userData", userData);
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
@@ -247,9 +250,9 @@ function GeneralInformation() {
               <Select
                 labelId="activity"
                 id="activity"
-                value={preferableActivity || ""}
+                value={activity || ""}
                 label="Preferable Activity"
-                {...register("preferableActivity")}
+                {...register("activity")}
               >
                 <MenuItem value="Yoga">Yoga</MenuItem>
                 <MenuItem value="Climbing">Climbing</MenuItem>
@@ -258,12 +261,11 @@ function GeneralInformation() {
                 <MenuItem value="Cardio Training">Cardio Training</MenuItem>
                 <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
               </Select>
-              {errors.preferableActivity && (
-                <Typography color="error">
-                  {errors.preferableActivity.message}
-                </Typography>
+              {errors.activity && (
+                <Typography color="error">{errors.activity.message}</Typography>
               )}
             </FormControl>
+
             <Box
               sx={{
                 display: "flex",

@@ -245,9 +245,12 @@ function RegisterPage() {
             }}
           >
             <Checkbox
-              checked={true}
-              //onChange={}
+              {...register("isCoach")}
               inputProps={{ "aria-label": "controlled" }}
+              onChange={(e) => {
+                // Ensure the value is true when checked
+                register("isCoach").onChange(e);
+              }}
             />
             <Typography variant="body2" color="textSecondary">
               Are you a Coach?

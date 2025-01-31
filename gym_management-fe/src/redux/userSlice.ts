@@ -6,22 +6,25 @@ export interface UserState {
   lastName: string;
   email: string;
   target: string;
-  preferableActivity: string;
-  role: string;
+  activity: string;
   password?: string;
   profileImage?: File;
   selectedLanguage: string;
+  isCoach: boolean;
+
 }
+
 
 const initialState: UserState = {
   email: '',
   firstName: '',
   lastName: '',
-  preferableActivity: '',
+  activity: '',
   target: '',
-  role: '',
   password: '',
+  isCoach: false,
   selectedLanguage: 'en',
+
 };
 
 export const userSlice = createSlice({

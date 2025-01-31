@@ -77,7 +77,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
 
       // Define routes and their corresponding tab indices
       if (isAuthenticated) {
-        if (userData.role === "Client") {
+        if (!userData.isCoach) {
           switch (currentPath) {
             case "/home":
               return 0;
@@ -172,7 +172,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                 indicatorColor="primary"
                 sx={{ flexGrow: 1 }}
               >
-                {(userData.role === "Client" || !isAuthenticated) && (
+                {(!userData.isCoach || !isAuthenticated) && (
                   <Tab
                     component={Link}
                     to="/home"
@@ -188,7 +188,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                     sx={{ fontSize: "1.1rem" }}
                   />
                 )}
-                {(userData.role === "Client" || !isAuthenticated) && (
+                {(!userData.isCoach || !isAuthenticated) && (
                   <Tab
                     component={Link}
                     to="/coaches"

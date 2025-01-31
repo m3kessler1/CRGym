@@ -7,6 +7,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
+  isCoach: boolean;
   target: string;
   activity: string;
 }
@@ -18,6 +19,7 @@ const userSchema: Schema = new Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    isCoach: { type: Boolean, default: false },
     target: { type: String, required: true },
     activity: { type: String, required: true },
   },

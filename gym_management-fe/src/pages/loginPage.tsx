@@ -46,8 +46,7 @@ function LoginPage() {
     try {
       const response = await login(data.email, data.password); // Call the login function with email and password
       if (response.status === 200) {
-        const { token, ...userData } = response.data; // Destructure to exclude token
-
+        const { token, userData } = response.data; // Destructure to exclude token
         // Store token in HTTP-only cookie
         Cookies.set("authToken", token, {
           expires: 1, // 1 day
@@ -69,7 +68,7 @@ function LoginPage() {
 
         // Navigate to home after a brief delay to show the skeleton
         setTimeout(() => {
-          if (userData.role === "Client") {
+          if (userData.isCoach) {
             navigate("/home");
           } else {
             navigate("/workouts");

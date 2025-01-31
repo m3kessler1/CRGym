@@ -65,10 +65,9 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   const handleSubmit = async () => {
     console.log("Submitting feedback...");
     try {
-      const validatedData =
-        userData.role == "Client"
-          ? feedbackSchema.parse({ rating, comment })
-          : feedbackSchema.parse({ rating: 1, comment: comment });
+      const validatedData = userData.isCoach
+        ? feedbackSchema.parse({ rating, comment })
+        : feedbackSchema.parse({ rating: 1, comment: comment });
       console.log("Received Feedback Data:", validatedData);
       try {
         await finishWorkout(
@@ -135,7 +134,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           <CloseIcon />
         </IconButton>
         <DialogContentText fontSize="14px">
-          {userData.role == "Client"
+          {userData.isCoach
             ? "Please rate your workout experience below"
             : "Please rate the Client's performance below"}
         </DialogContentText>
@@ -147,13 +146,13 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
               <Grid item xs={3.2} md={3.2}>
                 <Avatar
                   src={
-                    userData.role == "Client"
+                    userData.isCoach
                       ? "/Images/image1.svg"
                       : "/Images/image9.svg"
                   }
                   sx={{
-                    width: userData.role == "Client" ? "90%" : "70px",
-                    height: userData.role == "Client" ? "90%" : "70px",
+                    width: userData.isCoach ? "90%" : "70px",
+                    height: userData.isCoach ? "90%" : "70px",
                   }}
                 ></Avatar>
               </Grid>
@@ -162,20 +161,20 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                 xs={8.8}
                 md={8.8}
                 sx={{
-                  mt: userData.role == "Client" ? 0 : 1,
-                  ml: userData.role == "Client" ? 0 : 1,
+                  mt: userData.isCoach ? 0 : 1,
+                  ml: userData.isCoach ? 0 : 1,
                 }}
               >
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  {userData.role == "Client" ? coachName : userName}
+                  {userData.isCoach ? coachName : userName}
                 </Typography>
 
                 <Typography variant="body2" fontWeight={300} fontSize="14px">
-                  {userData.role == "Client"
+                  {userData.isCoach
                     ? "Certified personal yoga trainer"
                     : "Client"}
                 </Typography>
-                {userData.role == "Client" ? (
+                {userData.isCoach ? (
                   <>
                     <Typography
                       variant="body2"
@@ -275,7 +274,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
               </Typography>
             </Grid>
           </Grid>
-          {userData.role == "Client" ? (
+          {userData.isCoach ? (
             <Box
               sx={{
                 display: "flex",
@@ -360,7 +359,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           }}
           fullWidth
           variant="contained"
-          disabled={userData.role == "Client" && !rating}
+          disabled={userData.isCoach && !rating}
         >
           Submit Feedback
         </Button>

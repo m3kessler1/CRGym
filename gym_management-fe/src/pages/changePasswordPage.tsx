@@ -1,21 +1,15 @@
-import {
-  Box,
-  TextField,
-  Button,
-  Grid,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
+import { Box, TextField, Button, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import usePasswordUser from "../hooks/usePasswordUser";
 import { enqueueSnackbar } from "notistack";
 import { setUser } from "../redux/userSlice";
+
 import { useDispatch } from "react-redux";
 
 type FormData = {
@@ -36,7 +30,6 @@ const schema = z
   });
 
 function ChangePassword() {
-  const [showPassword, setShowPassword] = useState(false);
   const userData = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const { updatePasswordUser } = usePasswordUser();
@@ -110,30 +103,18 @@ function ChangePassword() {
               <Grid item xs={12} md={12}>
                 <TextField
                   margin="normal"
-                  required
                   fullWidth
-                  disabled
                   id="oldPassword"
                   label="Current Password"
                   value={userData.password}
-                  type={showPassword ? "text" : "password"}
                   autoComplete="oldPassword"
                   {...register("oldPassword")}
                   error={!!errors.oldPassword}
-                  helperText={errors.oldPassword?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
+                  helperText={
+                    errors.oldPassword
+                      ? errors.oldPassword.message
+                      : "Enter your current password"
+                  }
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "8px",

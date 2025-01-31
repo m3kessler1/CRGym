@@ -40,9 +40,10 @@ export const updateUser = async (
   token: string
 ) => {
   try {
-    const response = await axios.put(`${BASE_URL}/users/update`, data, {
+    const response = await axios.put(`${BASE_URL}/users/${data.email}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
     return response;

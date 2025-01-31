@@ -1,20 +1,19 @@
 // src/routes/userRoutes.ts
-import express from 'express';
-import { registerUser, loginUser } from '../controllers/userController';
-import { protect } from '../middleware/authMiddleware';
+import express from "express";
+import { userController } from "../controllers/userController";
+import { protect } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.post('/register', registerUser);
+router.post("/register", userController.registerUser.bind(userController));
 
+router.post("/login", userController.loginUser.bind(userController));
 
-router.post('/login', loginUser);
-
-
-router.get('/profile', protect, (req:any, res) => {
+router.get("/profile", protect, (req: any, res) => {
   res.status(200).json({
     message: `Hello, ${req.user?.name}`, // TypeScript should now recognize `req.user`
   });
 });
 
+router.put("/update/:email", userController.updateUser.bind(userController));
 export default router;

@@ -9,14 +9,14 @@ const usePasswordUser = () => {
   const token = Cookies.get("authToken");
 
 
-const updatePasswordUser = async (data: object): Promise<AxiosResponse> => {
+const updatePasswordUser = async (data: object, userId: string): Promise<AxiosResponse> => {
     if (!token) {
       throw new Error('No auth token found');
     }
-
+    console.log("data", data);
     setLoading(true);
     try {
-      const response = await updatePassword(data, token);
+      const response = await updatePassword(data, token, userId);
       return response;
     } catch (err) {
       setError('Update failed');

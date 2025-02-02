@@ -22,6 +22,7 @@ export class UserController {
         password,
         isCoach,
         target,
+        userSummary,
         activity,
       } = req.body;
 
@@ -45,6 +46,7 @@ export class UserController {
         isCoach,
         target,
         activity,
+        userSummary,
       });
       const createdUser = await newUser.save();
       res.status(201).json({
@@ -57,6 +59,7 @@ export class UserController {
           isCoach: createdUser.isCoach,
           target: createdUser.target,
           activity: createdUser.activity,
+          title: createdUser.title,
         },
       });
     } catch (error) {
@@ -101,11 +104,16 @@ export class UserController {
         message: "Logged in successfully",
         token, // Return the JWT token
         userData: {
+          id: user._id,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
+          isCoach: user.isCoach,
           activity: user.activity,
           target: user.target,
+          userSummary: user.userSummary,
+          title: user.title,
+          timeSlots: user.timeSlots,
         },
       });
     } catch (error) {
@@ -114,12 +122,11 @@ export class UserController {
   }
 
   public async updateUser(req: Request, res: Response): Promise<void> {
-    const { email } = req.params; // Assuming userId is passed as a URL parameter
+    const { userId } = req.params; // Assuming userId is passed as a URL parameter
     const updates = req.body; // Get the updates from the request body
-     
     try {
       // Find the user by ID and update their information
-      const updatedUser = await User.findOneAndUpdate({ email }, updates, {
+      const updatedUser = await User.findOneAndUpdate({ _id: userId }, updates, {
         new: true, // Return the updated document
         runValidators: true, // Validate the updates against the model
       });
@@ -134,13 +141,51 @@ export class UserController {
       res.status(200).json({
         message: "User updated successfully",
         user: {
+          id: updatedUser._id,
           firstName: updatedUser.firstName,
           lastName: updatedUser.lastName,
           email: updatedUser.email,
           target: updatedUser.target,
           activity: updatedUser.activity,
+          userSummary: updatedUser.userSummary,
+          title: updatedUser.title,
+          timeSlots: updatedUser.timeSlots,
         },
       });
+    } catch (error) {
+      res.status(500).json({ message: `Error: ${(error as Error).message}` });
+    }
+  }
+
+  public async getCoach(req: Request, res: Response): Promise<void> {
+    const coach = await User.find({ isCoach: true });
+    res.status(200).json({ coach });
+  }
+
+  public async changePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { userId } = req.params;
+      const { oldPassword, newPassword } = req.body;
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      // Verify current password
+      const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+      if (!isPasswordValid) {
+        res.status(401).json({ message: "Current password is incorrect" });
+        return;
+      }
+
+      // Hash and save new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      user.password = hashedPassword;
+      await user.save();
+
+      res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
       res.status(500).json({ message: `Error: ${(error as Error).message}` });
     }

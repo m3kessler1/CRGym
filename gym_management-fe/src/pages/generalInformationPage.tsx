@@ -9,6 +9,7 @@ import {
   FormControl,
   Grid,
   Avatar,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +19,7 @@ import useUpdateUser from "../hooks/useUpdateUser";
 import { enqueueSnackbar } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser, UserState } from "../redux/userSlice";
+import { DateTime } from "luxon";
 
 type FormData = {
   firstName: string;
@@ -26,7 +28,10 @@ type FormData = {
   password?: string;
   target: string;
   activity: string;
+  userSummary?: string;
+  title?: string;
   profileImage?: File;
+  timeSlots: string[];
 };
 
 const schema = z.object({
@@ -34,12 +39,26 @@ const schema = z.object({
   lastName: z.string().min(3, "Last Name is required"),
   target: z.string().min(1, "Target is required"),
   activity: z.string().min(1, "Preferable Activity is required"),
+  userSummary: z.string().optional(),
+  title: z.string().optional(),
+  timeSlots: z.array(z.string()).optional(),
 });
+
+const generateTimeOptions = () => {
+  const times: string[] = ["All"];
+  let time = DateTime.now().startOf("day"); // Start at 12:00 AM
+  for (let hour = 0; hour < 24; hour++) {
+    times.push(time.toFormat("hh:mm a")); // Format to 1:00 AM, 2:00 AM, etc.
+    time = time.plus({ hours: 1 }); // Add an hour
+  }
+  return times;
+};
 
 function GeneralInformation() {
   const userData = useSelector((state: { user: UserState }) => state.user);
   const dispatch = useDispatch();
   const { update } = useUpdateUser();
+  const timeOptions = generateTimeOptions();
   const [previewImage, setPreviewImage] = useState<string>(
     "/images/profile.png"
   );
@@ -49,28 +68,33 @@ function GeneralInformation() {
     handleSubmit,
     formState: { errors, isValid },
     watch,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
       firstName: userData.firstName,
       lastName: userData.lastName,
+      userSummary: userData.userSummary,
       target: userData.target,
       activity: userData.activity,
+      title: userData.title,
+      timeSlots: userData.timeSlots
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("data", data);
     try {
       await update(data);
       dispatch(
         setUser({
           ...data,
+          id: userData.id,
           email: userData.email,
           isCoach: userData.isCoach,
           selectedLanguage: userData.selectedLanguage,
           activity: data.activity,
+          timeSlots: Array.isArray(data.timeSlots) ? data.timeSlots : [data.timeSlots || ''],
         })
       );
 
@@ -94,6 +118,7 @@ function GeneralInformation() {
   };
   const target = watch("target");
   const activity = watch("activity");
+  const timeSlots = watch("timeSlots");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -105,7 +130,23 @@ function GeneralInformation() {
       reader.readAsDataURL(file);
     }
   };
-  console.log("userData", userData);
+
+  const handleTimeSlotChange = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value as string[];
+    const allTimes = timeOptions.filter(time => time !== "All");
+    
+    let newValue: string[];
+    if (value.includes("All")) {
+      newValue = allTimes;
+    } else if (timeSlots?.includes("All")) {
+      newValue = [];
+    } else {
+      newValue = value;
+    }
+    
+    setValue("timeSlots", newValue);
+  };
+
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
@@ -140,7 +181,8 @@ function GeneralInformation() {
 
           <Box sx={{ ml: 1, mb: 4 }}>
             <Typography variant="h6" fontSize="16px">
-              {userData.firstName} {userData.lastName} (Client)
+              {userData.firstName} {userData.lastName} (
+              {userData.isCoach ? "Coach" : "Client"})
             </Typography>
             <Typography variant="body1" fontSize="16px" fontWeight="300">
               {userData.email}
@@ -198,44 +240,81 @@ function GeneralInformation() {
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "8px",
                     },
-                    mb: 4,
                   }}
                 />
               </Grid>
-            </Grid>
-
-            <FormControl
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "10px",
-                },
-                mb: 6,
-              }}
-            >
-              <InputLabel id="yourTargetLabel">Your Target</InputLabel>
-              <Select
-                labelId="yourTargetLabel"
-                id="yourTarget"
-                value={target || ""}
-                label="Your Target"
-                {...register("target")}
+              {userData.isCoach && (
+                <>
+                  <Grid item xs={12} md={12}>
+                  <TextField
+                id="title"
+                label="Title"
+                fullWidth
+                multiline
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
+                }}
+                {...register("title")}
+              />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      id="summary"
+                      label="About"
+                      fullWidth
+                      multiline
+                    rows={4}
+                    {...register("userSummary")}
+                    error={!!errors.userSummary}
+                    helperText={errors.userSummary?.message}
+                    variant="outlined"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "8px",
+                        mb: 1,
+                      },
+                    }}
+                  />
+                </Grid>
+              </>
+            )}
+          </Grid>
+            {!userData.isCoach && (
+              <FormControl
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "10px",
+                  },
+                  mb: 3,
+                }}
               >
-                <MenuItem value="Lose weight">Lose weight</MenuItem>
-                <MenuItem value="Gain weight">Gain weight</MenuItem>
-                <MenuItem value="Improve flexibility">
-                  Improve flexibility
-                </MenuItem>
-                <MenuItem value="General fitness">General fitness</MenuItem>
-                <MenuItem value="Build Muscle">Build Muscle</MenuItem>
-                <MenuItem value="Rehabilitation/Recovery">
-                  Rehabilitation/Recovery
-                </MenuItem>
-              </Select>
-              {errors.target && (
-                <Typography color="error">{errors.target.message}</Typography>
-              )}
-            </FormControl>
+                <InputLabel id="yourTargetLabel">Your Target</InputLabel>
+                <Select
+                  labelId="yourTargetLabel"
+                  id="yourTarget"
+                  value={target || ""}
+                  label="Your Target"
+                  {...register("target")}
+                >
+                  <MenuItem value="Lose weight">Lose weight</MenuItem>
+                  <MenuItem value="Gain weight">Gain weight</MenuItem>
+                  <MenuItem value="Improve flexibility">
+                    Improve flexibility
+                  </MenuItem>
+                  <MenuItem value="General fitness">General fitness</MenuItem>
+                  <MenuItem value="Build Muscle">Build Muscle</MenuItem>
+                  <MenuItem value="Rehabilitation/Recovery">
+                    Rehabilitation/Recovery
+                  </MenuItem>
+                </Select>
+                {errors.target && (
+                  <Typography color="error">{errors.target.message}</Typography>
+                )}
+              </FormControl>
+            )}
 
             <FormControl
               fullWidth
@@ -246,12 +325,12 @@ function GeneralInformation() {
                 mb: 2,
               }}
             >
-              <InputLabel id="activity">Preferable Activity</InputLabel>
+              <InputLabel id="activity">{userData.isCoach ? "Specialization" : "Preferable Activity"}</InputLabel>
               <Select
                 labelId="activity"
                 id="activity"
                 value={activity || ""}
-                label="Preferable Activity"
+                label= {userData.isCoach ? "Specialization" : "Preferable Activity"}
                 {...register("activity")}
               >
                 <MenuItem value="Yoga">Yoga</MenuItem>
@@ -265,6 +344,49 @@ function GeneralInformation() {
                 <Typography color="error">{errors.activity.message}</Typography>
               )}
             </FormControl>
+            {userData.isCoach && (
+            <Grid
+            item
+            xs={12}
+            md={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <FormControl
+              fullWidth
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                },
+                mt: 1,
+                mb: 2,
+              }}
+            >
+              <InputLabel id="time">Time Slots</InputLabel>
+              <Select
+                labelId="timeSlots"
+                id="timeSlots"
+                multiple
+                value={timeSlots || []}
+                label="Time Slots"
+                {...register("timeSlots")}
+                onChange={handleTimeSlotChange}
+              >
+                {timeOptions.map((timeOption, index) => (
+                  <MenuItem key={index} value={timeOption}>
+                    {timeOption}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.timeSlots && (
+                <Typography color="error">{errors.timeSlots.message}</Typography>
+              )}
+            </FormControl>
+          </Grid>
+          )}
 
             <Box
               sx={{

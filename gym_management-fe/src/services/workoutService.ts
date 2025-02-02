@@ -2,7 +2,14 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
-export const fetchWorkouts = async (data: any) => {
+interface WorkoutSearchParams {
+  activity: string;
+  time: string;
+  date: string;
+  coach: string;
+}
+
+export const fetchWorkouts = async (data: WorkoutSearchParams) => {
   try { 
     const response = await axios.get(
       `${BASE_URL}/workouts/available/?sport=${data.activity}&time=${data.time}&date=${data.date}&coach=${data.coach}`
@@ -62,7 +69,6 @@ export const cancelWorkout = async (workoutId: string, token: string) => {
 };
 
 export const finishWorkout = async (comment: string, rating: number,coachId: string, workoutId: string,  token: string) => {
-  console.log("Finishing workout:", coachId, comment, rating, workoutId, token);
   try {
     const response = await axios.post(`${BASE_URL}/feedbacks`, {
       coachId: coachId,

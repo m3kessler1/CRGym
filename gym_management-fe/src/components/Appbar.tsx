@@ -72,7 +72,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
     const handleOpenLanguageSelector = () => setOpen(true);
 
     // Create a function to get initial tab based on current route
-    const getInitialTab = () => {
+    const getInitialTab = React.useCallback(() => {
       const currentPath = location.pathname;
 
       // Define routes and their corresponding tab indices
@@ -107,7 +107,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
             return 0;
         }
       }
-    };
+    }, [location.pathname, isAuthenticated, userData.isCoach]);
 
     // Initialize reducer with current route's tab
     const [state, dispatch] = useReducer(navigationReducer, {
@@ -123,7 +123,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
       if (state.activeTab !== currentTab) {
         dispatch({ type: "SET_TAB", payload: currentTab });
       }
-    }, [location.pathname]);
+    }, [location.pathname, getInitialTab, state.activeTab]);
 
     // Handle avatar (profile) icon click
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {

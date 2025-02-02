@@ -14,19 +14,21 @@ import { Suspense } from "react";
 
 // Define the props interface
 interface CoachesCardProps {
-  name: string;
+  firstName: string;
+  lastName: string;
   image: string;
-  description: string;
-  shortSummary: string;
+  userSummary: string;
+  title: string;
   ratings: number;
 }
 
 // CoachesCard component
 const CoachesCard: React.FC<CoachesCardProps> = ({
-  name,
+  firstName,
+  lastName,
   image,
-  description,
-  shortSummary,
+  userSummary,
+  title,
   ratings,
 }) => {
   const navigate = useNavigate();
@@ -62,9 +64,9 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
           <CardMedia
             sx={{ height: 240 }}
             image={`/Images/${image}.svg`}
-            title={name}
+            title={firstName + " " + lastName}
             component="img"
-            alt={name}
+            alt={firstName + " " + lastName}
           />
         </Suspense>
         {/* Card Content */}
@@ -72,10 +74,10 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
           <Box sx={{ display: "flex" }}>
             <Box>
               <Typography gutterBottom variant="h6">
-                {name}
+                {firstName + " " + lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {description}
+                {title}
               </Typography>
             </Box>
 
@@ -85,9 +87,9 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
             <Rating name="read-only" value={1} max={1} readOnly />
           </Box>
 
-          <Box sx={{ pt: 3 }}>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {shortSummary}
+          <Box sx={{ pt: 3, height: "60px" }}>
+            <Typography variant="body2" sx={{ color: "text.secondary", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: "2", WebkitBoxOrient: "vertical" }}>
+              {userSummary}
             </Typography>
           </Box>
         </CardContent>

@@ -1,6 +1,6 @@
 import axios from "axios";
-
 export interface RegisterData {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,7 +12,6 @@ export interface RegisterData {
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const registerUser = async (data: RegisterData) => {
-  console.log("BASE_URL", data, "BASE_URL ", BASE_URL);
   try {
     const response = await axios.post(`${BASE_URL}/register`, data);
     return response;
@@ -37,10 +36,11 @@ export const loginUser = async (email: string, password: string) => {
 
 export const updateUser = async (
   data: Partial<RegisterData>,
-  token: string
+  token: string,
+  userId: string
 ) => {
   try {
-    const response = await axios.put(`${BASE_URL}/users/${data.email}`, data, {
+    const response = await axios.put(`${BASE_URL}/update/${userId}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -53,16 +53,29 @@ export const updateUser = async (
   }
 };
 
-export const updatePassword = async (data: object, token: string) => {
+export const updatePassword = async (data: object, token: string, userId: string) => {
   try {
-    const response = await axios.put(`${BASE_URL}/user/change-password`, data, {
+    const response = await axios.put(`${BASE_URL}/change-password/${userId}`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     });
     return response;
   } catch (error) {
     console.error("Error updating password:", error);
+    throw error;
+  }
+};
+
+export const getCoach = async (token: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/coach`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error getting user:", error);
     throw error;
   }
 };

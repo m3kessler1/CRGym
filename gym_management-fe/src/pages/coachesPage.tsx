@@ -1,34 +1,30 @@
 import React, { useState } from "react";
 import { Grid, Pagination, Box, Typography } from "@mui/material";
 import CoachesCard from "../components/CoachesCard";
-import useFetchCoaches from "../hooks/useFetchCoaches";
+//import useFetchCoaches from "../hooks/useFetchCoaches";
 import SkeletonCoachPage from "../components/Skeleton/SkeletonCoachPage";
-
-interface Coach {
-  id: number;
-  name: string;
-  profilePicture?: string;
-  specialization: string;
-  shortSummary: string;
-  ratings: number;
-}
+import useFetchCoaches from "../hooks/useFetchCoaches";
+import Cookies from 'js-cookie';
+import { Coach } from '../types/coach';
 
 const Coaches: React.FC = () => {
-  const { data: coaches, loading } = useFetchCoaches();
+  const token = Cookies.get('authToken') || '';
+  const { data: coaches, loading } = useFetchCoaches(token);
+  const [page, setPage] = useState(1); // Moved up
 
-  const coachesData = (coaches || []).map((coach: Coach, index: number) => ({
+  if (!coaches) return <SkeletonCoachPage />;
+  const coachesData = coaches.coach.map((coach: Coach, index: number) => ({
     id: coach.id,
-    name: coach.name || "",
+    firstName: coach.firstName || "",
+    lastName: coach.lastName || "",
     image: "image" + ((index + 1) % 9),
     description: coach.specialization || "",
-    shortSummary: coach.shortSummary || "",
+    title: coach.title || "",
     ratings: coach.ratings || 0,
+    userSummary: coach.userSummary || "",
   }));
 
-  const itemsPerPage = coachesData.length >= 8 ? 8 : coachesData.length; // Number of items per page
-  const [page, setPage] = useState(1); // Current page
-
-  // Calculate total pages
+  const itemsPerPage = coachesData.length >= 8 ? 8 : coachesData.length;
   const totalPages = Math.ceil(coachesData.length / itemsPerPage);
 
   const currentPageData = coachesData.slice(
@@ -52,8 +48,8 @@ const Coaches: React.FC = () => {
         <>
           {/* Coaches Grid */}
           <Grid container spacing={2} sx={{ display: "flex" }}>
-            {currentPageData.map((coach) => (
-              <CoachesCard key={coach.id} {...coach} />
+            {currentPageData.map((coach, index) => (
+              <CoachesCard key={index} {...coach} />
             ))}
           </Grid>
 

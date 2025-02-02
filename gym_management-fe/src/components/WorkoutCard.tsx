@@ -13,7 +13,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import WorkoutDialog from "./WorkoutDialog";
 import WorkoutFeedback from "./WorkoutFeedback";
 
-type EventStatus =
+export type EventStatus =
   | "SCHEDULED"
   | "WAITING_FOR_FEEDBACK"
   | "FEEDBACK_SUBMITTED"
@@ -53,8 +53,18 @@ function workoutReducer(
   }
 }
 
-const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
-  console.log(workout.status);
+interface Workout {
+  status: EventStatus;
+  sport: string;
+  Summary: string;
+  date: string;
+  coachId: string;
+  userName: string;
+  workoutId: string;
+  coachName: string;
+}
+
+const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
   const [state, dispatch] = React.useReducer(workoutReducer, {
     status: workout.status,
     openDialog: false,
@@ -193,7 +203,6 @@ const WorkoutCard: React.FC<{ workout: any }> = ({ workout }) => {
         open={feedbackDialogOpen}
         onClose={() => setFeedbackDialogOpen(false)}
         onSubmit={(feedback) => {
-          console.log("Feedback submitted:", feedback);
           dispatch({ type: "FINISH_WORKOUT" });
           setFeedbackDialogOpen(false);
         }}

@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import usePasswordUser from "../hooks/usePasswordUser";
@@ -18,16 +17,14 @@ type FormData = {
   confirmPassword: string;
 };
 
-const schema = z
-  .object({
-    oldPassword: z.string().min(1, "Old password is required"),
-    newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Password don't match",
-    path: ["confirmPassword"], // path of error
-  });
+const schema = z.object({
+  oldPassword: z.string().min(8, "Password must be at least 8 characters"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 function ChangePassword() {
   const userData = useSelector((state: RootState) => state.user);
@@ -36,7 +33,6 @@ function ChangePassword() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -48,19 +44,14 @@ function ChangePassword() {
     },
   });
 
-  useEffect(() => {
-    if (userData.password) {
-      setValue("oldPassword", userData.password);
-    }
-  }, [userData.password, setValue]);
-
   const onSubmit = async (data: FormData) => {
-    const newData: { newPassword: string } = {
+    const newData = {
+      oldPassword: data.oldPassword,
       newPassword: data.newPassword,
     };
-
+    const userId = userData.id;
     try {
-      await updatePasswordUser(newData);
+      await updatePasswordUser(newData, userId);
       dispatch(setUser({ ...userData, password: newData.newPassword }));
       enqueueSnackbar("Password updated successfully!", {
         variant: "success",
@@ -106,8 +97,7 @@ function ChangePassword() {
                   fullWidth
                   id="oldPassword"
                   label="Current Password"
-                  value={userData.password}
-                  autoComplete="oldPassword"
+                  type="password"
                   {...register("oldPassword")}
                   error={!!errors.oldPassword}
                   helperText={
@@ -157,7 +147,7 @@ function ChangePassword() {
                   helperText={
                     errors.confirmPassword
                       ? errors.confirmPassword.message
-                      : "At least one capital letter required"
+                      : "Passwords don't match"
                   }
                   fullWidth
                   sx={{

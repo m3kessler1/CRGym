@@ -5,11 +5,25 @@ import { fetchBookedWorkouts } from "../services/workoutService.ts";
 import SkeletonWorkoutPage from "../components/Skeleton/SkeletonWorkoutPage.tsx";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { EventStatus } from "../components/WorkoutCard";
+
+interface Workout {
+  id: string;
+  status: EventStatus;
+  sport: string;
+  Summary: string;
+  date: string;
+  coachId: string;
+  userName: string;
+  workoutId: string;
+  coachName: string;
+}
+
 const Workouts: React.FC = () => {
   const itemsPerPage = 8;
   const totalItems = 8;
   const [page, setPage] = useState<number>(1);
-  const [workouts, setWorkouts] = useState<any[]>([]);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -30,7 +44,7 @@ const Workouts: React.FC = () => {
     fetchWorkouts();
   }, []);
   const components = (workouts || []).map((workout, index) => (
-    <WorkoutCard key={index} workout={workout} />
+    <WorkoutCard key={index} workout={workout as Workout} />
   ));
 
   const startIndex = (page - 1) * itemsPerPage;

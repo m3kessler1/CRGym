@@ -18,7 +18,7 @@ import { DateTime } from "luxon";
 import dayjs from "dayjs";
 import HomeCard from "../components/homeCard";
 import { fetchWorkouts } from "../services/workoutService";
-import useFetchCoaches from "../hooks/useFetchCoaches";
+//import useFetchCoaches from "../hooks/useFetchCoaches";
 import { useThemeContext } from "../context/ThemeContextProvider";
 import SkeletonHomeCard from "../components/Skeleton/SkeletonHomePage";
 
@@ -41,9 +41,9 @@ const generateTimeOptions = () => {
 const HomePage: React.FC = () => {
   const { mode } = useThemeContext();
   const timeOptions = generateTimeOptions();
-  const { data: coaches } = useFetchCoaches();
+  //const { data: coaches } = useFetchCoaches();
   const [isLoading, setIsLoading] = useState(false);
-  const coachName = (coaches || []).map((coach: Coach) => ({
+  const coachName = ( []).map((coach: Coach) => ({
     id: coach.id,
     name: coach.name || "",
   }));
@@ -56,13 +56,19 @@ const HomePage: React.FC = () => {
   } = useForm<FormData>({
     defaultValues: {
       activity: "All",
-      date: dayjs(DateTime.now().toJSDate()),
+      date: dayjs(DateTime.now().toJSDate()).format("YYYY-MM-DD"),
       time: "All",
       coach: "All",
     },
   });
-  const [workouts, setWorkouts] = useState<any[]>([]);
-  const [searchData, setSearchData] = useState<any>(null);
+  interface Workout {
+    id: number;
+    name: string;
+    // Add other properties of Workout here
+  }
+
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [searchData, setSearchData] = useState<FormData | null>(null);
 
   const onSubmit = async (data: FormData) => {
     const newData = {
@@ -94,7 +100,7 @@ const HomePage: React.FC = () => {
 
   type FormData = {
     activity: string;
-    date: dayjs.Dayjs | null;
+    date: string;
     time: string;
     coach: string;
   };
@@ -183,7 +189,7 @@ const HomePage: React.FC = () => {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Select Date"
-                  value={watch("date") || dayjs(DateTime.now().toJSDate())}
+                  value={dayjs(watch("date")) || dayjs(DateTime.now().toJSDate())}
                   slotProps={{
                     textField: {
                       ...register("date"),
@@ -196,7 +202,7 @@ const HomePage: React.FC = () => {
                   }}
                   onChange={(newValue) => {
                     if (newValue && dayjs.isDayjs(newValue)) {
-                      setValue("date", newValue);
+                      setValue("date", newValue.format("YYYY-MM-DD"));
                     }
                   }}
                 />

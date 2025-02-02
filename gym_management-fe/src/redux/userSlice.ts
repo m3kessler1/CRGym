@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the shape of the user state
 export interface UserState {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -9,13 +10,16 @@ export interface UserState {
   activity: string;
   password?: string;
   profileImage?: File;
+  userSummary?: string;
   selectedLanguage: string;
   isCoach: boolean;
-
+  title?: string;
+  timeSlots: string[]; 
 }
 
 
 const initialState: UserState = {
+  id: '',
   email: '',
   firstName: '',
   lastName: '',
@@ -23,7 +27,10 @@ const initialState: UserState = {
   target: '',
   password: '',
   isCoach: false,
+  userSummary: '',
   selectedLanguage: 'en',
+  title: '',
+  timeSlots: [],
 
 };
 

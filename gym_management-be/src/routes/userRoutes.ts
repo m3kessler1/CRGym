@@ -9,11 +9,11 @@ router.post("/register", userController.registerUser.bind(userController));
 
 router.post("/login", userController.loginUser.bind(userController));
 
-router.get("/profile", protect, (req: any, res) => {
-  res.status(200).json({
-    message: `Hello, ${req.user?.name}`, // TypeScript should now recognize `req.user`
-  });
-});
+router.get("/coach", userController.getCoach.bind(userController));
 
-router.put("/update/:email", userController.updateUser.bind(userController));
+router.put("/update/:userId", protect, userController.updateUser.bind(userController));
+
+router.put("/change-password/:userId", protect, userController.changePassword.bind(userController));
+
 export default router;
+

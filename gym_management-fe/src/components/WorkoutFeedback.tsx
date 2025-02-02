@@ -63,12 +63,10 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   }>({});
   const userData = useSelector((state: RootState) => state.user);
   const handleSubmit = async () => {
-    console.log("Submitting feedback...");
     try {
       const validatedData = userData.isCoach
         ? feedbackSchema.parse({ rating, comment })
         : feedbackSchema.parse({ rating: 1, comment: comment });
-      console.log("Received Feedback Data:", validatedData);
       try {
         await finishWorkout(
           validatedData.comment || "",

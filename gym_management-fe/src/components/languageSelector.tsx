@@ -31,7 +31,6 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const [language, setLanguage] = React.useState<string>(
     userData.selectedLanguage || "en"
   ); // Set default to user's selected language or 'en'
-  console.log(userData.selectedLanguage);
   // Handle language selection
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as string);

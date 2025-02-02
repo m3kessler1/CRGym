@@ -9,7 +9,10 @@ export interface IUser extends Document {
   password: string;
   isCoach: boolean;
   target: string;
+  userSummary: string;
   activity: string;
+  title: string;
+  timeSlots: string[];
 }
 
 // Mongoose schema
@@ -19,9 +22,12 @@ const userSchema: Schema = new Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    isCoach: { type: Boolean, default: false },
+    isCoach: { type: Boolean, default: true },
     target: { type: String, required: true },
     activity: { type: String, required: true },
+    userSummary: { type: String, required: false },
+    title: { type: String, required: false },
+    timeSlots: { type: [String], required: false },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt

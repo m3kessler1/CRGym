@@ -7,7 +7,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps): JSX.Element => {
   const isAuthenticated = !!Cookies.get("authToken");
-
   if (!isAuthenticated) {
     return <Navigate to="/home" replace />;
   }

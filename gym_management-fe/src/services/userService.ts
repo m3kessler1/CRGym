@@ -1,6 +1,6 @@
 import axios from "axios";
 export interface RegisterData {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;

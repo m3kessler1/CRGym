@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Suspense } from "react";
-import BookCoachPage from "../pages/bookCoachPage.tsx";
-import { Coach } from "../types/coach.ts";
 
 // Define the props interface
 interface CoachesCardProps {
@@ -25,30 +23,25 @@ interface CoachesCardProps {
 }
 
 // CoachesCard component
-const CoachesCard: React.FC<CoachesCardProps> = ({
+const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
   firstName,
   lastName,
-  image,
   userSummary,
   title,
+  image,
   ratings,
 }) => {
   const navigate = useNavigate();
 
   // Handle booking navigation
   const handleBookWorkout = () => {
-    navigate("/book-coach", {
-      state: {
-        coach: { firstName, lastName, image, userSummary, title, ratings },
-      },
-    });
+    navigate("/book-coach");
   };
-
   return (
     <Grid
       item
       xs={12}
-      sm={6}
+      sm={12}
       md={3}
       lg={3}
       sx={{
@@ -142,4 +135,4 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
   );
 };
 
-export default CoachesCard;
+export default BookWorkoutProfileCard;

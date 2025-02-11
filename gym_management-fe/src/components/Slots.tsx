@@ -1,61 +1,102 @@
-import * as React from "react";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import { Box, useTheme } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, List, ListItem, useTheme } from "@mui/material";
 
-interface SlotsProps {
-  testimonials: any; // Replace 'any' with your testimonial type if available
+interface TimeSlotSelectorProps {
+  date: string;
+  availableSlots: string[];
+  onSelect: (slot: string) => void;
 }
 
-export default function Slots({
-  testimonials,
-}: SlotsProps): React.ReactElement {
+const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
+  date,
+  availableSlots,
+  onSelect,
+}) => {
   const theme = useTheme();
-  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
+  const isDarkMode = theme.palette.mode === "dark";
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const primaryColor = theme.palette.primary.main;
 
-  const handleClick = (index: number): void => {
-    setSelectedIndex(index);
+  const handleSlotSelect = (slot: string) => {
+    setSelectedSlot(slot);
+    onSelect(slot);
   };
-
-  const component = Array(10)
-    .fill(null)
-    .map((_, index) => (
-      <ListItem key={index} component="div" disablePadding sx={{ p: 1 }}>
-        <ListItemButton
-          onClick={() => handleClick(index)}
-          sx={{
-            border: `0.2px solid ${
-              selectedIndex === index ? theme.palette.primary.main : "green"
-            }`, // Conditional border color
-            backgroundColor:
-              selectedIndex === index ? theme.palette.primary.main : "",
-            borderRadius: "4px",
-            "&:hover": {
-              borderColor: theme.palette.primary.main, // Change border color on hover
-            },
-          }}
-        >
-          <ListItemText primary={`Item ${index + 1}`} />
-        </ListItemButton>
-      </ListItem>
-    ));
 
   return (
     <Box
-      sx={{
-        overflowY: "auto", // Enables vertical scrolling
-        overflowX: "hidden", // Disables horizontal scrolling
-        padding: 6,
-        height: 300, // Set a fixed height for the scrolling container
-        width: "100%", // Full width
-        scrollbarWidth: "none", // Hides scrollbar in Firefox
-        "&::-webkit-scrollbar": {
-          display: "none", // Hides scrollbar in Chrome, Safari, and Edge
-        },
-      }}
+      width="550px" // Matches calendar width
+      height="422px" // Fixed height
+      margin="auto"
+      p={1}
+      bgcolor={isDarkMode ? "#1e1e1e" : "#fff"}
+      borderRadius="10px"
+      //border="1px solid"
+      borderColor={isDarkMode ? "#444" : "#ddd"}
+      color={isDarkMode ? "#fff" : "#000"}
+      textAlign="center"
+      overflow="hidden"
     >
-      {component}
+      {/* Header */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          p: 1,
+        }}
+      >
+        <Typography variant="h6">{date}</Typography>
+        <Typography variant="body2" color={isDarkMode ? "#bbb" : "gray"}>
+          {availableSlots.length} slots available
+        </Typography>
+      </Box>
+      {/* Time Slots */}
+      <List
+        sx={{
+          mt: 2,
+          overflowY: "auto", // Scrollable but no scrollbar
+          height: "350px",
+          "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar for Webkit browsers
+          "-ms-overflow-style": "none", // Hide scrollbar for IE
+          "scrollbar-width": "none", // Hide scrollbar for Firefox
+        }}
+      >
+        {availableSlots.map((slot, index) => (
+          <ListItem
+            key={index}
+            sx={{
+              cursor: "pointer",
+              backgroundColor:
+                selectedSlot === slot
+                  ? isDarkMode
+                    ? "#76c7c0" // Highlight color for Dark Mode
+                    : "#e8f5e9"
+                  : isDarkMode
+                  ? "#2a2a2a"
+                  : "#f5fdf5",
+              border:
+                selectedSlot === slot ? `2px solid ${primaryColor}` : "none",
+              textAlign: "center",
+              borderRadius: "8px",
+              padding: "12px",
+              margin: "5px 0",
+              transition: "all 0.2s ease",
+              height: "56px",
+              color:
+                selectedSlot === slot ? "#000" : isDarkMode ? "#fff" : "#000",
+              "&:hover": {
+                border: `2px solid ${primaryColor}`,
+                backgroundColor: primaryColor,
+              },
+            }}
+            onClick={() => handleSlotSelect(slot)}
+          >
+            {slot}
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
-}
+};
+
+export default TimeSlotSelector;

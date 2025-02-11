@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import Testimonials from "../components/Testimonials.tsx";
-import { Grid, Box, Typography } from "@mui/material";
-import dayjs, { Dayjs } from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Calendar from "react-calendar";
+import { Grid, Typography } from "@mui/material";
 import TimeSlotSelector from "../components/Slots.tsx";
 import BookWorkoutProfileCard from "../components/bookWorkoutProfileCard.tsx";
 import { Coach } from "../types/coach.ts";
 import { useLocation, Navigate } from "react-router-dom";
 
+
 import CalenderComponent from "../components/CalenderComponent.tsx";
+import SessionCard from "../components/SessionCard.tsx";
 
 const BookCoachPage: React.FC = () => {
   const location = useLocation();
@@ -52,6 +51,9 @@ const BookCoachPage: React.FC = () => {
           display="flex"
           justifyContent="space-between"
         >
+          <Grid item xs={12} md={12} display="flex">
+            <Typography variant="body2">SCHEDULE YOUR SESSION</Typography>
+          </Grid>
           <Grid item xs={12} md={6}>
             <CalenderComponent />
           </Grid>
@@ -63,8 +65,17 @@ const BookCoachPage: React.FC = () => {
               onSelect={handleSlotSelection}
             />
           </Grid>
-          <Grid item xs={12} md={12} display="flex">
-            <Typography variant="body2">Upcoming Workouts</Typography>
+          <Grid item xs={12} md={12} display="flex" marginTop="10px">
+            <Typography variant="body2">YOUR UPCOMING WORKOUTS</Typography>
+          </Grid>
+          <Grid item xs={12} md={12} display="flex" justifyContent="flex-start" alignItems="center">
+          <SessionCard title="Yoga" date="July 9" time="9:30 AM" duration="1 hour" />
+          </Grid>
+          <Grid item xs={12} md={12} display="flex" marginTop="10px">
+            <Typography variant="body2">FEEDBACK</Typography>
+          </Grid>
+          <Grid item xs={12} md={12} display="flex" justifyContent="flex-start">
+            <Testimonials />
           </Grid>
         </Grid>
       </Grid>

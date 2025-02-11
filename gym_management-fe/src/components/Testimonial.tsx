@@ -23,6 +23,7 @@ const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
         minHeight: "15rem",
         margin: [0, 1, 0, 1],
         p: 1,
+        borderRadius: "10px",
       }}
     >
       <CardHeader

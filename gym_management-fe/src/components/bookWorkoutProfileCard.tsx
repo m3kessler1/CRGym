@@ -44,16 +44,11 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
       sm={12}
       md={3}
       lg={3}
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
     >
       <Card
         sx={{
           borderRadius: "16px",
-          height: "100%",
+          height: "auto",
           width: { xs: "100%", sm: "90%", md: "100%", lg: "80%" },
           maxWidth: { xs: "100%", sm: "400px", md: "400px", lg: "400px" },
           margin: "0 auto",
@@ -71,7 +66,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
         </Suspense>
         {/* Card Content */}
         <CardContent>
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", mb: 2 }}>
             <Box>
               <Typography gutterBottom variant="h6">
                 {firstName + " " + lastName}
@@ -87,49 +82,56 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
             <Rating name="read-only" value={1} max={1} readOnly />
           </Box>
 
-          <Box sx={{ pt: 3, height: "60px" }}>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" gutterBottom>About Coach</Typography>
             <Typography
               variant="body2"
               sx={{
                 color: "text.secondary",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: "2",
-                WebkitBoxOrient: "vertical",
               }}
             >
               {userSummary}
             </Typography>
           </Box>
-        </CardContent>
 
-        {/* Card Actions */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            p: [0, 2],
-            gap: 2,
-            mb: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <Button
-            variant="contained"
-            size="medium"
-            fullWidth
-            onClick={handleBookWorkout}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="body2" gutterBottom>Specialization</Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              {"specialization"}
+            </Typography>
+          </Box>
+
+          {/* Card Actions */}
+          <Box
             sx={{
-              fontFamily: "Lexend, Arial, sans-serif",
-              textTransform: "none",
+              display: "flex",
+              flexDirection: "column",
+              p: [0, 2],
+              gap: 2,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
             }}
           >
-            Book Workout
-          </Button>
-        </Box>
+            <Button
+              variant="contained"
+              size="medium"
+              fullWidth
+              onClick={handleBookWorkout}
+              sx={{
+                fontFamily: "Lexend, Arial, sans-serif",
+                textTransform: "none",
+              }}
+            >
+              Book Workout
+            </Button>
+          </Box>
+        </CardContent>
       </Card>
     </Grid>
   );

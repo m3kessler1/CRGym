@@ -1,50 +1,46 @@
 import { Grid, Pagination, Box, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard.tsx";
 import { useEffect, useState } from "react";
-import { fetchBookedWorkouts } from "../services/workoutService.ts";
+import { fetchBookedWorkouts, getBookedWorkoutsByUsers } from "../services/workoutService.ts";
 import SkeletonWorkoutPage from "../components/Skeleton/SkeletonWorkoutPage.tsx";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 import { EventStatus } from "../components/WorkoutCard";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store.ts";
 
-interface Workout {
-  id: string;
-  status: EventStatus;
-  sport: string;
-  Summary: string;
-  date: string;
+interface BookedWorkout {
+  _id: string;
+  userId: string;
   coachId: string;
-  userName: string;
-  workoutId: string;
-  coachName: string;
+  date: string;
+  time: string;
+  activity: string;
 }
+
+
 
 const Workouts: React.FC = () => {
   const itemsPerPage = 8;
   const totalItems = 8;
   const [page, setPage] = useState<number>(1);
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
+  const user = useSelector((state: RootState) => state.user);
+  const userId = user.id;
+
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      setIsLoading(true);
+    const fetchBookedWorkouts = async () => {
       try {
-        const response = await fetchBookedWorkouts(
-          Cookies.get("authToken") || ""
-        );
-        setWorkouts(response);
+        const response = await getBookedWorkoutsByUsers(userId);
+        setBookedWorkouts(response);
       } catch (error) {
-        console.error("Error fetching workouts:", error);
-        enqueueSnackbar("Error fetching workouts", { variant: "error" });
-        setWorkouts([]);
-      } finally {
-        setIsLoading(false);
+        console.error("Error fetching booked workouts:", error);
       }
     };
-    fetchWorkouts();
-  }, []);
-  const components = (workouts || []).map((workout, index) => (
-    <WorkoutCard key={index} workout={workout as Workout} />
+    fetchBookedWorkouts();
+  }, [userId]);
+  const components = (bookedWorkouts || []).map((workout, index) => (
+    <WorkoutCard key={index} workout={workou } />
   ));
 
   const startIndex = (page - 1) * itemsPerPage;
@@ -60,7 +56,7 @@ const Workouts: React.FC = () => {
 
   return (
     <>
-      {isLoading ? (
+      {bookedWorkouts.length === 0 ? (
         <Grid
           container
           spacing={6}
@@ -83,7 +79,7 @@ const Workouts: React.FC = () => {
               mb: 2,
             }}
           >
-            {(workouts || []).length > 0 ? (
+            {bookedWorkouts.length > 0 ? (
               displayedComponents
             ) : (
               <Box
@@ -102,7 +98,7 @@ const Workouts: React.FC = () => {
           </Grid>
 
           {/* Pagination controls */}
-          {(workouts || []).length > 6 ? (
+          {bookedWorkouts.length > 6 ? (
             <Box
               sx={{
                 display: "flex",

@@ -15,13 +15,17 @@ import { Coach } from "../types/coach";
 // Define the props interface
 interface CoachesCardProps {
   coach: Coach;
-  onSelect?: () => void;
+  onSelect?: (coachId: string) => void;
+  selectedSlot: string | null;
+  selectedDate: string | null;
 }
 
 // CoachesCard component
 const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
   coach,
   onSelect,
+  selectedSlot,
+  selectedDate,
 }) => {
   // Handle booking navigation
 
@@ -107,8 +111,9 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
             <Button
               variant="contained"
               size="medium"
+              disabled={!selectedSlot || !selectedDate}
               fullWidth
-              onClick={() => onSelect?.()}
+              onClick={() => onSelect?.(coach._id)}
               sx={{
                 fontFamily: "Lexend, Arial, sans-serif",
                 textTransform: "none",

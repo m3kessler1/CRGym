@@ -11,35 +11,22 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Suspense } from "react";
-import BookCoachPage from "../pages/bookCoachPage.tsx";
 import { Coach } from "../types/coach.ts";
 
 // Define the props interface
 interface CoachesCardProps {
-  firstName: string;
-  lastName: string;
-  image: string;
-  userSummary: string;
-  title: string;
-  ratings: number;
+  coach: Coach;
 }
 
 // CoachesCard component
-const CoachesCard: React.FC<CoachesCardProps> = ({
-  firstName,
-  lastName,
-  image,
-  userSummary,
-  title,
-  ratings,
-}) => {
+const CoachesCard: React.FC<CoachesCardProps> = ({ coach }) => {
   const navigate = useNavigate();
 
   // Handle booking navigation
-  const handleBookWorkout = () => {
+  const handleBookWorkout = (coach: Coach) => {
     navigate("/book-coach", {
       state: {
-        coach: { firstName, lastName, image, userSummary, title, ratings },
+        coach: coach,
       },
     });
   };
@@ -70,10 +57,10 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image={`/Images/${image}.svg`}
-            title={firstName + " " + lastName}
+            image={`/Images/Image/image1.svg`}
+            title={coach.firstName + " " + coach.lastName}
             component="img"
-            alt={firstName + " " + lastName}
+            alt={coach.firstName + " " + coach.lastName}
           />
         </Suspense>
         {/* Card Content */}
@@ -81,16 +68,16 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
           <Box sx={{ display: "flex" }}>
             <Box>
               <Typography gutterBottom variant="h6">
-                {firstName + " " + lastName}
+                {coach.firstName + " " + coach.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {title}
+                {coach.title}
               </Typography>
             </Box>
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography>{ratings}</Typography>
+            <Typography>{coach.ratings}</Typography>
             <Rating name="read-only" value={1} max={1} readOnly />
           </Box>
 
@@ -106,7 +93,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
                 WebkitBoxOrient: "vertical",
               }}
             >
-              {userSummary}
+              {coach.userSummary}
             </Typography>
           </Box>
         </CardContent>
@@ -128,7 +115,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({
             variant="contained"
             size="medium"
             fullWidth
-            onClick={handleBookWorkout}
+            onClick={() => handleBookWorkout(coach)}
             sx={{
               fontFamily: "Lexend, Arial, sans-serif",
               textTransform: "none",

@@ -3,32 +3,21 @@ import Testimonials from "../components/Testimonials.tsx";
 import { Grid, Typography } from "@mui/material";
 import TimeSlotSelector from "../components/Slots.tsx";
 import BookWorkoutProfileCard from "../components/bookWorkoutProfileCard.tsx";
-import { Coach } from "../types/coach.ts";
 import { useLocation, Navigate } from "react-router-dom";
-
-
 import CalenderComponent from "../components/CalenderComponent.tsx";
 import SessionCard from "../components/SessionCard.tsx";
+import { format } from "date-fns";
 
 const BookCoachPage: React.FC = () => {
   const location = useLocation();
   const coach = location.state?.coach;
-  const coachImage = "https://via.placeholder.com/150";
-  const availableSlots = [
-    "8:00 - 9:00 AM",
-    "9:00 - 10:00 AM",
-    "10:00 - 11:00 AM",
-    "3:00 - 4:00 PM",
-    "4:00 - 5:00 PM",
-    "5:00 - 6:00 PM",
-    "6:00 - 7:00 PM",
-    "7:00 - 8:00 PM",
-    "8:00 - 9:00 PM",
-    "9:00 - 10:00 PM",
-  ];
+  const availableSlots = coach.timeSlots;
+
+  const [selectedDate, setSelectedDate] = useState(new Date(2024, 6, 3));
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
   const handleSlotSelection = (slot: string) => {
-    console.log("Selected Slot:", slot);
+    setSelectedSlot(slot);
   };
   if (!coach) {
     return <Navigate to="/coaches" replace />;
@@ -37,30 +26,37 @@ const BookCoachPage: React.FC = () => {
   return (
     <Grid container spacing={2}>
       <BookWorkoutProfileCard
-        image={coachImage}
-        firstName={coach.firstName}
-        lastName={coach.lastName}
-        userSummary={coach.userSummary}
-        title={coach.title}
-        ratings={coach.ratings}
+        coach={coach}
+        onSelect={() => {
+          if (selectedSlot && selectedDate) {
+            console.log("Booking:", {
+              date: format(selectedDate, "MMM d, yyyy"),
+              slot: selectedSlot,
+              coach: coach._id,
+            });
+          }
+        }}
       />
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} md={9} sx={{ padding: "2 rem" }}>
         <Grid
           container
           spacing={1}
           display="flex"
           justifyContent="space-between"
         >
-          <Grid item xs={12} md={12} display="flex">
+          <Grid item xs={12} md={12}>
             <Typography variant="body2">SCHEDULE YOUR SESSION</Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <CalenderComponent />
+            <CalenderComponent
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
           </Grid>
 
           <Grid item xs={12} md={6}>
             <TimeSlotSelector
-              date="Jul 3"
+              date={format(selectedDate, "MMM d")}
               availableSlots={availableSlots}
               onSelect={handleSlotSelection}
             />
@@ -68,8 +64,20 @@ const BookCoachPage: React.FC = () => {
           <Grid item xs={12} md={12} display="flex" marginTop="10px">
             <Typography variant="body2">YOUR UPCOMING WORKOUTS</Typography>
           </Grid>
-          <Grid item xs={12} md={12} display="flex" justifyContent="flex-start" alignItems="center">
-          <SessionCard title="Yoga" date="July 9" time="9:30 AM" duration="1 hour" />
+          <Grid
+            item
+            xs={12}
+            md={12}
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <SessionCard
+              title="Yoga"
+              date="July 9"
+              time="9:30 AM"
+              duration="1 hour"
+            />
           </Grid>
           <Grid item xs={12} md={12} display="flex" marginTop="10px">
             <Typography variant="body2">FEEDBACK</Typography>

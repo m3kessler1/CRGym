@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   format,
   startOfMonth,
@@ -11,12 +11,19 @@ import {
 import { Box, Typography, IconButton, useTheme } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 
-const CalendarComponent = () => {
+type CalendarComponentProps = {
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+};
+
+const CalendarComponent: React.FC<CalendarComponentProps> = ({
+  selectedDate,
+  setSelectedDate,
+}) => {
   const theme = useTheme(); // 🎨 Get MUI theme
   const isDarkMode = theme.palette.mode === "dark"; // 🌙 Check for dark mode
 
   const [currentMonth, setCurrentMonth] = useState(new Date(2024, 6, 1)); // July 2024
-  const [selectedDate, setSelectedDate] = useState(new Date(2024, 6, 3));
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
@@ -39,8 +46,6 @@ const CalendarComponent = () => {
   return (
     <Box
       width="100%"
-      maxWidth="550px"
-      margin="auto"
       textAlign="center"
       //border="1px solid"
       borderColor={isDarkMode ? "#444" : "#ddd"} // 🎨 Adjust border color for dark mode
@@ -71,7 +76,7 @@ const CalendarComponent = () => {
       </Box>
 
       {/* Days of the week */}
-      <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" mt={2}>
+      <Box display="grid" gridTemplateColumns="repeat(7, 1fr)" mt={2} gap={3}>
         {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day) => (
           <Typography
             key={day}

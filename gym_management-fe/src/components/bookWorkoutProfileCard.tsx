@@ -9,42 +9,24 @@ import {
   Card,
   Rating,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { Suspense } from "react";
+import { Coach } from "../types/coach";
 
 // Define the props interface
 interface CoachesCardProps {
-  firstName: string;
-  lastName: string;
-  image: string;
-  userSummary: string;
-  title: string;
-  ratings: number;
+  coach: Coach;
+  onSelect?: () => void;
 }
 
 // CoachesCard component
 const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
-  firstName,
-  lastName,
-  userSummary,
-  title,
-  image,
-  ratings,
+  coach,
+  onSelect,
 }) => {
-  const navigate = useNavigate();
-
   // Handle booking navigation
-  const handleBookWorkout = () => {
-    navigate("/book-coach");
-  };
+
   return (
-    <Grid
-      item
-      xs={12}
-      sm={12}
-      md={3}
-      lg={3}
-    >
+    <Grid item xs={12} sm={12} md={3} lg={3}>
       <Card
         sx={{
           borderRadius: "16px",
@@ -58,10 +40,10 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image={`/Images/${image}.svg`}
-            title={firstName + " " + lastName}
+            image={`/Images/Image/image1.svg`}
+            title={coach.firstName + " " + coach.lastName}
             component="img"
-            alt={firstName + " " + lastName}
+            alt={coach.firstName + " " + coach.lastName}
           />
         </Suspense>
         {/* Card Content */}
@@ -69,40 +51,44 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
           <Box sx={{ display: "flex", mb: 2 }}>
             <Box>
               <Typography gutterBottom variant="h6">
-                {firstName + " " + lastName}
+                {coach.firstName + " " + coach.lastName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {title}
+                {coach.title}
               </Typography>
             </Box>
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography>{ratings}</Typography>
+            <Typography>{coach.ratings}</Typography>
             <Rating name="read-only" value={1} max={1} readOnly />
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" gutterBottom>About Coach</Typography>
+            <Typography variant="body2" gutterBottom>
+              About Coach
+            </Typography>
             <Typography
               variant="body2"
               sx={{
                 color: "text.secondary",
               }}
             >
-              {userSummary}
+              {coach.userSummary}
             </Typography>
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" gutterBottom>Specialization</Typography>
+            <Typography variant="body2" gutterBottom>
+              Specialization
+            </Typography>
             <Typography
               variant="body2"
               sx={{
                 color: "text.secondary",
               }}
             >
-              {"specialization"}
+              {coach.target}
             </Typography>
           </Box>
 
@@ -122,7 +108,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
               variant="contained"
               size="medium"
               fullWidth
-              onClick={handleBookWorkout}
+              onClick={() => onSelect?.()}
               sx={{
                 fontFamily: "Lexend, Arial, sans-serif",
                 textTransform: "none",

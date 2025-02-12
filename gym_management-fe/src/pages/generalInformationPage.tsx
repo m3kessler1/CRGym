@@ -79,7 +79,7 @@ function GeneralInformation() {
       target: userData.target,
       activity: userData.activity,
       title: userData.title,
-      timeSlots: userData.timeSlots
+      timeSlots: userData.timeSlots,
     },
   });
 
@@ -94,7 +94,9 @@ function GeneralInformation() {
           isCoach: userData.isCoach,
           selectedLanguage: userData.selectedLanguage,
           activity: data.activity,
-          timeSlots: Array.isArray(data.timeSlots) ? data.timeSlots : [data.timeSlots || ''],
+          timeSlots: Array.isArray(data.timeSlots)
+            ? data.timeSlots
+            : [data.timeSlots || ""],
         })
       );
 
@@ -133,8 +135,8 @@ function GeneralInformation() {
 
   const handleTimeSlotChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value as string[];
-    const allTimes = timeOptions.filter(time => time !== "All");
-    
+    const allTimes = timeOptions.filter((time) => time !== "All");
+
     let newValue: string[];
     if (value.includes("All")) {
       newValue = allTimes;
@@ -143,7 +145,7 @@ function GeneralInformation() {
     } else {
       newValue = value;
     }
-    
+
     setValue("timeSlots", newValue);
   };
 
@@ -246,18 +248,18 @@ function GeneralInformation() {
               {userData.isCoach && (
                 <>
                   <Grid item xs={12} md={12}>
-                  <TextField
-                id="title"
-                label="Title"
-                fullWidth
-                multiline
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                  },
-                }}
-                {...register("title")}
-              />
+                    <TextField
+                      id="title"
+                      label="Title"
+                      fullWidth
+                      multiline
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "8px",
+                        },
+                      }}
+                      {...register("title")}
+                    />
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <TextField
@@ -265,22 +267,22 @@ function GeneralInformation() {
                       label="About"
                       fullWidth
                       multiline
-                    rows={4}
-                    {...register("userSummary")}
-                    error={!!errors.userSummary}
-                    helperText={errors.userSummary?.message}
-                    variant="outlined"
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "8px",
-                        mb: 1,
-                      },
-                    }}
-                  />
-                </Grid>
-              </>
-            )}
-          </Grid>
+                      rows={4}
+                      {...register("userSummary")}
+                      error={!!errors.userSummary}
+                      helperText={errors.userSummary?.message}
+                      variant="outlined"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "8px",
+                          mb: 1,
+                        },
+                      }}
+                    />
+                  </Grid>
+                </>
+              )}
+            </Grid>
             {!userData.isCoach && (
               <FormControl
                 fullWidth
@@ -325,12 +327,16 @@ function GeneralInformation() {
                 mb: 2,
               }}
             >
-              <InputLabel id="activity">{userData.isCoach ? "Specialization" : "Preferable Activity"}</InputLabel>
+              <InputLabel id="activity">
+                {userData.isCoach ? "Specialization" : "Preferable Activity"}
+              </InputLabel>
               <Select
                 labelId="activity"
                 id="activity"
                 value={activity || ""}
-                label= {userData.isCoach ? "Specialization" : "Preferable Activity"}
+                label={
+                  userData.isCoach ? "Specialization" : "Preferable Activity"
+                }
                 {...register("activity")}
               >
                 <MenuItem value="Yoga">Yoga</MenuItem>
@@ -345,48 +351,50 @@ function GeneralInformation() {
               )}
             </FormControl>
             {userData.isCoach && (
-            <Grid
-            item
-            xs={12}
-            md={12}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <FormControl
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "10px",
-                },
-                mt: 1,
-                mb: 2,
-              }}
-            >
-              <InputLabel id="time">Time Slots</InputLabel>
-              <Select
-                labelId="timeSlots"
-                id="timeSlots"
-                multiple
-                value={timeSlots || []}
-                label="Time Slots"
-                {...register("timeSlots")}
-                onChange={handleTimeSlotChange}
+              <Grid
+                item
+                xs={12}
+                md={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                {timeOptions.map((timeOption, index) => (
-                  <MenuItem key={index} value={timeOption}>
-                    {timeOption}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.timeSlots && (
-                <Typography color="error">{errors.timeSlots.message}</Typography>
-              )}
-            </FormControl>
-          </Grid>
-          )}
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "10px",
+                    },
+                    mt: 1,
+                    mb: 2,
+                  }}
+                >
+                  <InputLabel id="time">Time Slots</InputLabel>
+                  <Select
+                    labelId="timeSlots"
+                    id="timeSlots"
+                    multiple
+                    value={timeSlots || []}
+                    label="Time Slots"
+                    {...register("timeSlots")}
+                    onChange={handleTimeSlotChange}
+                  >
+                    {timeOptions.map((timeOption, index) => (
+                      <MenuItem key={index} value={timeOption}>
+                        {timeOption}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.timeSlots && (
+                    <Typography color="error">
+                      {errors.timeSlots.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
+            )}
 
             <Box
               sx={{

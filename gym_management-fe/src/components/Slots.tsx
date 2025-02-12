@@ -24,9 +24,8 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
 
   return (
     <Box
-      width="550px" // Matches calendar width
+      width="100%" // Matches calendar width
       height="422px" // Fixed height
-      margin="auto"
       p={1}
       bgcolor={isDarkMode ? "#1e1e1e" : "#fff"}
       borderRadius="10px"
@@ -57,8 +56,8 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
           overflowY: "auto", // Scrollable but no scrollbar
           height: "350px",
           "&::-webkit-scrollbar": { display: "none" }, // Hide scrollbar for Webkit browsers
-          "-ms-overflow-style": "none", // Hide scrollbar for IE
-          "scrollbar-width": "none", // Hide scrollbar for Firefox
+          msOverflowStyle: "none", // Hide scrollbar for IE
+          scrollbarWidth: "none", // Hide scrollbar for Firefox
         }}
       >
         {availableSlots.map((slot, index) => (

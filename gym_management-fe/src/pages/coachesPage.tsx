@@ -4,24 +4,17 @@ import CoachesCard from "../components/CoachesCard";
 //import useFetchCoaches from "../hooks/useFetchCoaches";
 import SkeletonCoachPage from "../components/Skeleton/SkeletonCoachPage";
 import useFetchCoaches from "../hooks/useFetchCoaches";
-import Cookies from 'js-cookie';
-import { Coach } from '../types/coach';
+import Cookies from "js-cookie";
+import { Coach } from "../types/coach";
 
 const Coaches: React.FC = () => {
-  const token = Cookies.get('authToken') || '';
+  const token = Cookies.get("authToken") || "";
   const { data: coaches, loading } = useFetchCoaches(token);
   const [page, setPage] = useState(1); // Moved up
 
   if (!coaches) return <SkeletonCoachPage />;
-  const coachesData = coaches.coach.map((coach: Coach, index: number) => ({
-    id: coach.id,
-    firstName: coach.firstName || "",
-    lastName: coach.lastName || "",
-    image: "image" + ((index + 1) % 9),
-    description: coach.specialization || "",
-    title: coach.title || "",
-    ratings: coach.ratings || 0,
-    userSummary: coach.userSummary || "",
+  const coachesData = coaches.coach.map((coach: Coach) => ({
+    coach: coach,
   }));
 
   const itemsPerPage = coachesData.length >= 8 ? 8 : coachesData.length;
@@ -49,7 +42,7 @@ const Coaches: React.FC = () => {
           {/* Coaches Grid */}
           <Grid container spacing={2} sx={{ display: "flex" }}>
             {currentPageData.map((coach, index) => (
-              <CoachesCard key={index} {...coach} />
+              <CoachesCard key={index} coach={coach.coach} />
             ))}
           </Grid>
 

@@ -1,10 +1,11 @@
 export interface Coach {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
-  profilePicture?: string;
-  specialization: string;
-  title: string;
-  ratings: number;
-  userSummary: string;
+  email: string;
+  userSummary?: string;
+  title?: string;
+  ratings?: number;
+  target: string;
+  timeSlots?: string[];
 } 

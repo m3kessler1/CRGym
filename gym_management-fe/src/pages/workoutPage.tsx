@@ -1,11 +1,9 @@
 import { Grid, Pagination, Box, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard.tsx";
 import { useEffect, useState } from "react";
-import { fetchBookedWorkouts, getBookedWorkoutsByUsers } from "../services/workoutService.ts";
+import { getBookedWorkoutsByUsers } from "../services/workoutService.ts";
 import SkeletonWorkoutPage from "../components/Skeleton/SkeletonWorkoutPage.tsx";
-import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
-import { EventStatus } from "../components/WorkoutCard";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store.ts";
 
@@ -17,8 +15,6 @@ interface BookedWorkout {
   time: string;
   activity: string;
 }
-
-
 
 const Workouts: React.FC = () => {
   const itemsPerPage = 8;
@@ -34,19 +30,24 @@ const Workouts: React.FC = () => {
         const response = await getBookedWorkoutsByUsers(userId);
         setBookedWorkouts(response);
       } catch (error) {
+        enqueueSnackbar("Error fetching booked workouts:", {
+          variant: "error",
+        });
         console.error("Error fetching booked workouts:", error);
       }
     };
     fetchBookedWorkouts();
   }, [userId]);
+
   const components = (bookedWorkouts || []).map((workout, index) => (
-    <WorkoutCard key={index} workout={workou } />
+    <WorkoutCard key={index} workout={workout} />
   ));
 
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const displayedComponents = (components || []).slice(startIndex, endIndex);
 
+  console.log();
   const handleChange = (
     _event: React.ChangeEvent<unknown>,
     value: number

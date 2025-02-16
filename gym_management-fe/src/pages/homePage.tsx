@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { DateTime } from "luxon";
 import dayjs from "dayjs";
 import HomeCard from "../components/homeCard";
-import { fetchWorkouts } from "../services/workoutService";
 //import useFetchCoaches from "../hooks/useFetchCoaches";
 import { useThemeContext } from "../context/ThemeContextProvider";
 import SkeletonHomeCard from "../components/Skeleton/SkeletonHomePage";
@@ -43,7 +42,7 @@ const HomePage: React.FC = () => {
   const timeOptions = generateTimeOptions();
   //const { data: coaches } = useFetchCoaches();
   const [isLoading, setIsLoading] = useState(false);
-  const coachName = ( []).map((coach: Coach) => ({
+  const coachName = [].map((coach: Coach) => ({
     id: coach.id,
     name: coach.name || "",
   }));
@@ -80,23 +79,23 @@ const HomePage: React.FC = () => {
     setSearchData(newData);
   };
 
-  useEffect(() => {
-    const fetchWorkoutData = async () => {
-      if (searchData) {
-        try {
-          setIsLoading(true);
-          const response = await fetchWorkouts(searchData);
-          setWorkouts(response);
-          setIsLoading(false);
-        } catch (error) {
-          console.error("Error fetching workouts:", error);
-          setWorkouts([]);
-          setIsLoading(false);
-        }
-      }
-    };
-    fetchWorkoutData();
-  }, [searchData]);
+  // useEffect(() => {
+  //   const fetchWorkoutData = async () => {
+  //     if (searchData) {
+  //       try {
+  //         setIsLoading(true);
+  //         const response = await fetchWorkouts(searchData);
+  //         setWorkouts(response);
+  //         setIsLoading(false);
+  //       } catch (error) {
+  //         console.error("Error fetching workouts:", error);
+  //         setWorkouts([]);
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //   };
+  //   fetchWorkoutData();
+  // }, [searchData]);
 
   type FormData = {
     activity: string;
@@ -189,7 +188,9 @@ const HomePage: React.FC = () => {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="Select Date"
-                  value={dayjs(watch("date")) || dayjs(DateTime.now().toJSDate())}
+                  value={
+                    dayjs(watch("date")) || dayjs(DateTime.now().toJSDate())
+                  }
                   slotProps={{
                     textField: {
                       ...register("date"),

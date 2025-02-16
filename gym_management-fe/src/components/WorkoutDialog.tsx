@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { cancelWorkout } from "../services/workoutService";
-import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 
 interface WorkoutDialogProps {
@@ -32,7 +31,6 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
   onCancelWorkout,
   workoutId,
 }) => {
-  const token = Cookies.get("authToken") || "";
   const dispatch = useDispatch();
   const handleResumeWorkout = () => {
     onClose();
@@ -40,7 +38,7 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
 
   const handleCancelWorkout = async () => {
     try {
-      await cancelWorkout(workoutId, token);
+      await cancelWorkout(workoutId);
       onCancelWorkout();
     } catch (error) {
       console.error("Error cancelling workout:", error);

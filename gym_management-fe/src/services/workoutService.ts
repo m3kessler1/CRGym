@@ -8,14 +8,16 @@ interface WorkoutSearchParams {
   coach: string;
 } // Backend URL
 
-export const bookWorkout = async (userId: string, coachId: string, date: string, time: string, activity: string) => {
+export const bookWorkout = async (userId: string, coachId: string, date: string, time: string, activity: string, status: string) => {
+  console.log(userId, coachId, date, time, activity, status);
   try {
     const response = await axios.post(`${BASE_URL}/book`, {
       userId,
       coachId,
       date,
       time,
-      activity
+      activity,
+      status
     });
     return response.data;
   } catch ( error) {
@@ -34,58 +36,11 @@ export const getBookedWorkoutsByUsers = async (userId: string) => {
   }
 };
 
-export const fetchWorkouts = async (data: WorkoutSearchParams) => {
-  try { 
-    const response = await axios.get(
-      `${BASE_URL}/workouts/available/?sport=${data.activity}&time=${data.time}&date=${data.date}&coach=${data.coach}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching workouts:", error);
-    throw error;
-  }
-};
 
-export const fetchBookedWorkouts = async (token: string) => {
+export const cancelWorkout = async (workoutId: string) => {
+  console.log("workoutId : ", workoutId);
   try {
-    const response = await axios.get(`${BASE_URL}/workouts/booked`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-    },
-  });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching booked workouts:", error);
-    throw error;
-  }
-};
-
-export const fetchUserWorkouts = async (token: string) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/workouts/user`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-    },
-  });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user workouts:", error);
-    throw error;
-  }
-};
-
-export const cancelWorkout = async (workoutId: string, token: string) => {
-  try {
-    const response = await axios.put(
-      `${BASE_URL}/workouts/booked/${workoutId}`, {
-        // Add any necessary body data here if required by your API
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.patch(`${BASE_URL}/${workoutId}/cancel`);
     return response.data;
   } catch (error) {
     console.error("Error cancelling workout:", error);
@@ -93,21 +48,15 @@ export const cancelWorkout = async (workoutId: string, token: string) => {
   }
 };
 
-export const finishWorkout = async (comment: string, rating: number,coachId: string, workoutId: string,  token: string) => {
+export const waitingForFeedback = async (workoutId: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/feedbacks`, {
-      coachId: coachId,
-      comment: comment,
-      rating: rating.toString(),
-      workoutId: workoutId,
-    }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.patch(`${BASE_URL}/${workoutId}/waiting-for-feedback`);
     return response.data;
   } catch (error) {
-    console.error("Error finishing workout:", error);
+    console.error("Error waiting for feedback:", error);
     throw error;
   }
 };
+
+
+

@@ -12,6 +12,20 @@ import {
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import WorkoutDialog from "./WorkoutDialog";
 import WorkoutFeedback from "./WorkoutFeedback";
+import { waitingForFeedback } from "../services/workoutService";
+const workOutSummary = {
+  Yoga: "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being.",
+  Climbing:
+    "Climbing is a sport that involves climbing a wall or a rope. It is a great way to get fit and improve your strength and endurance.",
+  "Strength Training":
+    "Strength training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
+  "Cross-fit":
+    "Crossfit is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
+  "Cardio Training":
+    "Cardio training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
+  Rehabilitation:
+    "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
+};
 
 export type EventStatus =
   | "SCHEDULED"
@@ -53,24 +67,45 @@ function workoutReducer(
   }
 }
 
-interface Workout {
-  status: EventStatus;
-  sport: string;
-  Summary: string;
-  date: string;
-  coachId: string;
-  userName: string;
-  workoutId: string;
-  coachName: string;
+interface WorkoutCardProps {
+  workout: {
+    _id: string;
+    userId: string;
+    coachId: string;
+    date: string;
+    time: string;
+    activity: string;
+    status?: string;
+    userfName?: string;
+    userlName?: string;
+    workoutId?: string;
+    coachName?: string;
+  };
 }
 
-const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
+const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
+  console.log("workout ", workout);
   const [state, dispatch] = React.useReducer(workoutReducer, {
-    status: workout.status,
+    status: workout.status as EventStatus,
     openDialog: false,
     dialogType: null,
   });
   const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkFeedback = async () => {
+      const workoutDate = new Date(
+        workout.date.replace(/(\d+)(th|st|nd|rd)/, "$1")
+      );
+      workoutDate.setHours(parseInt(workout.time.split(":")[0]));
+      if (new Date() > workoutDate && workout.status === "SCHEDULED") {
+        console.log(new Date(), workoutDate);
+        const response = await waitingForFeedback(workout.workoutId || "");
+        console.log("response : ", response);
+      }
+    };
+    checkFeedback();
+  }, [workout]);
 
   return (
     <>
@@ -88,19 +123,19 @@ const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
           <CardContent sx={{ flex: 1 }}>
             <Box sx={{ display: "flex" }}>
               <Typography variant="h6" fontWeight={"bold"}>
-                {workout.sport}
+                {workout.activity}
               </Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Chip
                 label={
                   state.status === "SCHEDULED"
-                    ? "Schedule"
+                    ? "Scheduled"
                     : state.status === "WAITING_FOR_FEEDBACK"
                     ? "Waiting for feedback"
                     : state.status === "FEEDBACK_SUBMITTED" ||
                       state.status === "FINISHED"
                     ? "Finished"
-                    : "Canceled"
+                    : "Cancelled"
                 }
                 sx={{
                   backgroundColor:
@@ -124,7 +159,7 @@ const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
               />
             </Box>
             <Typography variant="h6" sx={{ pt: 1, pb: 2 }}>
-              {workout.Summary}
+              {workOutSummary[workout.activity as keyof typeof workOutSummary]}
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "left", width: "50%" }}>
               <EventAvailableIcon
@@ -134,7 +169,7 @@ const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
                 }}
               />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                {workout.date}
+                {workout.date}, {workout.time}
               </Typography>
             </Box>
           </CardContent>
@@ -186,11 +221,11 @@ const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
 
       <WorkoutDialog
         coachId={workout.coachId}
-        userName={workout.userName}
+        userName={workout.userfName + " " + workout.userlName}
         open={state.openDialog}
         dialogType={state.dialogType}
         onClose={() => dispatch({ type: "CLOSE_DIALOG" })}
-        workoutId={workout.workoutId}
+        workoutId={workout.workoutId || ""}
         onFinishWorkout={() => {
           dispatch({ type: "FINISH_WORKOUT" });
           dispatch({ type: "OPEN_DIALOG", payload: "finish" });
@@ -206,10 +241,10 @@ const WorkoutCard: React.FC<{ workout: Workout }> = ({ workout }) => {
           dispatch({ type: "FINISH_WORKOUT" });
           setFeedbackDialogOpen(false);
         }}
-        coachName={workout.coachName}
-        workoutId={workout.workoutId}
-        coachId={workout.coachId}
-        userName={workout.userName}
+        coachName={workout.coachName || ""}
+        workoutId={workout.workoutId || ""}
+        coachId={workout.coachId || ""}
+        userName={workout.userfName + " " + workout.userlName || ""}
       />
     </>
   );

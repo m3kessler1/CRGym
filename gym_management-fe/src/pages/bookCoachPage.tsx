@@ -9,7 +9,10 @@ import SessionCard from "../components/SessionCard.tsx";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store.ts";
-import { bookWorkout, getBookedWorkoutsByUsers } from "../services/workoutService.ts";
+import {
+  bookWorkout,
+  getBookedWorkoutsByUsers,
+} from "../services/workoutService.ts";
 import { useSnackbar } from "notistack";
 
 interface BookedWorkout {
@@ -33,18 +36,22 @@ const BookCoachPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date(2024, 6, 3));
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
+  const [booked, setBooked] = useState([]);
+  const status = "SCHEDULED";
 
   useEffect(() => {
     const fetchBookedWorkouts = async () => {
       try {
         const response = await getBookedWorkoutsByUsers(userId);
-        setBookedWorkouts(response);
+        console.log("response", response);
+        setBookedWorkouts(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error("Error fetching booked workouts:", error);
+        setBookedWorkouts([]);
       }
     };
     fetchBookedWorkouts();
-  }, [userId]);
+  }, [userId, booked]);
 
   console.log("bookedWorkouts", bookedWorkouts);
   const handleSlotSelection = (slot: string) => {
@@ -62,18 +69,23 @@ const BookCoachPage: React.FC = () => {
         coach={coach}
         onSelect={async (coachId: string) => {
           if (selectedSlot && selectedDate) {
-            console.log("Booking:", {
-              date: format(selectedDate, "MMM d, yyyy"),
-              slot: selectedSlot,
-              coach: coachId,
-              activity: user.activity
-            });
             try {
-              const response = await bookWorkout(userId, coachId, format(selectedDate, "MMM d, yyyy"), selectedSlot, activity);
-              console.log(response);
-              enqueueSnackbar("Workout booked successfully", { variant: "success" });
+              const response = await bookWorkout(
+                userId,
+                coachId,
+                format(selectedDate, "MMM d, yyyy"),
+                selectedSlot,
+                activity,
+                status
+              );
+              setBooked(response);
+              enqueueSnackbar("Workout booked successfully", {
+                variant: "success",
+              });
             } catch (error) {
-              enqueueSnackbar("This slot is already booked", { variant: "error" });
+              enqueueSnackbar("This slot is already booked", {
+                variant: "error",
+              });
               console.error("Error booking workout:", error);
             }
           }
@@ -116,9 +128,9 @@ const BookCoachPage: React.FC = () => {
             alignItems="center"
             gap={2}
           >
-            {bookedWorkouts.map((workout, index) => (
+            {(bookedWorkouts || []).map((workout, index) => (
               <SessionCard
-              key={workout.time + index}
+                key={workout.time + index}
                 title={workout.activity}
                 date={workout.date}
                 time={workout.time}

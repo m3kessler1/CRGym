@@ -7,10 +7,11 @@ interface BookWorkoutRequest {
   time: string;
   activity: string;
   coachId: string;
+  status: string;
 }
 
 export class WorkoutService {
-  public async bookWorkout({ userId, date, time, activity, coachId }: BookWorkoutRequest) {
+  public async bookWorkout({ userId, date, time, activity, coachId, status }: BookWorkoutRequest) {
     const user = await User.findById(userId);
     if (!user) throw new Error('User not found');
 
@@ -23,7 +24,7 @@ export class WorkoutService {
     const existingWorkout = await Workout.findOne({ coachId, date, time });
     if (existingWorkout) throw new Error('Coach is unavailable at the selected time');
 
-    const workout = new Workout({ userId, coachId, date, time, activity });
+    const workout = new Workout({ userId, coachId, date, time, activity, status });
     await workout.save();
 
     return { message: 'Workout booked successfully', workout };
@@ -34,10 +35,48 @@ export class WorkoutService {
     if (!workouts.length) {
       throw new Error('No workouts found for this user');
     }
-    return workouts.map(workout => ({
-      date: workout.date,
-      time: workout.time,
-      activity: workout.activity,
+
+    // Fetch user details
+    const user = await User.findById(userId);
+    if (!user) throw new Error('User not found');
+
+    // Fetch coach details for each workout
+    const workoutsWithDetails = await Promise.all(workouts.map(async workout => {
+      const coach = await User.findById(workout.coachId);
+      return {
+        workoutId: workout._id,
+        date: workout.date,
+        time: workout.time,
+        activity: workout.activity,
+        status: workout.status,
+        userFirstName: user.firstName,
+        userLastName: user.lastName,
+        coachFirstName: coach ? coach.firstName : 'Unknown',
+        coachLastName: coach ? coach.lastName : 'Unknown',
+      };
     }));
+
+    return workoutsWithDetails;
+  }
+
+  async cancelWorkout(workoutId: string) {
+    console.log(workoutId);
+    const workout = await Workout.findById(workoutId);
+    if (!workout) {
+      throw new Error('Workout not found');
+    }
+    workout.status = 'CANCELLED'; // Change status to 'cancel'
+    await workout.save();
+    return workout;
+  }
+
+  async setWorkoutStatusToWaitingForFeedback(workoutId: string) {
+    const workout = await Workout.findById(workoutId);
+    if (!workout) {
+      throw new Error('Workout not found');
+    }
+    workout.status = 'WAITING_FOR_FEEDBACK'; // Change status to 'WAITING_FOR_FEEDBACK'
+    await workout.save();
+    return workout;
   }
 }

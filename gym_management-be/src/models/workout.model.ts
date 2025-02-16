@@ -6,6 +6,7 @@ export interface IWorkout extends Document {
   time: string; // Example: "10:00 AM"
   activity: string; // Example: "Strength Training"
   coachId: mongoose.Types.ObjectId;
+  status: string; // Example: "pending"
 }
 
 const WorkoutSchema = new Schema<IWorkout>({
@@ -13,7 +14,8 @@ const WorkoutSchema = new Schema<IWorkout>({
   date: { type: String, required: true },
   time: { type: String, required: true },
   activity: { type: String, required: true },
-  coachId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  coachId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  status: { type: String, required: true }
 });
 
 export const Workout = mongoose.model<IWorkout>('Workout', WorkoutSchema);

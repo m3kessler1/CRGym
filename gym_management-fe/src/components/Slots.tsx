@@ -76,6 +76,7 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
               border:
                 selectedSlot === slot ? `2px solid ${primaryColor}` : "none",
               textAlign: "center",
+
               borderRadius: "8px",
               padding: "12px",
               margin: "5px 0",

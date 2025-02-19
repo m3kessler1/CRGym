@@ -9,13 +9,21 @@ import { Rating } from "@mui/material";
 interface TestimonialData {
   // Add specific fields based on your data structure
   // For now it's empty since the data prop isn't being used
+  id: string;
+  coachId: string;
+  firstName: string;
+  lastName: string;
+  rating: number;
+  testimonial: string;
+  workoutId: string;
+  date: string;
 }
 
 interface TestimonialProps {
-  data?: TestimonialData;
+  testimonial: TestimonialData;
 }
 
-const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
+const Testimonial: React.FC<TestimonialProps> = ({ testimonial }) => {
   return (
     <Card
       sx={{
@@ -35,21 +43,25 @@ const Testimonial: React.FC<TestimonialProps> = ({ data }) => {
             }}
             aria-label="testimonial"
           >
-            A
+            {(testimonial.firstName || "").charAt(0)}
+            {(testimonial.lastName || "").charAt(0)}
           </Avatar>
         }
-        action={<Rating name="size-small" defaultValue={2} size="small" />}
-        title="Aditya Singh"
-        subheader="6/8/2024"
+        action={
+          <Rating
+            name="size-small"
+            defaultValue={testimonial.rating}
+            readOnly
+            size="small"
+          />
+        }
+        title={`${testimonial.firstName} ${testimonial.lastName}`}
+        subheader={testimonial.date}
       />
 
       <CardContent>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          I've been attending classes with Kristin Watson for six months, and
-          the transformation in my flexibility and overall well-being has been
-          incredible. Her calm demeanor and expert guidance make each session a
-          refreshing experience. Highly recommend for anyone looking to enhance
-          their yoga practice!
+          {testimonial.testimonial}
         </Typography>
       </CardContent>
     </Card>

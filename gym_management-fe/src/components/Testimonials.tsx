@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Testimonial from "./Testimonial.tsx";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
+import { getTestimonials } from "../services/testimonialsService";
 
 interface TestimonialsProps {
-  testimonials?: any[]; // Consider defining a more specific type for testimonials
+  coachId: string;
 }
 
-const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
-  const component = Array(8)
-    .fill(null)
-    .map((_, index) => <Testimonial key={index} />);
+const Testimonials: React.FC<TestimonialsProps> = ({ coachId }) => {
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const fetchedTestimonials = await getTestimonials(coachId);
+        setTestimonials(fetchedTestimonials[coachId] || []);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+    fetchTestimonials();
+  }, [coachId]);
+
+  const component = (testimonials || []).map((testimonial, index) => (
+    <Testimonial key={index} testimonial={testimonial} />
+  ));
+
+  return loading ? (
+    <CircularProgress />
+  ) : (
     <Box
       sx={{
         display: "flex",

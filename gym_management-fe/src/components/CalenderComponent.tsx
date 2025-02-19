@@ -23,7 +23,10 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
   const theme = useTheme(); // 🎨 Get MUI theme
   const isDarkMode = theme.palette.mode === "dark"; // 🌙 Check for dark mode
 
-  const [currentMonth, setCurrentMonth] = useState(new Date(2024, 6, 1)); // July 2024
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Set initial month to current month
+
+  const today = new Date(); // Get today's date
+  today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
@@ -32,9 +35,14 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
   const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
   const handlePrevMonth = () => {
-    setCurrentMonth(
-      (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
-    );
+    if (
+      currentMonth.getMonth() !== today.getMonth() ||
+      currentMonth.getFullYear() !== today.getFullYear()
+    ) {
+      setCurrentMonth(
+        (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
+      );
+    }
   };
 
   const handleNextMonth = () => {
@@ -116,7 +124,12 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                 : "#777"
             }
             position="relative"
-            onClick={() => setSelectedDate(day)}
+            onClick={() => {
+              if (day >= today) {
+                // Only allow selection if the day is today or in the future
+                setSelectedDate(day);
+              }
+            }}
             sx={{
               cursor: "pointer",
               border: isSameDay(day, selectedDate)

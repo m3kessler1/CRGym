@@ -92,7 +92,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
                 color: "text.secondary",
               }}
             >
-              {coach.target}
+              {coach.activity}
             </Typography>
           </Box>
 

@@ -9,7 +9,7 @@ export interface RegisterData {
   activity: string;
 }
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL + "/users";
 
 export const registerUser = async (data: RegisterData) => {
   try {

@@ -13,7 +13,6 @@ const updatePasswordUser = async (data: object, userId: string): Promise<AxiosRe
     if (!token) {
       throw new Error('No auth token found');
     }
-    console.log("data", data);
     setLoading(true);
     try {
       const response = await updatePassword(data, token, userId);

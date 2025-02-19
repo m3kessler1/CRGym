@@ -28,10 +28,10 @@ export const getUserWorkoutsController = async (req: Request, res: Response) => 
 };
 
 export const cancelWorkoutController = async (req: Request, res: Response) => {
-  console.log("cancel workout controller");
   try {
-    const { workoutId } = req.params; // Assuming workoutId is passed as a URL parameter
-    const updatedWorkout = await workoutService.cancelWorkout(workoutId);
+    const { workoutId } = req.params; // Get workoutId from URL parameters
+    const { status } = req.body; // Get status from request body
+    const updatedWorkout = await workoutService.cancelWorkout(workoutId, status);
     res.status(200).json(updatedWorkout);
   } catch (error) {
     res.status(400).json({ error: (error as Error).message });

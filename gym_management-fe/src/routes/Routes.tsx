@@ -3,7 +3,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 import RegisterPage from "../pages/registerPage.tsx";
 import LoginPage from "../pages/loginPage.tsx";
@@ -30,14 +29,12 @@ function AppRoutesContent(): JSX.Element {
     .split("; ")
     .find((row) => row.startsWith("authToken"));
   const userData = useSelector((state: RootState) => state.user);
-  const location = useLocation();
   const getDefaultRoute = () => {
     if (userData.isCoach && isAuthenticated) {
       return "/workouts";
     }
     return "/home";
   };
-  console.log("userData", userData.isCoach, isAuthenticated, getDefaultRoute());
 
   return (
     <Routes>
@@ -94,9 +91,13 @@ function AppRoutesContent(): JSX.Element {
         <Route
           path="/book-coach"
           element={
-            <ProtectedRoute>
-              <BookCoachPage />
-            </ProtectedRoute>
+            !userData.isCoach ? (
+              <ProtectedRoute>
+                <BookCoachPage />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/home" replace />
+            )
           }
         />
       </Route>

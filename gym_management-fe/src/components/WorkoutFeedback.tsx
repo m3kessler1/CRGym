@@ -20,41 +20,47 @@ import StarIcon from "@mui/icons-material/Star";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 //import { finishWorkout } from "../services/workoutService";
-import Cookies from "js-cookie";
+
 import { enqueueSnackbar } from "notistack";
+import { addTestimonial } from "../services/testimonialsService";
+import { updateStatus } from "../services/workoutService";
 interface FeedbackDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (feedback: { rating: number; comment?: string }) => void;
-  userName: string;
-  workoutId: string;
-  coachId: string;
-  coachName: string;
+  workout: Workout;
 }
 
+interface Workout {
+  activity: string;
+  coachId: string;
+  coachFirstName: string;
+  coachLastName: string;
+  date: string;
+  time: string;
+  status: string;
+  workoutId: string;
+  userFirstName: string;
+  userLastName: string;
+}
 // Add Zod schema
 const feedbackSchema = z.object({
   rating: z.number().min(1).max(5),
   comment: z
     .string()
     .min(3, "Comment must be at least 3 characters")
-    .max(500, "Comment must not exceed 500 characters")
-    .optional()
-    .or(z.literal("")), // Allow empty string
+    .max(500, "Comment must not exceed 500 characters"),
 });
 
 const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   open,
   onClose,
-  onSubmit,
-  userName,
-  workoutId,
-  coachId,
-  coachName,
+  workout,
 }) => {
+  const dispatch = useDispatch();
   const [rating, setRating] = React.useState<number | null>(0);
   const [comment, setComment] = React.useState("");
   const [errors, setErrors] = React.useState<{
@@ -63,49 +69,33 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   }>({});
   const userData = useSelector((state: RootState) => state.user);
   const handleSubmit = async () => {
-    // try {
-    //   const validatedData = userData.isCoach
-    //     ? feedbackSchema.parse({ rating, comment })
-    //     : feedbackSchema.parse({ rating: 1, comment: comment });
-    //   try {
-    //     await finishWorkout(
-    //       validatedData.comment || "",
-    //       validatedData.rating,
-    //       coachId,
-    //       workoutId,
-    //       Cookies.get("authToken") || ""
-    //     );
-    //     onSubmit(validatedData);
-    //     setRating(0);
-    //     setComment("");
-    //     setErrors({});
-    //     onClose();
-    //     enqueueSnackbar("Feedback submitted successfully", {
-    //       variant: "success",
-    //       anchorOrigin: {
-    //         vertical: "top",
-    //         horizontal: "center",
-    //       },
-    //     });
-    //   } catch (error) {
-    //     console.error("Error finishing workout:", error);
-    //     enqueueSnackbar("Error finishing workout", {
-    //       variant: "error",
-    //       anchorOrigin: {
-    //         vertical: "top",
-    //         horizontal: "center",
-    //       },
-    //     });
-    //   }
-    // } catch (error) {
-    //   if (error instanceof z.ZodError) {
-    //     const formattedErrors: Record<string, string> = {};
-    //     error.errors.forEach((err) => {
-    //       formattedErrors[err.path[0]] = err.message;
-    //     });
-    //     setErrors(formattedErrors);
-    //   }
-    // }
+    try {
+      const validatedData = feedbackSchema.parse({ rating, comment });
+      const testimonial = {
+        coachId: workout.coachId,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        rating: validatedData.rating,
+        feedback: validatedData.comment,
+        workoutId: workout.workoutId,
+      };
+      await addTestimonial(testimonial);
+      await updateStatus(workout.workoutId, "FINISHED");
+      dispatch({ type: "FINISH_WORKOUT" });
+      enqueueSnackbar("Feedback submitted successfully", {
+        variant: "success",
+      });
+      onClose();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const formattedErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          formattedErrors[err.path[0]] = err.message;
+        });
+        setErrors(formattedErrors);
+      }
+      enqueueSnackbar("Failed to submit feedback", { variant: "error" });
+    }
   };
 
   return (
@@ -132,7 +122,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           <CloseIcon />
         </IconButton>
         <DialogContentText fontSize="14px">
-          {userData.isCoach
+          {!userData.isCoach
             ? "Please rate your workout experience below"
             : "Please rate the Client's performance below"}
         </DialogContentText>
@@ -144,13 +134,13 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
               <Grid item xs={3.2} md={3.2}>
                 <Avatar
                   src={
-                    userData.isCoach
+                    !userData.isCoach
                       ? "/Images/image1.svg"
                       : "/Images/image9.svg"
                   }
                   sx={{
-                    width: userData.isCoach ? "90%" : "70px",
-                    height: userData.isCoach ? "90%" : "70px",
+                    width: "70px",
+                    height: "70px",
                   }}
                 ></Avatar>
               </Grid>
@@ -159,20 +149,22 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                 xs={8.8}
                 md={8.8}
                 sx={{
-                  mt: userData.isCoach ? 0 : 1,
-                  ml: userData.isCoach ? 0 : 1,
+                  mt: !userData.isCoach ? 0 : 1,
+                  ml: !userData.isCoach ? 0 : 1,
                 }}
               >
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  {userData.isCoach ? coachName : userName}
+                  {!userData.isCoach
+                    ? workout.coachFirstName + " " + workout.coachLastName
+                    : workout.userFirstName + " " + workout.userLastName}
                 </Typography>
 
                 <Typography variant="body2" fontWeight={300} fontSize="14px">
-                  {userData.isCoach
-                    ? "Certified personal yoga trainer"
+                  {!userData.isCoach
+                    ? "Certified personal Yoga Trainer"
                     : "Client"}
                 </Typography>
-                {userData.isCoach ? (
+                {!userData.isCoach ? (
                   <>
                     <Typography
                       variant="body2"
@@ -223,7 +215,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                 />
                 Type :{" "}
                 <Typography variant="body2" fontWeight={300} component="span">
-                  Yoga
+                  {workout.activity}
                 </Typography>
               </Typography>
               <Typography
@@ -243,7 +235,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                     color: "grey.500",
                   }}
                 />
-                Time :{" "}
+                Duration :{" "}
                 <Typography variant="body2" fontWeight={300} component="span">
                   1h
                 </Typography>
@@ -267,12 +259,12 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                 />
                 Date :{" "}
                 <Typography variant="body2" fontWeight={300} component="span">
-                  July 9th, 12:30 AM
+                  {workout.date}
                 </Typography>
               </Typography>
             </Grid>
           </Grid>
-          {userData.isCoach ? (
+          {!userData.isCoach ? (
             <Box
               sx={{
                 display: "flex",
@@ -357,7 +349,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           }}
           fullWidth
           variant="contained"
-          disabled={userData.isCoach && !rating}
+          disabled={!rating || !comment}
         >
           Submit Feedback
         </Button>

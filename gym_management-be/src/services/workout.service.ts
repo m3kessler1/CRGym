@@ -53,19 +53,19 @@ export class WorkoutService {
         userLastName: user.lastName,
         coachFirstName: coach ? coach.firstName : 'Unknown',
         coachLastName: coach ? coach.lastName : 'Unknown',
+        coachId: coach ? coach._id : 'Unknown',
       };
     }));
 
     return workoutsWithDetails;
   }
 
-  async cancelWorkout(workoutId: string) {
-    console.log(workoutId);
+  async cancelWorkout(workoutId: string, status: string) {
     const workout = await Workout.findById(workoutId);
     if (!workout) {
       throw new Error('Workout not found');
     }
-    workout.status = 'CANCELLED'; // Change status to 'cancel'
+    workout.status = status; // Change status to 'cancel'
     await workout.save();
     return workout;
   }

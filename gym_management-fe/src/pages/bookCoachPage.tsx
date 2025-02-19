@@ -32,8 +32,8 @@ const BookCoachPage: React.FC = () => {
   const availableSlots = coach.timeSlots;
   const user = useSelector((state: RootState) => state.user);
   const userId = user.id;
-  const activity = user.activity;
-  const [selectedDate, setSelectedDate] = useState(new Date(2024, 6, 3));
+  const activity = coach.activity;
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
   const [booked, setBooked] = useState([]);
@@ -43,7 +43,6 @@ const BookCoachPage: React.FC = () => {
     const fetchBookedWorkouts = async () => {
       try {
         const response = await getBookedWorkoutsByUsers(userId);
-        console.log("response", response);
         setBookedWorkouts(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error("Error fetching booked workouts:", error);
@@ -53,7 +52,6 @@ const BookCoachPage: React.FC = () => {
     fetchBookedWorkouts();
   }, [userId, booked]);
 
-  console.log("bookedWorkouts", bookedWorkouts);
   const handleSlotSelection = (slot: string) => {
     setSelectedSlot(slot);
   };
@@ -128,21 +126,40 @@ const BookCoachPage: React.FC = () => {
             alignItems="center"
             gap={2}
           >
-            {(bookedWorkouts || []).map((workout, index) => (
-              <SessionCard
-                key={workout.time + index}
-                title={workout.activity}
-                date={workout.date}
-                time={workout.time}
-                duration="1 hour"
-              />
-            ))}
+            {(bookedWorkouts || [])
+              .filter((workout) => {
+                const workoutDate = new Date(workout.date); // Assuming format is YYYY-MM-DD
+                const workoutTimeParts = workout.time.split(":"); // Assuming format is HH:mm
+                const workoutTime = new Date();
+                workoutTime.setHours(
+                  parseInt(workoutTimeParts[0]),
+                  parseInt(workoutTimeParts[1]),
+                  0,
+                  0
+                ); // Set hours and minutes
+
+                const now = new Date();
+                // Compare both date and time
+                return (
+                  workoutDate > now ||
+                  (workoutDate.getTime() === now.getTime() && workoutTime > now)
+                );
+              })
+              .map((workout, index) => (
+                <SessionCard
+                  key={workout.time + index}
+                  title={workout.activity}
+                  date={workout.date}
+                  time={workout.time}
+                  duration="1 hour"
+                />
+              ))}
           </Grid>
           <Grid item xs={12} md={12} display="flex" marginTop="10px">
             <Typography variant="body2">FEEDBACK</Typography>
           </Grid>
           <Grid item xs={12} md={12} display="flex" justifyContent="flex-start">
-            <Testimonials />
+            <Testimonials coachId={coach._id} />
           </Grid>
         </Grid>
       </Grid>

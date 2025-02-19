@@ -1,15 +1,9 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL_WORKOUT;
-interface WorkoutSearchParams {
-  activity: string;
-  time: string;
-  date: string;
-  coach: string;
-} // Backend URL
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL + "/workouts";
 
 export const bookWorkout = async (userId: string, coachId: string, date: string, time: string, activity: string, status: string) => {
-  console.log(userId, coachId, date, time, activity, status);
+  
   try {
     const response = await axios.post(`${BASE_URL}/book`, {
       userId,
@@ -37,10 +31,9 @@ export const getBookedWorkoutsByUsers = async (userId: string) => {
 };
 
 
-export const cancelWorkout = async (workoutId: string) => {
-  console.log("workoutId : ", workoutId);
+export const updateStatus = async (workoutId: string, status: string) => {
   try {
-    const response = await axios.patch(`${BASE_URL}/${workoutId}/cancel`);
+    const response = await axios.patch(`${BASE_URL}/${workoutId}/status`, { status });
     return response.data;
   } catch (error) {
     console.error("Error cancelling workout:", error);

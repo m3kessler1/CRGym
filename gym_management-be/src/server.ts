@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes';
 import cors from 'cors';
 import workoutRoutes from './routes/workout.routes';
 import { cancelWorkoutController } from './controllers/workout.controller';
+import { testimonialRoutes } from './routes/testimonial.routes';
 // Load environment variables
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 // Use routes
 app.use('/api/users', userRoutes); 
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 app.get('/', (req: Request, res: Response) => {
   res.send('API is running...');
 });

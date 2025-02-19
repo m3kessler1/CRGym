@@ -1,18 +1,28 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
-export interface ITestimonial extends Document {
-  testimonial: string;
-  userId: string;
-  coachId: string;
+interface ITestimonialEntry {
+  firstName: string;
+  lastName: string;
+  date: string;
   rating: number;
+  testimonial: string;
+  workoutId: string;
 }
 
-const testimonialSchema: Schema = new Schema({
-  testimonial: { type: String, required: true },
-  userId: { type: String, required: true },
-  coachId: { type: String, required: true },
-  rating: { type: Number, required: true },
-});
+export interface ITestimonialDoc {
+  [coachId: string]: ITestimonialEntry[];
+}
 
-export const Testimonial = mongoose.model<ITestimonial>("Testimonial", testimonialSchema);
+export interface ITestimonial extends Document {
+  toObject(): { [key: string]: any };
+}
+
+const TestimonialSchema = new Schema({}, { 
+  strict: false,
+  timestamps: false,
+  versionKey: false,
+  _id: false
+}); 
+
+export const Testimonial = mongoose.model<ITestimonial>('Testimonial', TestimonialSchema);
 

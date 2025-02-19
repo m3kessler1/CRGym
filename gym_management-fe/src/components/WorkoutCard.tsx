@@ -14,16 +14,16 @@ import WorkoutDialog from "./WorkoutDialog";
 import WorkoutFeedback from "./WorkoutFeedback";
 import { waitingForFeedback } from "../services/workoutService";
 const workOutSummary = {
-  Yoga: "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being.",
-  Climbing:
+  yoga: "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being.",
+  climbing:
     "Climbing is a sport that involves climbing a wall or a rope. It is a great way to get fit and improve your strength and endurance.",
-  "Strength Training":
+  strengthtraining:
     "Strength training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  "Cross-fit":
+  crossfit:
     "Crossfit is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  "Cardio Training":
+  cardiotraining:
     "Cardio training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  Rehabilitation:
+  rehabilitation:
     "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
 };
 
@@ -69,22 +69,20 @@ function workoutReducer(
 
 interface WorkoutCardProps {
   workout: {
-    _id: string;
-    userId: string;
+    activity: string;
     coachId: string;
+    coachFirstName: string;
+    coachLastName: string;
     date: string;
     time: string;
-    activity: string;
-    status?: string;
-    userfName?: string;
-    userlName?: string;
-    workoutId?: string;
-    coachName?: string;
+    status: string;
+    workoutId: string;
+    userFirstName: string;
+    userLastName: string;
   };
 }
 
 const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
-  console.log("workout ", workout);
   const [state, dispatch] = React.useReducer(workoutReducer, {
     status: workout.status as EventStatus,
     openDialog: false,
@@ -99,13 +97,15 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
       );
       workoutDate.setHours(parseInt(workout.time.split(":")[0]));
       if (new Date() > workoutDate && workout.status === "SCHEDULED") {
-        console.log(new Date(), workoutDate);
-        const response = await waitingForFeedback(workout.workoutId || "");
-        console.log("response : ", response);
+        await waitingForFeedback(workout.workoutId || "");
       }
     };
     checkFeedback();
   }, [workout]);
+
+  React.useEffect(() => {
+    console.log("Current status:", state.status); // Debugging line
+  }, [state.status]); // This will log whenever state.status changes
 
   return (
     <>
@@ -159,7 +159,13 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
               />
             </Box>
             <Typography variant="h6" sx={{ pt: 1, pb: 2 }}>
-              {workOutSummary[workout.activity as keyof typeof workOutSummary]}
+              {
+                workOutSummary[
+                  workout.activity
+                    .replace(/\s+/g, "")
+                    .toLowerCase() as keyof typeof workOutSummary
+                ]
+              }
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "left", width: "50%" }}>
               <EventAvailableIcon
@@ -221,7 +227,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
 
       <WorkoutDialog
         coachId={workout.coachId}
-        userName={workout.userfName + " " + workout.userlName}
+        userName={workout.userFirstName + " " + workout.userLastName}
         open={state.openDialog}
         dialogType={state.dialogType}
         onClose={() => dispatch({ type: "CLOSE_DIALOG" })}
@@ -237,14 +243,11 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
       <WorkoutFeedback
         open={feedbackDialogOpen}
         onClose={() => setFeedbackDialogOpen(false)}
-        onSubmit={(feedback) => {
+        onSubmit={() => {
           dispatch({ type: "FINISH_WORKOUT" });
           setFeedbackDialogOpen(false);
         }}
-        coachName={workout.coachName || ""}
-        workoutId={workout.workoutId || ""}
-        coachId={workout.coachId || ""}
-        userName={workout.userfName + " " + workout.userlName || ""}
+        workout={workout}
       />
     </>
   );

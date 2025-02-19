@@ -6,6 +6,6 @@ export interface Coach {
   userSummary?: string;
   title?: string;
   ratings?: number;
-  target: string;
+  activity: string;
   timeSlots?: string[];
 } 

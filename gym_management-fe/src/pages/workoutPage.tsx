@@ -8,17 +8,20 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store.ts";
 
 interface BookedWorkout {
-  _id: string;
-  userId: string;
+  activity: string;
   coachId: string;
+  coachFirstName: string;
+  coachLastName: string;
   date: string;
   time: string;
-  activity: string;
+  status: string;
+  workoutId: string;
+  userFirstName: string;
+  userLastName: string;
 }
 
 const Workouts: React.FC = () => {
   const itemsPerPage = 8;
-  const totalItems = 8;
   const [page, setPage] = useState<number>(1);
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
   const user = useSelector((state: RootState) => state.user);
@@ -38,8 +41,27 @@ const Workouts: React.FC = () => {
     };
     fetchBookedWorkouts();
   }, [userId]);
+  const sortedWorkouts = (bookedWorkouts || []).sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.time}`); // Convert to Date object
+    const dateB = new Date(`${b.date}T${b.time}`); // Convert to Date object
 
-  const components = (bookedWorkouts || []).map((workout, index) => (
+    const now = new Date(); // Current date and time
+
+    // Check if both dates are upcoming
+    if (dateA >= now && dateB >= now) {
+      return dateA.getTime() - dateB.getTime(); // Sort upcoming dates in ascending order
+    }
+    // Check if both dates are past
+    else if (dateA < now && dateB < now) {
+      return dateB.getTime() - dateA.getTime(); // Sort past dates in descending order
+    }
+    // One date is upcoming and the other is past
+    else {
+      return dateA >= now ? -1 : 1; // Upcoming dates come first
+    }
+  });
+
+  const components = sortedWorkouts.map((workout, index) => (
     <WorkoutCard key={index} workout={workout} />
   ));
 
@@ -47,14 +69,14 @@ const Workouts: React.FC = () => {
   const endIndex = startIndex + itemsPerPage;
   const displayedComponents = (components || []).slice(startIndex, endIndex);
 
-  console.log();
+  const totalItems = bookedWorkouts.length;
+
   const handleChange = (
     _event: React.ChangeEvent<unknown>,
     value: number
   ): void => {
     setPage(value);
   };
-
   return (
     <>
       {bookedWorkouts.length === 0 ? (

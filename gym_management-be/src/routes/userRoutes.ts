@@ -15,5 +15,6 @@ router.put("/update/:userId", protect, userController.updateUser.bind(userContro
 
 router.put("/change-password/:userId", protect, userController.changePassword.bind(userController));
 
+router.post('/filter', userController.filterCoaches.bind(userController));
 export default router;
 

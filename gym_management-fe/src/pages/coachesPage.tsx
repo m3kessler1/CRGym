@@ -42,7 +42,11 @@ const Coaches: React.FC = () => {
           {/* Coaches Grid */}
           <Grid container spacing={2} sx={{ display: "flex" }}>
             {currentPageData.map((coach, index) => (
-              <CoachesCard key={index} coach={coach.coach} />
+              <CoachesCard
+                key={index}
+                coach={coach.coach}
+                image={`/Images/image${(index + 1) % 10}.svg`}
+              />
             ))}
           </Grid>
 

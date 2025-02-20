@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import { Workout } from '../models/workout.model';
 
 // Path to RSA keys
 export class UserController {
@@ -188,6 +189,39 @@ export class UserController {
       res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
       res.status(500).json({ message: `Error: ${(error as Error).message}` });
+    }
+  }
+
+  public async filterCoaches(req: Request, res: Response): Promise<void> {
+    const { activity, date, time, coach } = req.body;
+
+    try {
+      const filterCriteria: any = { isCoach: true }; // Ensure we are only looking for coaches
+
+      // If activity is specified and not "All", filter by activity
+      if (activity && activity !== 'All') {
+        filterCriteria.activity = activity;
+      }
+
+      // If a specific coach is specified and not "All", filter by coach ID
+      if (coach && coach !== 'All') {
+        filterCriteria._id = coach; // Directly use the coach ID
+      }
+
+      // Find coaches based on the constructed filter criteria
+      const coaches = await User.find(filterCriteria);
+
+      // Filter coaches based on time availability if time is specified and not "All"
+      const availableCoaches = coaches.filter(coach => {
+        return time === 'All' || coach.timeSlots.includes(time); // Check if the specified time is in the coach's timeSlots or if time is "All"
+      });
+
+      // If a date is specified, you can add additional logic here if needed
+      // For now, we are just filtering based on time and activity
+
+      res.status(200).json(availableCoaches);
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
     }
   }
 }

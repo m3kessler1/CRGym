@@ -18,6 +18,7 @@ interface CoachesCardProps {
   onSelect?: (coachId: string) => void;
   selectedSlot: string | null;
   selectedDate: string | null;
+  image: string;
 }
 
 // CoachesCard component
@@ -26,6 +27,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
   onSelect,
   selectedSlot,
   selectedDate,
+  image,
 }) => {
   // Handle booking navigation
 
@@ -44,7 +46,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image={`/Images/Image/image1.svg`}
+            image={image}
             title={coach.firstName + " " + coach.lastName}
             component="img"
             alt={coach.firstName + " " + coach.lastName}

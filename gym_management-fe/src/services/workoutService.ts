@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL + "/workouts";
 
+
 export const bookWorkout = async (userId: string, coachId: string, date: string, time: string, activity: string, status: string) => {
   
   try {
@@ -50,6 +51,11 @@ export const waitingForFeedback = async (workoutId: string) => {
     throw error;
   }
 };
+
+
+
+// Example usage
+
 
 
 

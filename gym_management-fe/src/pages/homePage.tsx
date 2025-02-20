@@ -17,14 +17,12 @@ import { useForm } from "react-hook-form";
 import { DateTime } from "luxon";
 import dayjs from "dayjs";
 import HomeCard from "../components/homeCard";
-//import useFetchCoaches from "../hooks/useFetchCoaches";
 import { useThemeContext } from "../context/ThemeContextProvider";
 import SkeletonHomeCard from "../components/Skeleton/SkeletonHomePage";
-
-interface Coach {
-  id: number;
-  name: string;
-}
+import { filterCoaches } from "../services/userService";
+import useFetchCoaches from "../hooks/useFetchCoaches";
+import Cookies from "js-cookie";
+import { Coach } from "../types/coach";
 
 const generateTimeOptions = () => {
   const times: string[] = ["All"];
@@ -39,13 +37,14 @@ const generateTimeOptions = () => {
 
 const HomePage: React.FC = () => {
   const { mode } = useThemeContext();
+  const token = Cookies.get("authToken") || "";
   const timeOptions = generateTimeOptions();
-  //const { data: coaches } = useFetchCoaches();
-  const [isLoading, setIsLoading] = useState(false);
-  const coachName = [].map((coach: Coach) => ({
-    id: coach.id,
-    name: coach.name || "",
-  }));
+  const { data: coaches, loading } = useFetchCoaches(token);
+  const coachesData =
+    coaches?.coach?.map((coach: Coach) => ({
+      coach: coach,
+    })) || [];
+
   const {
     register,
     handleSubmit,
@@ -79,24 +78,27 @@ const HomePage: React.FC = () => {
     setSearchData(newData);
   };
 
-  // useEffect(() => {
-  //   const fetchWorkoutData = async () => {
-  //     if (searchData) {
-  //       try {
-  //         setIsLoading(true);
-  //         const response = await fetchWorkouts(searchData);
-  //         setWorkouts(response);
-  //         setIsLoading(false);
-  //       } catch (error) {
-  //         console.error("Error fetching workouts:", error);
-  //         setWorkouts([]);
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   };
-  //   fetchWorkoutData();
-  // }, [searchData]);
+  interface SearchData {
+    activity: string;
+    date: string;
+    time: string;
+    coach: string;
+  }
 
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        if (searchData) {
+          const response = await filterCoaches(searchData as SearchData);
+          setWorkouts(response);
+        }
+      } catch (error) {
+        console.error("Error fetching workouts:", error);
+        setWorkouts([]);
+      }
+    };
+    fetchWorkouts();
+  }, [searchData]);
   type FormData = {
     activity: string;
     date: string;
@@ -276,9 +278,9 @@ const HomePage: React.FC = () => {
                 {...register("coach")}
               >
                 <MenuItem value="All">All</MenuItem>
-                {coachName.map((coach) => (
-                  <MenuItem key={coach.id} value={coach.id}>
-                    {coach.name}
+                {coachesData.map((coach) => (
+                  <MenuItem key={coach.coach._id} value={coach.coach._id}>
+                    {coach.coach.firstName + " " + coach.coach.lastName}
                   </MenuItem>
                 ))}
               </Select>
@@ -316,7 +318,7 @@ const HomePage: React.FC = () => {
             </Button>
           </Grid>
 
-          {isLoading ? (
+          {loading ? (
             <SkeletonHomeCard />
           ) : workouts.length > 0 ? (
             <>
@@ -324,7 +326,13 @@ const HomePage: React.FC = () => {
                 <Typography fontWeight={300}>AVAILABLE WORKOUTS</Typography>
               </Grid>
               {workouts.map((workout, index) => (
-                <HomeCard key={index} workout={workout} />
+                <HomeCard
+                  key={index}
+                  image={`/Images/image${(index + 1) % 10}.svg`}
+                  date={watch("date")}
+                  time={watch("time")}
+                  coach={workout}
+                />
               ))}
             </>
           ) : (

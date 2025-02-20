@@ -22,6 +22,7 @@ interface BookedWorkout {
   date: string;
   time: string;
   activity: string;
+  status: string;
 }
 
 const BookCoachPage: React.FC = () => {
@@ -29,10 +30,12 @@ const BookCoachPage: React.FC = () => {
 
   const location = useLocation();
   const coach = location.state?.coach;
+  const image = location.state?.image;
   const availableSlots = coach.timeSlots;
   const user = useSelector((state: RootState) => state.user);
   const userId = user.id;
   const activity = coach.activity;
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
@@ -65,6 +68,7 @@ const BookCoachPage: React.FC = () => {
         selectedSlot={selectedSlot}
         selectedDate={format(selectedDate, "MMM d, yyyy")}
         coach={coach}
+        image={image}
         onSelect={async (coachId: string) => {
           if (selectedSlot && selectedDate) {
             try {
@@ -127,24 +131,7 @@ const BookCoachPage: React.FC = () => {
             gap={2}
           >
             {(bookedWorkouts || [])
-              .filter((workout) => {
-                const workoutDate = new Date(workout.date); // Assuming format is YYYY-MM-DD
-                const workoutTimeParts = workout.time.split(":"); // Assuming format is HH:mm
-                const workoutTime = new Date();
-                workoutTime.setHours(
-                  parseInt(workoutTimeParts[0]),
-                  parseInt(workoutTimeParts[1]),
-                  0,
-                  0
-                ); // Set hours and minutes
-
-                const now = new Date();
-                // Compare both date and time
-                return (
-                  workoutDate > now ||
-                  (workoutDate.getTime() === now.getTime() && workoutTime > now)
-                );
-              })
+              .filter((workout) => workout.status === "SCHEDULED")
               .map((workout, index) => (
                 <SessionCard
                   key={workout.time + index}

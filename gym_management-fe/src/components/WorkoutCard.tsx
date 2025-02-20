@@ -103,10 +103,6 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
     checkFeedback();
   }, [workout]);
 
-  React.useEffect(() => {
-    console.log("Current status:", state.status); // Debugging line
-  }, [state.status]); // This will log whenever state.status changes
-
   return (
     <>
       <Grid item xs={12} sm={12} md={6} lg={6}>

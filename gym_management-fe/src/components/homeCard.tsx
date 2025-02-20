@@ -12,19 +12,29 @@ import {
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
-
+import BookedWorkoutDialog from "./bookedWorkoutDialog";
+import Cookies from "js-cookie";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface HomeCardProps {
-  workout: any;
+  image: string;
+  date: string;
+  time: string;
+  coach: any;
 }
 
-function HomeCard({ workout }: HomeCardProps) {
+function HomeCard({ image, date, time, coach }: HomeCardProps) {
   // Create a variable to hold the mapped Grid items
-  const timeSlots = (workout["freeSlots"] || []).map(
+  const token = Cookies.get("authToken") ? true : false;
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const timeSlots = (coach["timeSlots"] || []).map(
     (slot: any, index: number) => (
-      <Grid item xs={3} md={2} lg={3} key={index} sx={{ mb: 1 }}>
+      <Grid item xs={2} md={2} lg={2} key={index}>
         <Chip
           label={`${slot}`}
           variant="filled"
@@ -66,17 +76,14 @@ function HomeCard({ workout }: HomeCardProps) {
           <Grid container spacing={2} sx={{ mb: 0 }}>
             <Grid item xs={7} md={7} sx={{ display: "flex", gap: 1 }}>
               <Grid item xs={2} md={2}>
-                <Avatar
-                  src={`/Images/${workout["coachName"]["profilePicture"]}`}
-                  sx={{ width: "75px", height: "75px" }}
-                />
+                <Avatar src={image} sx={{ width: "75px", height: "75px" }} />
               </Grid>
               <Grid item xs={10} md={10} sx={{ ml: 2 }}>
                 <Typography variant="body1" fontWeight={500} fontSize="18px">
-                  {workout["coachName"]["name"]}
+                  {coach["firstName"] + " " + coach["lastName"]}
                 </Typography>
                 <Typography variant="body2" fontWeight={300} fontSize="14px">
-                  {workout["coachName"]["tittle"]}
+                  {coach["title"]}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -89,7 +96,7 @@ function HomeCard({ workout }: HomeCardProps) {
                     gap: 0.5,
                   }}
                 >
-                  {workout["coachName"]["ratings"]}
+                  {5}
                   <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
                 </Typography>
               </Grid>
@@ -129,7 +136,7 @@ function HomeCard({ workout }: HomeCardProps) {
                   />
                   Type :{" "}
                   <Typography variant="body2" fontWeight={300} component="span">
-                    {workout["sport"]}
+                    {coach["activity"]}
                   </Typography>
                 </Typography>
                 <Typography
@@ -146,9 +153,9 @@ function HomeCard({ workout }: HomeCardProps) {
                   <QueryBuilderIcon
                     sx={{ fontSize: "small", color: "grey.500" }}
                   />
-                  Time :{" "}
+                  {time != "All" ? "Time :" : "Duration :"}
                   <Typography variant="body2" fontWeight={300} component="span">
-                    {workout["time"]}
+                    {time != "All" ? time : "1h"}
                   </Typography>
                 </Typography>
                 <Typography
@@ -167,14 +174,14 @@ function HomeCard({ workout }: HomeCardProps) {
                   />
                   Date :{" "}
                   <Typography variant="body2" fontWeight={300} component="span">
-                    {dayjs(workout["date"]).format("MMMM D[th], h:mm A")}
+                    {dayjs(date).format("MMMM D[th], h:mm A")}
                   </Typography>
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="body2" fontWeight={300} fontSize="14px">
-                {workout["coachName"]["shortSummary"]}
+                {coach["userSummary"]}
               </Typography>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -188,15 +195,16 @@ function HomeCard({ workout }: HomeCardProps) {
               md={12}
               sx={{
                 display: "flex",
-                flexDirection: "row",
                 flexWrap: "wrap",
+                height: "100px",
+                width: "100%",
               }}
             >
               {timeSlots}
             </Grid>
           </Grid>
         </CardContent>
-        <CardActions sx={{ mt: 0, mb: 1 }}>
+        <CardActions>
           <Box
             sx={{
               display: { md: "flex", lg: "flex" },
@@ -213,24 +221,31 @@ function HomeCard({ workout }: HomeCardProps) {
             }}
           >
             <Button
-              variant="contained"
-              size="medium"
               fullWidth
-              sx={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                border: "1px solid black",
-                mb: { md: 0, lg: 0, xs: 1, sm: 1 },
+              variant="contained"
+              sx={{ borderRadius: "8px" }}
+              onClick={() => {
+                if (token) {
+                  navigate("/book-coach", {
+                    state: {
+                      coach: coach,
+                      image: image,
+                    },
+                  });
+                } else {
+                  setOpenDialog(true);
+                }
               }}
             >
-              Coach Profile
-            </Button>
-            <Button fullWidth variant="contained" sx={{ borderRadius: "8px" }}>
               Book Workout
             </Button>
           </Box>
         </CardActions>
       </Card>
+      <BookedWorkoutDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      />
     </Grid>
   );
 }

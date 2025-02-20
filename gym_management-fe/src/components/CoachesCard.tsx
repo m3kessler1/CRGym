@@ -16,10 +16,11 @@ import { Coach } from "../types/coach.ts";
 // Define the props interface
 interface CoachesCardProps {
   coach: Coach;
+  image: string;
 }
 
 // CoachesCard component
-const CoachesCard: React.FC<CoachesCardProps> = ({ coach }) => {
+const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
   const navigate = useNavigate();
 
   // Handle booking navigation
@@ -27,6 +28,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach }) => {
     navigate("/book-coach", {
       state: {
         coach: coach,
+        image: image,
       },
     });
   };
@@ -57,7 +59,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach }) => {
         <Suspense fallback={<Box sx={{ height: 240 }} />}>
           <CardMedia
             sx={{ height: 240 }}
-            image={`/Images/Image/image1.svg`}
+            image={image}
             title={coach.firstName + " " + coach.lastName}
             component="img"
             alt={coach.firstName + " " + coach.lastName}

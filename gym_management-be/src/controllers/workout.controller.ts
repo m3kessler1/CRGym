@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { WorkoutService } from '../services/workout.service';
+import { Workout } from '../models/workout.model';
+import User, { IUser } from '../models/User';
 
 const workoutService = new WorkoutService();
 

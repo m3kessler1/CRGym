@@ -90,6 +90,10 @@ function LoginPage() {
     }
   };
 
+  const handleRegisterClick = () => {
+    navigate("/register", { replace: true });
+  };
+
   return loginLoading ? (
     <Box sx={{ pt: 50, pl: 20, pr: 20 }}>
       <LinearProgress color="primary" />

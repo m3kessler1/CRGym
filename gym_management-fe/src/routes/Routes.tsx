@@ -15,6 +15,7 @@ import ProtectedRoute from "./ProtectedRoute.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import BookCoachPage from "../pages/bookCoachPage.tsx";
+import Cookies from "js-cookie";
 
 function AppRoutes(): JSX.Element {
   return (
@@ -25,9 +26,7 @@ function AppRoutes(): JSX.Element {
 }
 
 function AppRoutesContent(): JSX.Element {
-  const isAuthenticated = !!document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("authToken"));
+  const isAuthenticated = !!Cookies.get("authToken");
   const userData = useSelector((state: RootState) => state.user);
   const getDefaultRoute = () => {
     if (userData.isCoach && isAuthenticated) {

@@ -13,11 +13,11 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import BookedWorkoutDialog from "./bookedWorkoutDialog";
-import Cookies from "js-cookie";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 interface HomeCardProps {
   image: string;

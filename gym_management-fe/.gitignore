@@ -21,3 +21,10 @@ node_modules
 *.sln
 *.sw?
 .env
+
+# Build directory
+dist
+build
+
+# Render specific
+public/_redirects

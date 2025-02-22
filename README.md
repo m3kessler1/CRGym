@@ -89,13 +89,13 @@ cd gym-management
 
 ### **2️⃣ Install Backend Dependencies**
 ```sh
-cd backend
+cd gym-management-be
 npm install
 ```
 
 ### **3️⃣ Install Frontend Dependencies**
 ```sh
-cd frontend
+cd gym-management-fe
 npm install
 ```
 
@@ -104,7 +104,7 @@ Create a **.env** file in the root directory and add:
 ```sh
 PORT=4000
 MONGO_URI=mongodb://localhost:27017/gymDB
-REACT_APP_USER_URL=http://localhost:4000/api/users
+REACT_APP_USER_URL=http://localhost:4000/api
 ```
 
 ### **5️⃣ Generate RSA Keys for JWT Authentication**
@@ -115,13 +115,13 @@ openssl rsa -pubout -in keys/private.pem -out keys/public.pem
 
 ### **6️⃣ Start the Backend Server**
 ```sh
-cd backend
-npm run dev  # Uses ts-node for development
+cd gym-management-fe
+npm start  # Uses ts-node for development
 ```
 
 ### **7️⃣ Start the Frontend Server**
 ```sh
-cd frontend
+cd gym-management-fe
 npm run dev  # Starts Vite development server
 ```
 

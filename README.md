@@ -5,7 +5,8 @@
 This is a **Node.js + TypeScript** backend for a Gym Management system. It provides secure authentication using **JWT (RSA Encryption)**, user registration, login, and session management. The API follows **RESTful principles** and integrates with **MongoDB** for data storage.
 
 This project also includes a **frontend built with Vite + React.js**, featuring:
-- **Login & Signup Pages**
+- **Login, Signup, Update Profile Pages**
+- **Home Page**
 - **Workouts Page**
 - **Book a Coach Page**
 - **Workout Coach Dashboard**

@@ -153,6 +153,6 @@ This project is licensed under the **MIT License**.
 
 ## 📞 Contact
 
-🔗 **GitHub:** [yourusername](https://github.com/adityasinghz)\
-📧 **Email:** [your.email@example.com](adityasingh246810@gmail.com)
+🔗 **GitHub:** [adityasinghz](https://github.com/adityasinghz)\
+📧 **Email:** [adityasingh246810@gmail.com](adityasingh246810@gmail.com)
 

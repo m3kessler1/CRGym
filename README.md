@@ -83,7 +83,7 @@ This project also includes a **frontend built with Vite + React.js**, featuring:
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/yourusername/gym-management.git
+git clone https://github.com/adityasinghz/gym-management.git
 cd gym-management
 ```
 

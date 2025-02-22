@@ -38,7 +38,7 @@ This project also includes a **frontend built with Vite + React.js**, featuring:
 ### **Frontend**
 - **Vite + React.js**
 - **React Router** (Navigation)
-- **TailwindCSS** (Styling)
+- **Material UI** (Styling)
 - **Axios** (API Requests)
 
 ---

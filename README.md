@@ -1,159 +1,140 @@
-# Gym Management Full Stack (MERN) 🏋️‍♂️
+# 🏋️ Gym Management System
 
-## 📌 Project Description
-
-This is a **Node.js + TypeScript** backend for a Gym Management system. It provides secure authentication using **JWT (RSA Encryption)**, user registration, login, and session management. The API follows **RESTful principles** and integrates with **MongoDB** for data storage.
-
-This project also includes a **frontend built with Vite + React.js**, featuring:
-- **Login, Signup, Update Profile Pages**
-- **Home Page**
-- **Workouts Page**
-- **Book a Coach Page**
-- **Workout Coach Dashboard**
+A modern web application for managing gym workouts, coaches, and client interactions. Built with **React, TypeScript, and Material-UI**.
 
 ---
 
-## ✨ Features
+## 🌟 Key Features
 
-- 📝 **User Registration & Login** with **bcrypt password hashing**
-- 🔐 **JWT Authentication (RSA Encryption) & Middleware for Protected Routes**
-- 📦 **MongoDB Integration** using **Mongoose**
-- 📂 **Structured Codebase** with MVC Architecture
-- ✅ **CORS Configuration** for Secure API Requests
-- 🎨 **Frontend Built with Vite + React.js**
+### 🏃 For Clients
+- **Seamless Account Management**
+  - Sign up/Login with email
+  - Customize profile settings
+  - Select preferred language
+
+- **Effortless Workout Booking**
+  - Explore available workout sessions
+  - Filter by activity, date, time, and coach
+  - Book or cancel sessions easily
+  - View all scheduled workouts
+  - Provide feedback after sessions
+
+- **Engage with Coaches**
+  - Browse coach profiles & testimonials
+  - Schedule workouts with preferred coaches
+  - Rate & review coaching sessions
+
+### 🏋️‍♂️ For Coaches
+- **Manage Workout Sessions**
+  - View and organize scheduled sessions
+  - Adjust workout slots & availability
+  - Track client attendance
+  - Receive and review client feedback
+
+---
+
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+Ensure you have the following installed:
+- **Node.js** (v14 or higher)
+- **npm** or **yarn**
+- **Git**
+
+### 📥 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [repository-url]
+   cd gym_management
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run the application:
+   ```bash
+   npm start
+   ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Backend**
-- **Node.js** (Express.js)
-- **TypeScript**
-- **MongoDB** (Mongoose ODM)
-- **JWT Authentication** (RSA Encryption)
-- **bcrypt.js** (Password Hashing)
-- **Axios** (Frontend API Calls)
-- **CORS** (Cross-Origin Resource Sharing)
-
-### **Frontend**
-- **Vite + React.js**
-- **React Router** (Navigation)
-- **Material UI** (Styling)
-- **Axios** (API Requests)
+| **Technology**      | **Usage**                          |
+|--------------------|---------------------------------|
+| React + TypeScript | Frontend development           |
+| Material-UI (MUI)  | UI components & design system  |
+| Redux             | State management               |
+| React Hook Form + Zod | Form handling & validation  |
+| React Router v6   | Client-side navigation         |
+| Axios            | HTTP client for API requests   |
+| date-fns, Luxon  | Date & time management         |
+| Notistack        | Toast notifications            |
+| JWT + HTTP-Only Cookies | Authentication & security |
 
 ---
 
-## 📂 Folder Structure (Roughly)
-```
-📦 gym-management-backend
- ┣ 📂 src
- ┃ ┣ 📂 config
- ┃ ┃ ┗ 📜 db.ts  # Database connection
- ┃ ┣ 📂 controllers
- ┃ ┃ ┗ 📜 userController.ts  # Business logic
- ┃ ┣ 📂 models
- ┃ ┃ ┗ 📜 User.ts  # Mongoose schema
- ┃ ┣ 📂 routes
- ┃ ┃ ┗ 📜 userRoutes.ts  # API routes
- ┃ ┣ 📂 middleware
- ┃ ┃ ┗ 📜 authMiddleware.ts  # JWT authentication middleware
- ┃ ┣ 📂 types
- ┃ ┃ ┗ 📜 custom.d.ts  # Extend Express Request type
- ┃ ┣ 📜 server.ts  # Entry point
- ┣ 📂 keys  # RSA Keys for JWT
- ┃ ┣ 📜 private.pem
- ┃ ┣ 📜 public.pem
- ┣ 📂 frontend  # Frontend Vite Project
- ┃ ┣ 📂 src
- ┃ ┃ ┣ 📜 App.tsx  # Main component
- ┃ ┃ ┣ 📂 pages
- ┃ ┃ ┃ ┣ 📜 Login.tsx
- ┃ ┃ ┃ ┣ 📜 Register.tsx
- ┃ ┃ ┃ ┣ 📜 Workouts.tsx
- ┃ ┃ ┃ ┣ 📜 BookCoach.tsx
- ┃ ┃ ┗ 📜 index.tsx  # React Entry Point
- ┣ 📜 .env  # Environment variables
- ┣ 📜 package.json  # Dependencies
- ┣ 📜 tsconfig.json  # TypeScript config
- ┣ 📜 README.md  # Project documentation
-```
+## 📱 User Journeys
+
+### 🔹 Client Flow
+1. **Sign Up & Login**: Create an account, log in, and get redirected based on your role.
+2. **Find Workouts**: Browse and filter sessions by time, activity, and coach.
+3. **Book a Session**: Select a preferred date/time, confirm, and receive a booking confirmation.
+4. **Manage Bookings**: View upcoming sessions, cancel if needed, and leave feedback after completion.
+
+### 🔹 Coach Flow
+1. **Session Dashboard**: Track upcoming workouts and client bookings.
+2. **Availability Management**: Adjust time slots and update professional details.
+3. **Client Interaction**: Receive ratings, reviews, and feedback from clients.
 
 ---
 
-## 🚀 Installation & Setup
+## 🔒 Security Measures
 
-### **1️⃣ Clone the Repository**
-```sh
-git clone https://github.com/adityasinghz/gym-management.git
-cd gym-management
-```
-
-### **2️⃣ Install Backend Dependencies**
-```sh
-cd gym-management-be
-npm install
-```
-
-### **3️⃣ Install Frontend Dependencies**
-```sh
-cd gym-management-fe
-npm install
-```
-
-### **4️⃣ Set Up Environment Variables**
-Create a **.env** file in the root directory and add:
-```sh
-PORT=4000
-MONGO_URI=mongodb://localhost:27017/gymDB
-REACT_APP_USER_URL=http://localhost:4000/api
-```
-
-### **5️⃣ Generate RSA Keys for JWT Authentication**
-```sh
-openssl genpkey -algorithm RSA -out keys/private.pem -pkeyopt rsa_keygen_bits:2048
-openssl rsa -pubout -in keys/private.pem -out keys/public.pem
-```
-
-### **6️⃣ Start the Backend Server**
-```sh
-cd gym-management-fe
-npm start  # Uses ts-node for development
-```
-
-### **7️⃣ Start the Frontend Server**
-```sh
-cd gym-management-fe
-npm run dev  # Starts Vite development server
-```
+- **JWT-based authentication** for secure user sessions
+- **HTTP-only cookies** for better security
+- **Protected routes** to prevent unauthorized access
+- **Form validation** to ensure data integrity
+- **Secure password handling** with encryption
 
 ---
 
-## 🎯 Future Enhancements
+## 🎨 User Experience Highlights
 
-- ✅ **Refresh Token Implementation**
-- ✅ **User Roles (Admin, Trainer, Member)**
-- ✅ **Email Verification (Nodemailer)**
-- ✅ **Google OAuth Login**
-- ✅ **Workout & Subscription Management**
-- ✅ **Interactive Workout Tracking**
-- ✅ **Enhanced Booking System for Coaches**
+- **Responsive Design**: Works seamlessly across devices
+- **Dark/Light Mode**: Choose your preferred theme
+- **Smooth Navigation**: Intuitive UI for easy access
+- **Loading States & Error Handling**: Improves app performance
+- **Toast Notifications**: Instant feedback on actions
+
+---
+
+## 🚀 Deployment Options
+
+- **Vercel** (Includes `vercel.json` configuration)
+- **Render** (Includes `_redirects` file for routing)
+- **Custom Hosting** (Compatible with any static hosting service)
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to submit issues and pull requests.
+Want to contribute? Follow these steps:
+1. **Fork the repository**
+2. **Create a feature branch**
+3. **Commit your changes**
+4. **Push to your branch**
+5. **Open a Pull Request**
 
 ---
 
-## 📜 License
+## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **MIT License**. See the LICENSE file for details.
 
 ---
 
-## 📞 Contact
-
-🔗 **GitHub:** [adityasinghz](https://github.com/adityasinghz)\
-📧 **Email:** [adityasingh246810@gmail.com](adityasingh246810@gmail.com)
+🔗 Happy coding & fitness tracking! 🚀💪
 

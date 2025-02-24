@@ -37,6 +37,7 @@ A modern web application for managing gym workouts, coaches, and client interact
 
 ### ✅ Prerequisites
 Ensure you have the following installed:
+- **Vite**
 - **Node.js** (v14 or higher)
 - **npm** or **yarn**
 - **Git**
@@ -47,6 +48,7 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/adityasinghz/gym-management.git
    cd gym_management
+   cd gym_management-fe
    ```
 2. Install dependencies:
    ```bash
@@ -55,7 +57,7 @@ Ensure you have the following installed:
 
 3. Run the application:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ---

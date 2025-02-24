@@ -45,7 +45,7 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/adityasinghz/gym-management.git
    cd gym_management
    ```
 2. Install dependencies:

@@ -111,9 +111,14 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 input={<OutlinedInput label="Language" />}
                 sx={{ height: 56 }}
               >
-                {["en", "hi"].map((code, index) => (
+                {["en", "hi", "tel"].map((code, index) => (
                   <MenuItem key={index} value={code}>
-                    {code === "en" ? "English" : "हिन्दी"} ({code})
+                    {code === "en"
+                      ? i18n.t("English")
+                      : code === "hi"
+                      ? i18n.t("Hindi")
+                      : i18n.t("Telugu")}
+                    ({code})
                   </MenuItem>
                 ))}
               </Select>

@@ -6,6 +6,18 @@ i18n.use(initReactI18next).init({
     en: {
       translation: {
         Hello: "Hello",
+        Coach: "Coach",
+        Home: "Home",
+        Workouts: "Workouts",
+        Coaches: "Coaches",
+        Client: "Client",
+        Activity: "Activity",
+        Status: "Status",
+        Actions: "Actions",
+        Scheduled: "Scheduled",
+        "Waiting for feedback": "Waiting for feedback",
+        Finished: "Finished",
+        Cancelled: "Cancelled",
         "Select Language": "Select Language",
         Ok: "Ok",
         "Your Target": "Your Target",
@@ -18,7 +30,6 @@ i18n.use(initReactI18next).init({
         "Achieve your fitness goals!": "Achieve your fitness goals!",
         "Find a workout and book today.": "Find a workout and book today.",
         Close: "Close",
-        Login: "Login",
         "Book Workout": "Book Workout",
         "Booked Workout": "Booked Workout",
         "About Coach": "About Coach",
@@ -37,7 +48,6 @@ i18n.use(initReactI18next).init({
         "hard and the perseverance to": "hard and the perseverance to",
         "rise each time you fall.": "rise each time you fall.",
         "Also available for this date:": "Also available for this date:",
-        "Select Language": "Select Language",
         "My Account": "My Account",
         "Edit Account Profile": "Edit Account Profile",
         "Resume Workout": "Resume Workout",
@@ -56,10 +66,10 @@ i18n.use(initReactI18next).init({
         "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
           "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
         "Leave Feedback": "Leave Feedback",
-        "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.":
-          "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.",
-        "You’re about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.":
-          "You’re about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.",
+        "You're about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.":
+          "You're about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.",
+        "You're about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.":
+          "You're about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.",
         Duration: "Duration",
         Date: "Date",
         Time: "Time",
@@ -70,8 +80,6 @@ i18n.use(initReactI18next).init({
         "Waiting for feedback": "Waiting for feedback",
         Finished: "Finished",
         Cancelled: "Cancelled",
-        "General Information": "General Information",
-        "Change Password": "Change Password",
         "Schedule Your Session": "Schedule Your Session",
         FEEDBACK: "FEEDBACK",
         "YOUR UPCOMING WORKOUTS": "YOUR UPCOMING WORKOUTS",
@@ -99,8 +107,13 @@ i18n.use(initReactI18next).init({
         Password: "Password",
         Credentials: "Credentials",
         "Login successful! Welcome back!": "Login successful! Welcome back!",
-
-        // Add other translations here
+        // Add Hindi translations here
+        "Log Out": "Log Out",
+        All: "All",
+        "Don't have an account?": "Don't have an account?",
+        "Log In": "Log In",
+        "Create an Account": "Create an Account",
+        // ... existing code ...
       },
     },
     hi: {
@@ -164,9 +177,9 @@ i18n.use(initReactI18next).init({
         "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
           "पुनर्वास एक प्रकार का व्यायाम है जो मांसपेशियों की ताकत और सहनशक्ति बनाने पर केंद्रित है। यह फिट रहने और अपनी ताकत और सहनशक्ति में सुधार करने का एक शानदार तरीका है।",
         "Leave Feedback": "प्रतिक्रिया छोड़ें",
-        "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.":
+        "You're about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.":
           "आप इस वर्कआउट को समाप्त के रूप में चिह्नित करने वाले हैं। क्या आप सुनिश्चित हैं कि आप इस सत्र को समाप्त करना चाहते हैं? इस वर्कआउट से कोई भी प्रगति या डेटा सहेजा नहीं जाएगा।",
-        "You’re about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.":
+        "You're about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.":
           "आप इस वर्कआउट को रद्द के रूप में चिह्नित करने वाले हैं। क्या आप सुनिश्चित हैं कि आप इस सत्र को रद्द करना चाहते हैं? इस वर्कआउट से कोई भी प्रगति या डेटा सहेजा नहीं जाएगा।",
         Duration: "अवधि",
         Date: "तारीख",
@@ -213,7 +226,117 @@ i18n.use(initReactI18next).init({
         // ... existing code ...
       },
     },
+    tel: {
+      translation: {
+        Hello: "హలో",
+        Coach: "ట్రేనర్",
+        Home: "హోమ్",
+        Workouts: "వర్క్అవ్యాయామ్స్",
+        Coaches: "ట్రేనర్లు",
+        Client: "గ్రాహకుడు",
+        Activity: "గతివిధి",
+        Status: "స్థితి",
+        Actions: "క్రియావిధించింది",
+        Scheduled: "కార్యక్రమాన్ని కొనుగోలు చేసినది",
+        "Waiting for feedback": "ప్రతిక్రియ కొనుగోలు చేసినది",
+        "Select Date": "తేదీని ఎంచుకోండి",
+        "Select Language": "భాష ఎంచుకోండి",
+        Ok: "సరే",
+        "Your Target": "మీ లక్ష్యం",
+        "Preferable Activity": "ఇష్టపడు గతివిధి",
+        "General Information": "సాధారణ సమాచారం",
+        "Change Password": "పాస్వర్డ్ మార్చండి",
+        Login: "లాగిన్",
+        "Create an Account": "ఖాతా సృష్టించండి",
+        "Find Workout": "వర్క్అవ్యాయామ్స్ కొనుగోలు",
+        "Achieve your fitness goals!":
+          "మీ ఫిట్నెస్ లక్ష్యాలను అభివృద్ధి చేయండి!",
+        "Find a workout and book today.":
+          "ఒక వర్క్అవ్యాయామ్ కొనుగోలు మరియు ఈ రోజు బుక్ చేయండి.",
+        Close: "మూసివేయండి",
+        "Book Workout": "వర్క్అవ్యాయామ్ బుక్ చేయండి",
+        "Booked Workout": "బుక్ చేసిన వర్క్అవ్యాయామ్",
+        "About Coach": "ట్రేనర్ గురించి",
+        About: "గురించి",
+        Account: "ఖాతా",
+        Specialization: "విశేషత",
+        "Workout Feedback": "వర్క్అవ్యాయామ్ ప్రతిక్రియ",
+        "Please rate your workout experience below":
+          "మీ వర్క్అవ్యాయామ్ అనుభవాన్ని క్రింది వివరాలు ఇవ్వండి",
+        "Please rate the Client's performance below":
+          "గ్రాహకుడి ప్రదర్శనాన్ని క్రింది వివరాలు ఇవ్వండి",
+        "Submit Feedback": "ప్రతిక్రియ పంపండి",
+        "The path to triumph is paved with the":
+          "విజయానికి పథం విజయానికి పథం పైన ఉంది",
+        "strength to train": "శక్తి ప్రశిక్షణకు",
+        "hard and the perseverance to": "హదించిన మరియు ప్రామాణికతకు",
+        "rise each time you fall.": "ప్రతిసారి మీరు పడినప్పుడు లేచి",
+        "Also available for this date:": "ఈ తేదీకి కూడా అందుబాటులో:",
+        "My Account": "నా ఖాతా",
+        "Edit Account Profile": "ఖాతా ప్రొఫైల్ మార్చండి",
+        "Resume Workout": "వర్క్అవ్యాయామ్ పునరారంభించండి",
+        "Cancel Workout": "వర్క్అవ్యాయామ్ రద్దు చేయండి",
+        "Finish Workout": "వర్క్అవ్యాయామ్ పూర్తి చేయండి",
+        "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being.":
+          "యోగ ఒక మానసిక మరియు శారీరక అభ్యాసం, ఇది భారతదేశంలో ఉద్భవించింది. ఇది శారీరక ఆసనాలు, శ్వాస వ్యాయామాలు మరియు ధ్యాన సాంకేతికతల శ్రేణిని కలిగి ఉంది. యోగ యొక్క లక్ష్యం శారీరక, మానసిక మరియు ఆధ్యాత్మిక సంక్షేమాన్ని ప్రోత్సహించడం.",
+        "Climbing is a sport that involves climbing a wall or a rope. It is a great way to get fit and improve your strength and endurance.":
+          "చదరంగం ఒక క్రీడ, ఇది ఒక గోడ లేదా ఒక కండరాన్ని ఎక్కడం. ఇది ఫిట్‌గా ఉండటానికి మరియు మీ శక్తి మరియు సహనాన్ని మెరుగుపరచడానికి గొప్ప మార్గం.",
+        "Strength training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
+          "శక్తి శిక్షణ ఒక వ్యాయామం, ఇది కండరాల శక్తి మరియు సహనాన్ని పెంచడంపై దృష్టి సారిస్తుంది. ఇది ఫిట్‌గా ఉండటానికి మరియు మీ శక్తి మరియు సహనాన్ని మెరుగుపరచడానికి గొప్ప మార్గం.",
+        "Crossfit is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
+          "క్రాస్‌ఫిట్ ఒక వ్యాయామం, ఇది కండరాల శక్తి మరియు సహనాన్ని పెంచడంపై దృష్టి సారిస్తుంది. ఇది ఫిట్‌గా ఉండటానికి మరియు మీ శక్తి మరియు సహనాన్ని మెరుగుపరచడానికి గొప్ప మార్గం.",
+        "Cardio training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
+          "కార్డియో శిక్షణ ఒక వ్యాయామం, ఇది కండరాల శక్తి మరియు సహనాన్ని పెంచడంపై దృష్టి సారిస్తుంది. ఇది ఫిట్‌గా ఉండటానికి మరియు మీ శక్తి మరియు సహనాన్ని మెరుగుపరచడానికి గొప్ప మార్గం.",
+        "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.":
+          "పునరావాసం ఒక వ్యాయామం, ఇది కండరాల శక్తి మరియు సహనాన్ని పెంచడంపై దృష్టి సారిస్తుంది. ఇది ఫిట్‌గా ఉండటానికి మరియు మీ శక్తి మరియు సహనాన్ని మెరుగుపరచడానికి గొప్ప మార్గం.",
+        "Leave Feedback": "ప్రతిక్రియ ఇవ్వండి",
+        "You're about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.":
+          "మీరు ఈ వర్కౌట్‌ను ముగిసినట్లు గుర్తించబోతున్నారు. మీరు ఈ సెషన్‌ను ముగించాలనుకుంటున్నారా? ఈ వర్కౌట్ నుండి ఏ ప్రగతి లేదా డేటా సేవ్ చేయబడదు.",
+        "You're about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.":
+          "మీరు ఈ వర్కౌట్‌ను రద్దు చేసినట్లు గుర్తించబోతున్నారు. మీరు ఈ సెషన్‌ను రద్దు చేయాలనుకుంటున్నారా? ఈ వర్కౌట్ నుండి ఏ ప్రగతి లేదా డేటా సేవ్ చేయబడదు.",
+        Duration: "అవధి",
+        Date: "తేదీ",
+        Time: "సమయం",
+        Activity: "గతివిధి",
+        Status: "స్థితి",
+        Actions: "క్రియావిధించింది",
+        Scheduled: "కార్యక్రమాన్ని కొనుగోలు చేసినది",
+        "Waiting for feedback": "ప్రతిక్రియ కొనుగోలు చేసినది",
+        Finished: "సమాప్తం",
+        Cancelled: "రద్దు చేయబడింది",
+        "Schedule Your Session": "మీ సెషన్‌ను షెడ్యూల్ చేయండి",
+        FEEDBACK: "ప్రతిక్రియ",
+        "YOUR UPCOMING WORKOUTS": "మీ రాబోయే వర్కౌట్స్",
+        "Workout booked successfully": "వర్కౌట్ విజయవంతంగా బుక్ చేయబడింది",
+        "This slot is already booked": "ఈ స్లాట్ ఇప్పటికే బుక్ చేయబడింది",
+        "Save Changes": "మార్పులను సేవ్ చేయండి",
+        "Current Password": "ప్రస్తుత పాస్వర్డ్",
+        "New Password": "కొత్త పాస్వర్డ్",
+        "Confirm New Password": "కొత్త పాస్వర్డ్‌ను నిర్ధారించండి",
+        "Passwords don't match": "పాస్వర్డులు సరిపోలడం లేదు",
+        "Password must be at least 8 characters":
+          "పాస్వర్డ్ కనీసం 8 అక్షరాలు ఉండాలి",
+        "Error updating password:": "పాస్వర్డ్‌ను నవీకరించేటప్పుడు పొరపాటు:",
+        "Password updated successfully!":
+          "పాస్వర్డ్ విజయవంతంగా నవీకరించబడింది!",
+        "No coaches available at the moment":
+          "ప్రస్తుతం అందుబాటులో ఉన్న కోచ్‌లు లేరు",
+        "No upcoming workouts": "రాబోయే వర్కౌట్స్ లేవు",
+        "No feedback available": "ప్రతిక్రియ అందుబాటులో లేదు",
+        "No workouts available": "వర్కౌట్స్ అందుబాటులో లేవు",
+        "It looks like there are no available slots. Please try refining your search.":
+          "అందుబాటులో ఉన్న స్లాట్లు లేవు. దయచేసి మీ శోధనను మెరుగుపరచడానికి ప్రయత్నించండి.",
+        "WELCOME BACK": "మళ్లీ స్వాగతం",
+        "Log In to Your Account": "మీ ఖాతాలో లాగిన్ చేయండి",
+        "Email Address": "ఇమెయిల్ చిరునామా",
+        Password: "పాస్వర్డ్",
+        Credentials: "ప్రామాణికాలు",
+        "Login successful! Welcome back!": "లాగిన్ విజయవంతం! మళ్లీ స్వాగతం!",
+        // ... existing code ...
+      },
+    },
   },
+
   lng: "en", // default language
   fallbackLng: "en",
   interpolation: {

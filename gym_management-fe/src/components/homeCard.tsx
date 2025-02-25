@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 interface HomeCardProps {
   image: string;
@@ -31,7 +32,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
   const token = Cookies.get("authToken") ? true : false;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
-
+  const { t } = useTranslation();
   const timeSlots = (coach["timeSlots"] || []).map(
     (slot: any, index: number) => (
       <Grid item xs={2} md={2} lg={2} key={index}>
@@ -54,13 +55,13 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
   );
 
   return (
-    <Grid item xs={12} md={6} sx={{ p: 1 }}>
+    <Grid item xs={12} md={6}>
       <Card
         sx={{
           borderRadius: "16px",
-          width: "100%",
+          width: "98%",
           height: "100%",
-          maxWidth: "664px",
+          //maxWidth: "664px",
         }}
       >
         <CardContent
@@ -186,7 +187,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="body2" fontWeight={300} fontSize="14px">
-                Also available for this date:
+                {t("Also available for this date:")}
               </Typography>
             </Grid>
             <Grid
@@ -237,7 +238,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
                 }
               }}
             >
-              Book Workout
+              {t("Book Workout")}
             </Button>
           </Box>
         </CardActions>

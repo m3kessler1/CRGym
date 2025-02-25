@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { persistor } from "../redux/store";
 import { clearUser } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 interface LogoutProps {
   padding: number | string | [number, number, number, number];
   handleClose?: () => void;
@@ -18,6 +19,7 @@ const Logout: React.FC<LogoutProps> = ({
   setAnchorEl,
   width,
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClose = (): void => {
@@ -47,7 +49,7 @@ const Logout: React.FC<LogoutProps> = ({
         color="error"
         sx={{ borderRadius: "10px" }}
       >
-        Log Out
+        {t("Log Out")}
       </Button>
     </Box>
   );

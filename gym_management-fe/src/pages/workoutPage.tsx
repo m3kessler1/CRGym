@@ -26,11 +26,10 @@ const Workouts: React.FC = () => {
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
   const user = useSelector((state: RootState) => state.user);
   const userId = user.id;
-
   useEffect(() => {
     const fetchBookedWorkouts = async () => {
       try {
-        const response = await getBookedWorkoutsByUsers(userId);
+        const response = await getBookedWorkoutsByUsers(userId, user.isCoach);
         setBookedWorkouts(response);
       } catch (error) {
         enqueueSnackbar("Error fetching booked workouts:", {
@@ -41,6 +40,7 @@ const Workouts: React.FC = () => {
     };
     fetchBookedWorkouts();
   }, [userId]);
+
   const sortedWorkouts = (bookedWorkouts || []).sort((a, b) => {
     const dateA = new Date(`${a.date}T${a.time}`); // Convert to Date object
     const dateB = new Date(`${b.date}T${b.time}`); // Convert to Date object
@@ -62,7 +62,7 @@ const Workouts: React.FC = () => {
   });
 
   const components = sortedWorkouts.map((workout, index) => (
-    <WorkoutCard key={index} workout={workout} />
+    <WorkoutCard key={index} workout={workout} userId={userId} />
   ));
 
   const startIndex = (page - 1) * itemsPerPage;

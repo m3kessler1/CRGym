@@ -21,9 +21,9 @@ export const bookWorkout = async (userId: string, coachId: string, date: string,
   }
 };
 
-export const getBookedWorkoutsByUsers = async (userId: string) => {
+export const getBookedWorkoutsByUsers = async (userId: string, isCoach: boolean) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${userId}`);
+    const response = await axios.get(`${BASE_URL}/${userId}/${isCoach}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching booked workouts:", error);

@@ -10,9 +10,18 @@ import {
   Rating,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Coach } from "../types/coach.ts";
-
+import { getTestimonials } from "../services/testimonialsService.ts";
+import { useTranslation } from "react-i18next";
+interface Testimonial {
+  rating: number;
+  date: string;
+  firstName: string;
+  lastName: string;
+  testimonial: string;
+  workoutId: string;
+}
 // Define the props interface
 interface CoachesCardProps {
   coach: Coach;
@@ -22,7 +31,8 @@ interface CoachesCardProps {
 // CoachesCard component
 const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
+  const [totalRatings, setTotalRatings] = useState<Testimonial[]>([]);
   // Handle booking navigation
   const handleBookWorkout = (coach: Coach) => {
     navigate("/book-coach", {
@@ -32,6 +42,33 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
       },
     });
   };
+  useEffect(() => {
+    const fetchTotalRatings = async () => {
+      try {
+        const response = await getTestimonials(coach._id);
+        // Extract the testimonials array from the response object
+        const testimonialsArray = response[coach._id] || []; // Fallback to an empty array if undefined
+        if (Array.isArray(testimonialsArray)) {
+          setTotalRatings(testimonialsArray);
+        } else {
+          console.error("Expected an array but got:", testimonialsArray);
+          setTotalRatings([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+        setTotalRatings([]); // Fallback to an empty array on error
+      }
+    };
+    fetchTotalRatings();
+  }, [coach._id]); // Add coach._id as a dependency
+  const cumulativeRating = (totalRatings || []).reduce(
+    (sum: number, data: Testimonial) => sum + data.rating,
+    0
+  );
+  const averageRating =
+    (totalRatings || []).length > 0
+      ? cumulativeRating / (totalRatings || []).length
+      : 0;
 
   return (
     <Grid
@@ -79,8 +116,8 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography>{coach.ratings}</Typography>
-            <Rating name="read-only" value={1} max={1} readOnly />
+            <Typography>{averageRating}</Typography>
+            <Rating name="read-only" value={averageRating} max={1} readOnly />
           </Box>
 
           <Box sx={{ pt: 3, height: "60px" }}>
@@ -123,7 +160,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
               textTransform: "none",
             }}
           >
-            Book Workout
+            {t("Book Workout")}
           </Button>
         </Box>
       </Card>

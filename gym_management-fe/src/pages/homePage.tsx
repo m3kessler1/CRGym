@@ -23,11 +23,10 @@ import { filterCoaches } from "../services/userService";
 import useFetchCoaches from "../hooks/useFetchCoaches";
 import Cookies from "js-cookie";
 import { Coach } from "../types/coach";
-
+import { useTranslation } from "react-i18next";
 const generateTimeOptions = () => {
   const times: string[] = ["All"];
   let time = DateTime.now().startOf("day"); // Start at 12:00 AM
-
   for (let hour = 0; hour < 24; hour++) {
     times.push(time.toFormat("hh:mm a")); // Format to 1:00 AM, 2:00 AM, etc.
     time = time.plus({ hours: 1 }); // Add an hour
@@ -44,7 +43,7 @@ const HomePage: React.FC = () => {
     coaches?.coach?.map((coach: Coach) => ({
       coach: coach,
     })) || [];
-
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -122,8 +121,10 @@ const HomePage: React.FC = () => {
       }}
     >
       <Grid item xs={12} md={12} sx={{ ml: 2 }}>
-        <Typography variant="h4">{"Achieve your fitness goals!"}</Typography>
-        <Typography variant="h4">{"Find a workout and book today."}</Typography>
+        <Typography variant="h4">{t("Achieve your fitness goals!")}</Typography>
+        <Typography variant="h4">
+          {t("Find a workout and book today.")}
+        </Typography>
       </Grid>
 
       <Box
@@ -133,7 +134,7 @@ const HomePage: React.FC = () => {
       >
         <Grid container spacing={2} sx={{ ml: 0, mt: 2 }}>
           <Grid item xs={12} md={12}>
-            <Typography fontWeight={300}>BOOK A WORKOUT</Typography>
+            <Typography fontWeight={300}>{t("BOOK A WORKOUT")}</Typography>
           </Grid>
           <Grid
             item
@@ -154,21 +155,27 @@ const HomePage: React.FC = () => {
                 mt: 1,
               }}
             >
-              <InputLabel id="activity">Activity</InputLabel>
+              <InputLabel id="activity">{t("Activity")}</InputLabel>
               <Select
                 labelId="activity"
                 id="activity"
                 value={activity || "All"}
-                label="Activity"
+                label={t("Activity")}
                 {...register("activity")}
               >
                 <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Yoga">Yoga</MenuItem>
-                <MenuItem value="Climbing">Climbing</MenuItem>
-                <MenuItem value="Strength training">Strength training</MenuItem>
-                <MenuItem value="Cross-fit">Cross-fit</MenuItem>
-                <MenuItem value="Cardio Training">Cardio Training</MenuItem>
-                <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
+                <MenuItem value="Yoga">{t("Yoga")}</MenuItem>
+                <MenuItem value="Climbing">{t("Climbing")}</MenuItem>
+                <MenuItem value="Strength training">
+                  {t("Strength training")}
+                </MenuItem>
+                <MenuItem value="Cross-fit">{t("Cross-fit")}</MenuItem>
+                <MenuItem value="Cardio Training">
+                  {t("Cardio Training")}
+                </MenuItem>
+                <MenuItem value="Rehabilitation">
+                  {t("Rehabilitation")}
+                </MenuItem>
               </Select>
               {errors.activity && (
                 <Typography color="error">{errors.activity.message}</Typography>
@@ -189,7 +196,7 @@ const HomePage: React.FC = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
-                  label="Select Date"
+                  label={t("Select Date")}
                   value={
                     dayjs(watch("date")) || dayjs(DateTime.now().toJSDate())
                   }
@@ -231,12 +238,12 @@ const HomePage: React.FC = () => {
                 mt: 1,
               }}
             >
-              <InputLabel id="time">Time</InputLabel>
+              <InputLabel id="time">{t("Time")}</InputLabel>
               <Select
                 labelId="time"
                 id="time"
                 value={time}
-                label="Time"
+                label={t("Time")}
                 {...register("time")}
               >
                 {timeOptions.map((timeOption, index) => (
@@ -269,12 +276,12 @@ const HomePage: React.FC = () => {
                 mt: 1,
               }}
             >
-              <InputLabel id="coach">Coach</InputLabel>
+              <InputLabel id="coach">{t("Coach")}</InputLabel>
               <Select
                 labelId="coach"
                 id="coach"
                 value={selectedCoach}
-                label="Coach"
+                label={t("Coach")}
                 {...register("coach")}
               >
                 <MenuItem value="All">All</MenuItem>
@@ -314,7 +321,7 @@ const HomePage: React.FC = () => {
                 mt: 1,
               }}
             >
-              Find Workout
+              {t("Find Workout")}
             </Button>
           </Grid>
 
@@ -323,7 +330,9 @@ const HomePage: React.FC = () => {
           ) : workouts.length > 0 ? (
             <>
               <Grid item xs={12} md={12}>
-                <Typography fontWeight={300}>AVAILABLE WORKOUTS</Typography>
+                <Typography fontWeight={300}>
+                  {t("AVAILABLE WORKOUTS")}
+                </Typography>
               </Grid>
               {workouts.map((workout, index) => (
                 <HomeCard
@@ -354,10 +363,11 @@ const HomePage: React.FC = () => {
                 src="/Images/no-workouts.svg"
                 alt="No workouts found"
               />
-              <Typography variant="h6">No workouts available</Typography>
+              <Typography variant="h6">{t("No workouts available")}</Typography>
               <Typography variant="body1">
-                It looks like there are no available slots. Please try refining
-                your search.
+                {t(
+                  "It looks like there are no available slots. Please try refining your search."
+                )}
               </Typography>
             </Grid>
           )}

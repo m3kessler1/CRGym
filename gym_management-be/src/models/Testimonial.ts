@@ -7,6 +7,7 @@ interface ITestimonialEntry {
   rating: number;
   testimonial: string;
   workoutId: string;
+  isCoach: boolean;
 }
 
 export interface ITestimonialDoc {

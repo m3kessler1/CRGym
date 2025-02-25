@@ -14,7 +14,7 @@ import {
   getBookedWorkoutsByUsers,
 } from "../services/workoutService.ts";
 import { useSnackbar } from "notistack";
-
+import { useTranslation } from "react-i18next";
 interface BookedWorkout {
   _id: string;
   userId: string;
@@ -27,6 +27,7 @@ interface BookedWorkout {
 
 const BookCoachPage: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
 
   const location = useLocation();
   const coach = location.state?.coach;
@@ -41,11 +42,11 @@ const BookCoachPage: React.FC = () => {
   const [bookedWorkouts, setBookedWorkouts] = useState<BookedWorkout[]>([]);
   const [booked, setBooked] = useState([]);
   const status = "SCHEDULED";
-
+  const isCoach = user.isCoach;
   useEffect(() => {
     const fetchBookedWorkouts = async () => {
       try {
-        const response = await getBookedWorkoutsByUsers(userId);
+        const response = await getBookedWorkoutsByUsers(userId, isCoach);
         setBookedWorkouts(Array.isArray(response) ? response : []);
       } catch (error) {
         console.error("Error fetching booked workouts:", error);
@@ -81,11 +82,11 @@ const BookCoachPage: React.FC = () => {
                 status
               );
               setBooked(response);
-              enqueueSnackbar("Workout booked successfully", {
+              enqueueSnackbar(t("Workout booked successfully"), {
                 variant: "success",
               });
             } catch (error) {
-              enqueueSnackbar("This slot is already booked", {
+              enqueueSnackbar(t("This slot is already booked"), {
                 variant: "error",
               });
               console.error("Error booking workout:", error);
@@ -101,7 +102,9 @@ const BookCoachPage: React.FC = () => {
           justifyContent="space-between"
         >
           <Grid item xs={12} md={12}>
-            <Typography variant="body2">SCHEDULE YOUR SESSION</Typography>
+            <Typography variant="body2">
+              {t("SCHEDULE YOUR SESSION")}
+            </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <CalenderComponent
@@ -118,7 +121,9 @@ const BookCoachPage: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12} md={12} display="flex" marginTop="10px">
-            <Typography variant="body2">YOUR UPCOMING WORKOUTS</Typography>
+            <Typography variant="body2">
+              {t("YOUR UPCOMING WORKOUTS")}
+            </Typography>
           </Grid>
           <Grid
             item
@@ -143,7 +148,7 @@ const BookCoachPage: React.FC = () => {
               ))}
           </Grid>
           <Grid item xs={12} md={12} display="flex" marginTop="10px">
-            <Typography variant="body2">FEEDBACK</Typography>
+            <Typography variant="body2">{t("FEEDBACK")}</Typography>
           </Grid>
           <Grid item xs={12} md={12} display="flex" justifyContent="flex-start">
             <Testimonials coachId={coach._id} />

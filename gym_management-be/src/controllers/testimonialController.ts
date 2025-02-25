@@ -5,7 +5,7 @@ import { ITestimonialDoc } from '../models/Testimonial';
 class TestimonialController {
   public async createTestimonial(req: Request, res: Response): Promise<void> {
     try {
-      const { feedback, firstName, lastName, coachId, rating, workoutId } = req.body;
+      const { feedback, firstName, lastName, coachId, rating, workoutId, isCoach } = req.body;
       const date = new Date().toISOString().split('T')[0];
 
       let doc = await Testimonial.findOne() || new Testimonial();
@@ -21,7 +21,8 @@ class TestimonialController {
         date,
         rating,
         testimonial: feedback,
-        workoutId
+        workoutId,
+        isCoach
       });
 
       await Testimonial.updateOne({}, testimonialDoc, { upsert: true });

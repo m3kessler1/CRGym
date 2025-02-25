@@ -9,7 +9,12 @@ interface SessionCardProps {
   duration: string;
 }
 
-const SessionCard: React.FC<SessionCardProps> = ({ title, date, time, duration }) => {
+const SessionCard: React.FC<SessionCardProps> = ({
+  title,
+  date,
+  time,
+  duration,
+}) => {
   const theme = useTheme();
 
   return (
@@ -20,7 +25,9 @@ const SessionCard: React.FC<SessionCardProps> = ({ title, date, time, duration }
       p={2}
       bgcolor={theme.palette.mode === "dark" ? "#1e1e1e" : "#f8fcff"} // Light blue
       borderRadius="10px"
-      boxShadow={theme.palette.mode === "dark" ? "none" : "0 2px 4px rgba(0,0,0,0.1)"}
+      boxShadow={
+        theme.palette.mode === "dark" ? "none" : "0 2px 4px rgba(0,0,0,0.1)"
+      }
       borderLeft={`4px solid ${theme.palette.primary.main}`} // Blue left border
       minWidth="100%"
     >

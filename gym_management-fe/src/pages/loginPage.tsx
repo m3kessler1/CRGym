@@ -6,6 +6,11 @@ import {
   Button,
   Link,
   LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  IconButton,
 } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -17,7 +22,10 @@ import { useSnackbar } from "notistack"; // Import useSnackbar
 import { useDispatch } from "react-redux"; // Import useDispatch
 import { setUser } from "../redux/userSlice"; // Import your action to set user data
 import Cookies from "js-cookie";
-
+import KeyIcon from "@mui/icons-material/Key";
+import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "react-i18next";
 // Define schema using Zod
 const schema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
@@ -29,7 +37,9 @@ type FormData = z.infer<typeof schema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
+  const [openCredentials, setOpenCredentials] = useState(false);
   const { login, loading: loginLoading } = useLoginUser(); // Destructure the login function and loading state
   const {
     register,
@@ -57,7 +67,7 @@ function LoginPage() {
         // Store user data in Redux
         dispatch(setUser(userData));
 
-        enqueueSnackbar("Login successful! Welcome back!", {
+        enqueueSnackbar(t("Login successful! Welcome back!"), {
           // Show success message
           variant: "success",
           anchorOrigin: {
@@ -78,7 +88,7 @@ function LoginPage() {
     } catch (err) {
       console.error("Login failed:", err); // Handle any errors if needed
       enqueueSnackbar(
-        "Login failed. Please check your credentials and try again.", // Show error message
+        t("Login failed. Please check your credentials and try again."), // Show error message
         {
           variant: "error",
           anchorOrigin: {
@@ -88,6 +98,10 @@ function LoginPage() {
         }
       );
     }
+  };
+
+  const handleCredentials = () => {
+    setOpenCredentials(true);
   };
 
   return loginLoading ? (
@@ -145,7 +159,7 @@ function LoginPage() {
             width="100%"
             sx={{ fontWeight: "300" }}
           >
-            WELCOME BACK
+            {t("WELCOME BACK")}
           </Typography>
 
           <Typography
@@ -157,12 +171,13 @@ function LoginPage() {
             }}
             width="100%"
           >
-            Log In to Your Account
+            {t("Log In to Your Account")}
           </Typography>
+
           <TextField
             margin="normal"
             id="email"
-            label="Email Address"
+            label={t("Email Address")}
             {...register("email")}
             error={!!errors.email}
             helperText={
@@ -179,12 +194,14 @@ function LoginPage() {
             margin="normal"
             type="password"
             id="password"
-            label="Password"
-            placeholder="Enter your password"
+            label={t("Password")}
+            placeholder={t("Enter your password")}
             {...register("password")}
             error={!!errors.password}
             helperText={
-              errors.password ? errors.password.message : "Password is required"
+              errors.password
+                ? errors.password.message
+                : t("Password is required")
             }
             fullWidth
             sx={{
@@ -193,6 +210,33 @@ function LoginPage() {
               },
             }}
           />
+          <Box
+            sx={{
+              width: "100%",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              display: "flex",
+              color: "primary.main",
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={() => {
+                handleCredentials();
+              }}
+              sx={{
+                borderRadius: "6px",
+                color: "primary.main",
+                borderColor: "primary.main",
+
+                "&:hover": {
+                  borderColor: "primary.main",
+                },
+              }}
+            >
+              {t("Credentials")} <KeyIcon />
+            </Button>
+          </Box>
           <Button
             type="submit"
             variant="contained"
@@ -205,11 +249,11 @@ function LoginPage() {
             }}
             disabled={!isValid}
           >
-            Log In
+            {t("Log In")}
           </Button>
           <Grid item xs={12} md={12}>
             <Typography>
-              Don't have an account?{" "}
+              {t("Don't have an account?")}{" "}
               <Link
                 href="/register"
                 variant="body2"
@@ -220,13 +264,79 @@ function LoginPage() {
                     theme.palette.mode === "dark" ? "#fff" : "#000",
                 }}
               >
-                CREATE NEW ACCOUNT
+                {t("CREATE NEW ACCOUNT")}
               </Link>
             </Typography>
           </Grid>
         </Box>
       </Grid>
       <Image />
+      <Dialog
+        open={openCredentials}
+        onClose={() => setOpenCredentials(false)}
+        PaperProps={{
+          sx: {
+            minWidth: "552px",
+            minHeight: "224px",
+            borderRadius: "16px",
+            border: "1px solid rgba(0, 0, 0, 0.12)",
+            padding: "24px",
+            "& .MuiDialogContent-root": {
+              padding: "8px 24px 0 24px",
+              overflowY: "visible",
+              marginLeft: "-24px",
+              marginRight: "-24px",
+            },
+            "& .MuiDialogActions-root": {
+              padding: "24px",
+              gap: "2px",
+              marginTop: "15px",
+            },
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            padding: "0",
+            fontSize: "18px",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {t("Credentials")}
+          <IconButton
+            aria-label="close"
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === "light" ? "grey.500" : "white",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Box sx={{ fontWeight: "bold", color: "primary.main" }}>
+              {t("Coach Credentials")}:
+            </Box>
+            <br />
+            {t("Email")}: username1@domain.com
+            <br />
+            {t("Password")}: a@00119922A
+            <br />
+            <br />
+            <Box sx={{ fontWeight: "bold", color: "primary.main" }}>
+              {t("User Credentials")}:
+            </Box>
+            <br />
+            {t("Email")}: username@domain.com
+            <br />
+            {t("Password")}: a@00119922A
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Grid>
   );
 }

@@ -24,7 +24,8 @@ import { RootState } from "../redux/store";
 import { Link } from "react-router-dom";
 import TranslateIcon from "@mui/icons-material/Translate";
 import LanguageSelector from "./languageSelector";
-
+import InfoIcon from "@mui/icons-material/Info";
+import { useTranslation } from "react-i18next";
 // Define props for the component
 interface CustomAppBarProps {
   positioning?: "fixed" | "absolute" | "sticky" | "static" | "relative";
@@ -70,6 +71,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
     const isAuthenticated = !!Cookies.get("authToken");
     const [open, setOpen] = React.useState(false);
     const handleOpenLanguageSelector = () => setOpen(true);
+    const { t } = useTranslation();
 
     // Create a function to get initial tab based on current route
     const getInitialTab = React.useCallback(() => {
@@ -176,7 +178,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                   <Tab
                     component={Link}
                     to="/home"
-                    label="Home"
+                    label={t("Home")}
                     sx={{ fontSize: "1.1rem" }}
                   />
                 )}
@@ -184,7 +186,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                   <Tab
                     component={Link}
                     to="/workouts"
-                    label="Workouts"
+                    label={t("Workouts")}
                     sx={{ fontSize: "1.1rem" }}
                   />
                 )}
@@ -192,11 +194,18 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                   <Tab
                     component={Link}
                     to="/coaches"
-                    label="Coaches"
+                    label={t("Coaches")}
                     sx={{ fontSize: "1.1rem" }}
                   />
                 )}
               </Tabs>
+              <IconButton
+                sx={{ color: "primary.main" }}
+                href="https://github.com/adityasinghz/gym-management/blob/main/README.md"
+                target="_blank"
+              >
+                <InfoIcon fontSize="large" />
+              </IconButton>
 
               {/* Theme Toggle Button */}
               <IconButton
@@ -245,7 +254,7 @@ const CustomAppBar: React.FC<CustomAppBarProps> = React.memo(
                       textTransform: "none",
                     }}
                   >
-                    Login
+                    {t("Login")}
                   </Button>
                 </Link>
               )}

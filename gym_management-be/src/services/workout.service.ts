@@ -30,8 +30,13 @@ export class WorkoutService {
     return { message: 'Workout booked successfully', workout };
   }
 
-  async getUserWorkouts(userId: string) {
-    const workouts = await Workout.find({ userId });
+  async getUserWorkouts(userId: string, isCoach: boolean) {
+    let workouts;
+    if(isCoach){
+      workouts = await Workout.find({ coachId: userId });
+    }else{
+      workouts = await Workout.find({ userId });
+    }
     if (!workouts.length) {
       throw new Error('No workouts found for this user');
     }
@@ -42,15 +47,19 @@ export class WorkoutService {
 
     // Fetch coach details for each workout
     const workoutsWithDetails = await Promise.all(workouts.map(async workout => {
-      const coach = await User.findById(workout.coachId);
+
+        const user = await User.findById(workout.userId);
+        const coach = await User.findById(workout.coachId);
+
+      
       return {
         workoutId: workout._id,
         date: workout.date,
         time: workout.time,
         activity: workout.activity,
         status: workout.status,
-        userFirstName: user.firstName,
-        userLastName: user.lastName,
+        userFirstName: user?.firstName,
+        userLastName: user?.lastName,
         coachFirstName: coach ? coach.firstName : 'Unknown',
         coachLastName: coach ? coach.lastName : 'Unknown',
         coachId: coach ? coach._id : 'Unknown',

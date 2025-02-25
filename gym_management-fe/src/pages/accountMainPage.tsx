@@ -6,6 +6,7 @@ import GeneralInformation from "./generalInformationPage";
 import ChangePassword from "./changePasswordPage";
 import Logout from "../components/LogoutButton";
 import { useTheme, useMediaQuery } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,6 +46,8 @@ export default function MyAccount() {
     setValue(newValue);
   };
 
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -83,7 +86,7 @@ export default function MyAccount() {
           }}
         >
           <Tab
-            label="General Information"
+            label={t("General Information")}
             {...a11yProps(0)}
             sx={{
               width: { xs: "auto", md: "316px" },
@@ -94,7 +97,7 @@ export default function MyAccount() {
             }}
           />
           <Tab
-            label="Change Password"
+            label={t("Change Password")}
             {...a11yProps(1)}
             sx={{
               width: { xs: "auto", md: "316px" },

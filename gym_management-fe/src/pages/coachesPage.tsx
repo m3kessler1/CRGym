@@ -6,9 +6,11 @@ import SkeletonCoachPage from "../components/Skeleton/SkeletonCoachPage";
 import useFetchCoaches from "../hooks/useFetchCoaches";
 import Cookies from "js-cookie";
 import { Coach } from "../types/coach";
+import { useTranslation } from "react-i18next";
 
 const Coaches: React.FC = () => {
   const token = Cookies.get("authToken") || "";
+  const { t } = useTranslation();
   const { data: coaches, loading } = useFetchCoaches(token);
   const [page, setPage] = useState(1); // Moved up
 
@@ -35,7 +37,7 @@ const Coaches: React.FC = () => {
     <Box>
       {coachesData.length === 0 ? (
         <Typography variant="h5" align="center" sx={{ mt: 4 }}>
-          No coaches available at the moment
+          {t("No coaches available at the moment")}
         </Typography>
       ) : (
         <>

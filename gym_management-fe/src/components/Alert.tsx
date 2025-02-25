@@ -2,15 +2,18 @@ import { Alert, Typography } from "@mui/material";
 import BaseImage from "../assets/Base.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useTranslation } from "react-i18next";
 
 const AlertComp = () => {
   const userData = useSelector((state: RootState) => state.user);
+  const { t } = useTranslation();
+
   return (
     <Alert
       variant="filled"
       icon={false}
       sx={{
-        backgroundImage: `url(${BaseImage})`, // Add your image path here
+        backgroundImage: `url(${BaseImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -25,7 +28,7 @@ const AlertComp = () => {
           p: 4,
         }}
       >
-        {`Hello${
+        {`${t("Hello")}${
           userData.firstName
             ? `, ${userData.firstName} ${userData.lastName}!`
             : "!"

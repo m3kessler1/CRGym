@@ -22,6 +22,7 @@ import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
+import { useTranslation } from "react-i18next";
 //import { finishWorkout } from "../services/workoutService";
 
 import { enqueueSnackbar } from "notistack";
@@ -32,6 +33,7 @@ interface FeedbackDialogProps {
   onClose: () => void;
   onSubmit: (feedback: { rating: number; comment?: string }) => void;
   workout: Workout;
+  userId: string;
 }
 
 interface Workout {
@@ -48,7 +50,7 @@ interface Workout {
 }
 // Add Zod schema
 const feedbackSchema = z.object({
-  rating: z.number().min(1).max(5),
+  rating: z.number().min(0).max(5),
   comment: z
     .string()
     .min(3, "Comment must be at least 3 characters")
@@ -60,6 +62,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
   onClose,
   workout,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [rating, setRating] = React.useState<number | null>(0);
   const [comment, setComment] = React.useState("");
@@ -78,14 +81,20 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
         rating: validatedData.rating,
         feedback: validatedData.comment,
         workoutId: workout.workoutId,
+        isCoach: userData.isCoach,
       };
-      await addTestimonial(testimonial);
-      await updateStatus(workout.workoutId, "FINISHED");
-      dispatch({ type: "FINISH_WORKOUT" });
-      enqueueSnackbar("Feedback submitted successfully", {
-        variant: "success",
-      });
-      onClose();
+
+      try {
+        await addTestimonial(testimonial);
+        await updateStatus(workout.workoutId, "FINISHED");
+        dispatch({ type: "FINISH_WORKOUT" });
+        enqueueSnackbar("Feedback submitted successfully", {
+          variant: "success",
+        });
+        onClose();
+      } catch (error) {
+        enqueueSnackbar("Failed to submit feedback", { variant: "error" });
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formattedErrors: Record<string, string> = {};
@@ -109,7 +118,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
       }}
     >
       <DialogTitle fontSize="24px">
-        Workout Feedback
+        {t("Workout Feedback")}
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -123,8 +132,8 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
         </IconButton>
         <DialogContentText fontSize="14px">
           {!userData.isCoach
-            ? "Please rate your workout experience below"
-            : "Please rate the Client's performance below"}
+            ? t("Please rate your workout experience below")
+            : t("Please rate the Client's performance below")}
         </DialogContentText>
       </DialogTitle>
       <DialogContent>
@@ -235,7 +244,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                     color: "grey.500",
                   }}
                 />
-                Duration :{" "}
+                {t("Duration")} :{" "}
                 <Typography variant="body2" fontWeight={300} component="span">
                   1h
                 </Typography>
@@ -257,7 +266,7 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
                     color: "grey.500",
                   }}
                 />
-                Date :{" "}
+                {t("Date")} :{" "}
                 <Typography variant="body2" fontWeight={300} component="span">
                   {workout.date}
                 </Typography>
@@ -349,9 +358,8 @@ const WorkoutFeedback: React.FC<FeedbackDialogProps> = ({
           }}
           fullWidth
           variant="contained"
-          disabled={!rating || !comment}
         >
-          Submit Feedback
+          {t("Submit Feedback")}
         </Button>
       </DialogActions>
     </Dialog>

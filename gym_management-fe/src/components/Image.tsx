@@ -1,11 +1,12 @@
 import { Box, Grid, Typography } from "@mui/material";
 import SignUpImage from "../assets/SignUpImage.svg";
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 const Image: React.FC<{
   width?: string;
   height?: string;
 }> = ({ width = "75%", height = "95%" }) => {
+  const { t } = useTranslation();
   return (
     <Grid
       item
@@ -58,15 +59,14 @@ const Image: React.FC<{
             },
           }}
         >
-          "The path to triumph is paved with the{" "}
+          {t("The path to triumph is paved with the")}
           <Typography component="span" color="primary" variant="inherit">
-            strength to train
+            {t("strength to train")}
           </Typography>{" "}
-          hard and the perseverance to{" "}
+          {t("hard and the perseverance to")}
           <Typography component="span" color="primary" variant="inherit">
-            rise each time you fall.
+            {t("rise each time you fall.")}
           </Typography>
-          "
         </Typography>
       </Box>
     </Grid>

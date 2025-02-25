@@ -10,12 +10,12 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import ISO6391 from "iso-639-1";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../redux/userSlice"; // Import the updateUser action
 import { RootState } from "../redux/store"; // Import the RootState type
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "react-i18next";
 
 interface LanguageSelectorProps {
   open: boolean;
@@ -30,17 +30,27 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const userData = useSelector((state: RootState) => state.user);
   const [language, setLanguage] = React.useState<string>(
     userData.selectedLanguage || "en"
-  ); // Set default to user's selected language or 'en'
-  // Handle language selection
+  ); // Set default to user's selected language
+
+  const { i18n } = useTranslation();
+
+  React.useEffect(() => {
+    // Update language state when userData changes
+    setLanguage(userData.selectedLanguage || "en");
+    i18n.changeLanguage(userData.selectedLanguage || "en"); // Set the language based on userData
+  }, [userData.selectedLanguage, i18n]);
+
   const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value as string);
+    const newLanguage = event.target.value as string;
+    setLanguage(newLanguage);
+    dispatch(updateUser({ ...userData, selectedLanguage: newLanguage })); // Update Redux state
+    i18n.changeLanguage(newLanguage); // Change the language in i18next
   };
 
-  // Handle closing of the dialog
   const handleOk = () => {
-    dispatch(updateUser({ ...userData, selectedLanguage: language })); // Spread existing user data
     setOpen(false);
   };
+
   const handleClose = (_: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== "backdropClick") {
       setOpen(false);
@@ -66,7 +76,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             alignItems: "center",
           }}
         >
-          Select Language
+          {i18n.t("Select Language")}
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -90,26 +100,27 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 },
               }}
             >
-              <InputLabel id="language-select-label">Language</InputLabel>
+              <InputLabel id="language-select-label">
+                {i18n.t("Select Language")}
+              </InputLabel>
               <Select
                 labelId="language-select-label"
                 id="language-select"
                 value={language}
                 onChange={handleChange}
-                defaultValue={userData.selectedLanguage}
                 input={<OutlinedInput label="Language" />}
                 sx={{ height: 56 }}
               >
-                {ISO6391.getAllCodes().map((code) => (
-                  <MenuItem key={code} value={code}>
-                    {ISO6391.getName(code)} ({code})
+                {["en", "hi"].map((code, index) => (
+                  <MenuItem key={index} value={code}>
+                    {code === "en" ? "English" : "हिन्दी"} ({code})
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ mr: 2, mb: 2 }}>
+        <DialogActions>
           <Button
             variant="contained"
             onClick={handleOk}
@@ -117,7 +128,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             size="large"
             sx={{ fontWeight: "bold", borderRadius: "8px" }}
           >
-            Confirm
+            {i18n.t("Ok")}
           </Button>
         </DialogActions>
       </Dialog>

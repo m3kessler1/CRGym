@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import MyAccount from "../assets/MyAccount.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-
+import { useTranslation } from "react-i18next";
 interface ProfileTooltipProps {
   anchorEl: HTMLElement | null;
   setAnchorEl: (element: HTMLElement | null) => void;
@@ -28,6 +28,7 @@ export default function ProfileTooltip({
     handleClose(); // Close the menu after navigation
   };
   const userData = useSelector((state: RootState) => state.user);
+  const { t } = useTranslation();
   return (
     <Box>
       <Menu
@@ -150,10 +151,10 @@ export default function ProfileTooltip({
             }}
           >
             <Typography variant="h6" fontWeight="bold">
-              My Account
+              {t("My Account")}
             </Typography>
             <Typography variant="body2" fontSize="1rem">
-              Edit Account Profile
+              {t("Edit Account Profile")}
             </Typography>
           </Box>
         </MenuItem>

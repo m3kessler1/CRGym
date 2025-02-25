@@ -28,10 +28,9 @@ const initialState: UserState = {
   password: '',
   isCoach: false,
   userSummary: '',
-  selectedLanguage: 'en',
+  selectedLanguage: '',
   title: '',
   timeSlots: [],
-
 };
 
 export const userSlice = createSlice({

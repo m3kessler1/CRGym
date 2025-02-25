@@ -4,7 +4,7 @@ import { bookWorkoutController, getUserWorkoutsController, cancelWorkoutControll
 const router = express.Router();
 
 router.post('/book', bookWorkoutController);
-router.get('/:userId', getUserWorkoutsController);
+router.get('/:userId/:isCoach', getUserWorkoutsController);
 router.patch('/:workoutId/status', cancelWorkoutController);
 router.patch('/:workoutId/waiting-for-feedback', setWorkoutStatusToWaitingForFeedbackController);
 export default router;

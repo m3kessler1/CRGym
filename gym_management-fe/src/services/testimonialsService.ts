@@ -9,6 +9,7 @@ interface Testimonial {
   rating: number;
   feedback: string;
   workoutId: string;
+  isCoach: boolean;
 }
 
 export const getTestimonials = async (coachId: string) => {
@@ -16,7 +17,13 @@ export const getTestimonials = async (coachId: string) => {
   return response.data;
 };
 
-export const addTestimonial = async (testimonial: Testimonial) => {
-  const response = await axios.post(`${BASE_URL}`, testimonial);
-  return response.data;
+export const addTestimonial = async (testimonialData: Testimonial) => {
+  console.log("testimonialData", testimonialData);
+  try {
+    const response = await axios.post(`${BASE_URL}`, testimonialData);
+    return response.data; // Return the response data
+  } catch (error) {
+    console.error("Error creating testimonial:", error);
+    throw error; // Rethrow the error for further handling
+  }
 };

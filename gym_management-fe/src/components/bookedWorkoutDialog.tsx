@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 interface WorkoutDialogProps {
   open: boolean;
   onClose: () => void;
@@ -21,6 +21,7 @@ const BookedWorkoutDialog: React.FC<WorkoutDialogProps> = ({
   onClose,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleResumeWorkout = () => {
     onClose();
   };
@@ -36,9 +37,10 @@ const BookedWorkoutDialog: React.FC<WorkoutDialogProps> = ({
 
   const getDialogContent = () => {
     return {
-      title: "Log in to book workout",
-      content:
-        "You must be logged in to book a workout. Please log in to access available slots and book your session.",
+      title: t("Log in to book workout"),
+      content: t(
+        "You must be logged in to book a workout. Please log in to access available slots and book your session."
+      ),
     };
   };
 
@@ -123,7 +125,7 @@ const BookedWorkoutDialog: React.FC<WorkoutDialogProps> = ({
           }}
           onClick={onClose}
         >
-          Close
+          {t("Close")}
         </Button>
 
         <Button
@@ -136,7 +138,7 @@ const BookedWorkoutDialog: React.FC<WorkoutDialogProps> = ({
           }}
           onClick={loginRouter}
         >
-          Login
+          {t("Login")}
         </Button>
       </DialogActions>
     </Dialog>

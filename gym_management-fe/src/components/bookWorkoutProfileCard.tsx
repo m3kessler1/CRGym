@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Suspense } from "react";
 import { Coach } from "../types/coach";
-
+import { useTranslation } from "react-i18next";
 // Define the props interface
 interface CoachesCardProps {
   coach: Coach;
@@ -30,7 +30,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
   image,
 }) => {
   // Handle booking navigation
-
+  const { t } = useTranslation();
   return (
     <Grid item xs={12} sm={12} md={3} lg={3}>
       <Card
@@ -72,7 +72,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
 
           <Box sx={{ mb: 2 }}>
             <Typography variant="body2" gutterBottom>
-              About Coach
+              {t("About Coach")}
             </Typography>
             <Typography
               variant="body2"
@@ -86,7 +86,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
 
           <Box sx={{ mb: 3 }}>
             <Typography variant="body2" gutterBottom>
-              Specialization
+              {t("Specialization")}
             </Typography>
             <Typography
               variant="body2"
@@ -121,7 +121,7 @@ const BookWorkoutProfileCard: React.FC<CoachesCardProps> = ({
                 textTransform: "none",
               }}
             >
-              Book Workout
+              {t("Book Workout")}
             </Button>
           </Box>
         </CardContent>

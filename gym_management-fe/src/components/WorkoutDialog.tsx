@@ -11,7 +11,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { updateStatus } from "../services/workoutService";
 import { useDispatch } from "react-redux";
-
+import { useTranslation } from "react-i18next";
 interface WorkoutDialogProps {
   open: boolean;
   dialogType: "cancel" | "finish" | null;
@@ -32,6 +32,7 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
   workoutId,
 }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const handleResumeWorkout = () => {
     onClose();
   };
@@ -58,16 +59,18 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
   const getDialogContent = () => {
     if (dialogType === "cancel") {
       return {
-        title: "Cancel Workout",
-        content:
-          "You’re about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved.",
+        title: t("Cancel Workout"),
+        content: t(
+          "You’re about to mark this workout as canceled. Are you sure you want to cancel this session? Any progress or data from this workout will not be saved."
+        ),
       };
     }
     if (dialogType === "finish") {
       return {
-        title: "Complete Workout",
-        content:
-          "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.",
+        title: t("Complete Workout"),
+        content: t(
+          "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved."
+        ),
       };
     }
   };
@@ -153,7 +156,7 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
           }}
           onClick={onClose}
         >
-          Resume Workout
+          {t("Resume Workout")}
         </Button>
 
         <Button
@@ -168,7 +171,7 @@ const WorkoutDialog: React.FC<WorkoutDialogProps> = ({
             dialogType === "cancel" ? handleCancelWorkout : handleFinishWorkout
           }
         >
-          {dialogType === "cancel" ? "Cancel Workout" : "Finish Workout"}
+          {dialogType === "cancel" ? t("Cancel Workout") : t("Finish Workout")}
         </Button>
       </DialogActions>
     </Dialog>

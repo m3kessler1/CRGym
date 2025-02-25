@@ -13,19 +13,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import WorkoutDialog from "./WorkoutDialog";
 import WorkoutFeedback from "./WorkoutFeedback";
 import { waitingForFeedback } from "../services/workoutService";
-const workOutSummary = {
-  yoga: "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being.",
-  climbing:
-    "Climbing is a sport that involves climbing a wall or a rope. It is a great way to get fit and improve your strength and endurance.",
-  strengthtraining:
-    "Strength training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  crossfit:
-    "Crossfit is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  cardiotraining:
-    "Cardio training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-  rehabilitation:
-    "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance.",
-};
+import { useTranslation } from "react-i18next";
 
 export type EventStatus =
   | "SCHEDULED"
@@ -80,15 +68,38 @@ interface WorkoutCardProps {
     userFirstName: string;
     userLastName: string;
   };
+  userId: string;
 }
 
-const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
+const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout, userId }) => {
+  const { t } = useTranslation();
   const [state, dispatch] = React.useReducer(workoutReducer, {
     status: workout.status as EventStatus,
     openDialog: false,
     dialogType: null,
   });
   const [feedbackDialogOpen, setFeedbackDialogOpen] = React.useState(false);
+
+  const workOutSummary = {
+    yoga: t(
+      "Yoga is a mind and body practice that originated in India. It involves a series of physical postures, breathing exercises, and meditation techniques. The goal of yoga is to promote physical, mental, and spiritual well-being."
+    ),
+    climbing: t(
+      "Climbing is a sport that involves climbing a wall or a rope. It is a great way to get fit and improve your strength and endurance."
+    ),
+    strengthtraining: t(
+      "Strength training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance."
+    ),
+    crossfit: t(
+      "Crossfit is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance."
+    ),
+    cardiotraining: t(
+      "Cardio training is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance."
+    ),
+    rehabilitation: t(
+      "Rehabilitation is a type of exercise that focuses on building muscle strength and endurance. It is a great way to get fit and improve your strength and endurance."
+    ),
+  };
 
   React.useEffect(() => {
     const checkFeedback = async () => {
@@ -125,13 +136,13 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
               <Chip
                 label={
                   state.status === "SCHEDULED"
-                    ? "Scheduled"
+                    ? t("Scheduled")
                     : state.status === "WAITING_FOR_FEEDBACK"
-                    ? "Waiting for feedback"
+                    ? t("Waiting for feedback")
                     : state.status === "FEEDBACK_SUBMITTED" ||
                       state.status === "FINISHED"
-                    ? "Finished"
-                    : "Cancelled"
+                    ? t("Finished")
+                    : t("Cancelled")
                 }
                 sx={{
                   backgroundColor:
@@ -200,7 +211,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
                     dispatch({ type: "OPEN_DIALOG", payload: "cancel" })
                   }
                 >
-                  Cancel Workout
+                  {t("Cancel Workout")}
                 </Button>
               </>
             ) : state.status === "WAITING_FOR_FEEDBACK" ? (
@@ -214,7 +225,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
                 }}
                 onClick={() => setFeedbackDialogOpen(true)}
               >
-                Leave Feedback
+                {t("Leave Feedback")}
               </Button>
             ) : null}
           </CardActions>
@@ -244,6 +255,7 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ workout }) => {
           setFeedbackDialogOpen(false);
         }}
         workout={workout}
+        userId={userId}
       />
     </>
   );

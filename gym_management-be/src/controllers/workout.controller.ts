@@ -17,8 +17,8 @@ export const bookWorkoutController = async (req: Request, res: Response) => {
 
 export const getUserWorkoutsController = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    const workouts = await workoutService.getUserWorkouts(userId);
+    const { userId, isCoach } = req.params;
+    const workouts = await workoutService.getUserWorkouts(userId, isCoach=='true');
     res.status(200).json(workouts);
   } catch (error) {
     if ((error as Error).message === 'No workouts found for this user') {

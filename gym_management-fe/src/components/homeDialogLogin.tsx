@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 interface HomeDialogLoginProps {
   open: boolean;
   onClose: () => void;
@@ -18,15 +18,17 @@ interface HomeDialogLoginProps {
 
 const HomeDialogLogin: React.FC<HomeDialogLoginProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleResumeWorkout = () => {
     onClose();
   };
 
   const getDialogContent = () => {
     return {
-      title: "Complete Workout",
-      content:
-        "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved.",
+      title: t("Complete Workout"),
+      content: t(
+        "You’re about to mark this workout as Finished. Are you sure you want to finish this session? Any progress or data from this workout will not be saved."
+      ),
     };
   };
 
@@ -111,7 +113,7 @@ const HomeDialogLogin: React.FC<HomeDialogLoginProps> = ({ open, onClose }) => {
           }}
           onClick={onClose}
         >
-          Resume Workout
+          {t("Resume Workout")}
         </Button>
 
         <Button
@@ -124,7 +126,7 @@ const HomeDialogLogin: React.FC<HomeDialogLoginProps> = ({ open, onClose }) => {
           }}
           onClick={() => navigate("/login")}
         >
-          Login
+          {t("Login")}
         </Button>
       </DialogActions>
     </Dialog>

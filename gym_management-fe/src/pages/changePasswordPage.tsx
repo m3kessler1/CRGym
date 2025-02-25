@@ -10,6 +10,7 @@ import { enqueueSnackbar } from "notistack";
 import { setUser } from "../redux/userSlice";
 
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 type FormData = {
   oldPassword: string;
@@ -17,19 +18,27 @@ type FormData = {
   confirmPassword: string;
 };
 
-const schema = z.object({
-  oldPassword: z.string().min(8, "Password must be at least 8 characters"),
-  newPassword: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string()
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
 function ChangePassword() {
   const userData = useSelector((state: RootState) => state.user);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { updatePasswordUser } = usePasswordUser();
+
+  const schema = z
+    .object({
+      oldPassword: z
+        .string()
+        .min(8, t("Password must be at least 8 characters")),
+      newPassword: z
+        .string()
+        .min(8, t("Password must be at least 8 characters")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t("Passwords don't match"),
+      path: ["confirmPassword"],
+    });
+
   const {
     register,
     handleSubmit,
@@ -53,7 +62,7 @@ function ChangePassword() {
     try {
       await updatePasswordUser(newData, userId);
       dispatch(setUser({ ...userData, password: newData.newPassword }));
-      enqueueSnackbar("Password updated successfully!", {
+      enqueueSnackbar(t("Password updated successfully!"), {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -62,7 +71,7 @@ function ChangePassword() {
       });
     } catch (error) {
       console.error("Error updating password:", error);
-      enqueueSnackbar("Error updating password:", {
+      enqueueSnackbar(t("Error updating password:"), {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -96,14 +105,14 @@ function ChangePassword() {
                   margin="normal"
                   fullWidth
                   id="oldPassword"
-                  label="Current Password"
+                  label={t("Current Password")}
                   type="password"
                   {...register("oldPassword")}
                   error={!!errors.oldPassword}
                   helperText={
                     errors.oldPassword
                       ? errors.oldPassword.message
-                      : "Enter your current password"
+                      : t("Enter your current password")
                   }
                   sx={{
                     "& .MuiOutlinedInput-root": {
@@ -118,14 +127,14 @@ function ChangePassword() {
                   margin="normal"
                   type="password"
                   id="newPassword"
-                  label="New Password"
-                  placeholder="Enter your password"
+                  label={t("New Password")}
+                  placeholder={t("Enter your password")}
                   {...register("newPassword")}
                   error={!!errors.newPassword}
                   helperText={
                     errors.newPassword
                       ? errors.newPassword.message
-                      : "At least one capital letter required"
+                      : t("At least one capital letter required")
                   }
                   fullWidth
                   sx={{
@@ -140,14 +149,14 @@ function ChangePassword() {
                   margin="normal"
                   type="password"
                   id="confirmPassword"
-                  label="Confirm New Password"
-                  placeholder="Enter your password"
+                  label={t("Confirm New Password")}
+                  placeholder={t("Enter your password")}
                   {...register("confirmPassword")}
                   error={!!errors.confirmPassword}
                   helperText={
                     errors.confirmPassword
                       ? errors.confirmPassword.message
-                      : "Passwords don't match"
+                      : t("Passwords don't match")
                   }
                   fullWidth
                   sx={{
@@ -174,7 +183,7 @@ function ChangePassword() {
                   width: { xs: "100%", md: "auto" },
                 }}
               >
-                Save Changes
+                {t("Save Changes")}
               </Button>
             </Box>
           </Box>

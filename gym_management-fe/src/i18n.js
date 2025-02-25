@@ -207,6 +207,9 @@ i18n.use(initReactI18next).init({
         "Login successful! Welcome back!": "लॉगिन सफल! वापस आ गए हैं!",
         "Log Out": "लॉग आउट करें",
         All: "सभी",
+        "Don't have an account?": "खाता नहीं है?",
+        "Log In": "लॉग इन करें",
+        "Create an Account": "खाता बनाएं",
         // ... existing code ...
       },
     },

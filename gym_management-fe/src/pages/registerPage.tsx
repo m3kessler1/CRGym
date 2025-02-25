@@ -19,28 +19,32 @@ import Image from "../components/Image.tsx";
 import useRegisterUser from "../hooks/useRegisterUser";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-
-// Define a schema using Zod for validation
-const schema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().min(1, "Last Name is required"),
-  email: z.string().email("Invalid email address").min(1, "Email is required"),
-  password: z
-    .string()
-    .regex(/^\S*$/, "Password must not contain spaces")
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
-  target: z.string().min(1, "Target is required"),
-  isCoach: z.boolean(),
-  activity: z.string().min(1, "Activity is required"),
-});
-
-// Define the TypeScript interface for form data based on the schema
-type RegisterFormData = z.infer<typeof schema>;
+import { useTranslation } from "react-i18next";
 
 function RegisterPage() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { t } = useTranslation();
+
+  const schema = z.object({
+    firstName: z.string().min(1, t("First Name is required")),
+    lastName: z.string().min(1, t("Last Name is required")),
+    email: z
+      .string()
+      .email(t("Invalid email address"))
+      .min(1, t("Email is required")),
+    password: z
+      .string()
+      .regex(/^\S*$/, t("Password must not contain spaces"))
+      .min(8, t("Password must be at least 8 characters long"))
+      .regex(/[A-Z]/, t("Password must contain at least one uppercase letter")),
+    target: z.string().min(1, t("Target is required")),
+    isCoach: z.boolean(),
+    activity: z.string().min(1, t("Activity is required")),
+  });
+
+  // Define the TypeScript interface for form data based on the schema
+  type RegisterFormData = z.infer<typeof schema>;
 
   // Destructure the useForm hook with zodResolver and schema validation
   const {
@@ -78,7 +82,9 @@ function RegisterPage() {
     } catch (error: any) {
       enqueueSnackbar(
         error.response?.data?.message ||
-          "We're experiencing technical difficulties. Please try again later.",
+          t(
+            "We're experiencing technical difficulties. Please try again later."
+          ),
         {
           variant: "error",
           anchorOrigin: {
@@ -145,7 +151,7 @@ function RegisterPage() {
             width="100%"
             sx={{ fontWeight: "300" }}
           >
-            LET'S GET YOU STARTED
+            {t("LET'S GET YOU STARTED")}
           </Typography>
 
           <Typography
@@ -157,20 +163,20 @@ function RegisterPage() {
             }}
             width="100%"
           >
-            Create an Account
+            {t("CREATE AN ACCOUNT")}
           </Typography>
           <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
             {" "}
             <TextField
               margin="normal"
               id="firstName"
-              label="First Name"
+              label={t("First Name")}
               autoComplete="given-name"
-              placeholder="Enter your first name"
+              placeholder={t("Enter your first name")}
               {...register("firstName")}
               error={!!errors.firstName}
               helperText={
-                errors.firstName ? errors.firstName.message : "e.g. Johnson"
+                errors.firstName ? errors.firstName.message : t("e.g. Johnson")
               }
               fullWidth
               sx={{
@@ -182,13 +188,13 @@ function RegisterPage() {
             <TextField
               margin="normal"
               id="lastName"
-              label="Last Name"
-              placeholder="Enter your last name"
+              label={t("Last Name")}
+              placeholder={t("Enter your last name")}
               autoComplete="family-name"
               {...register("lastName")}
               error={!!errors.lastName}
               helperText={
-                errors.lastName ? errors.lastName.message : "e.g. Doe"
+                errors.lastName ? errors.lastName.message : t("e.g. Doe")
               }
               fullWidth
               sx={{
@@ -202,12 +208,14 @@ function RegisterPage() {
           <TextField
             margin="normal"
             id="email"
-            label="Email Address"
-            placeholder="Enter your email"
+            label={t("Email Address")}
+            placeholder={t("Enter your email")}
             {...register("email")}
             error={!!errors.email}
             helperText={
-              errors.email ? errors.email.message : "e.g. username@domain.com"
+              errors.email
+                ? errors.email.message
+                : t("e.g. username@domain.com")
             }
             fullWidth
             sx={{
@@ -220,14 +228,14 @@ function RegisterPage() {
             margin="normal"
             type="password"
             id="password"
-            label="Password"
-            placeholder="Enter your password"
+            label={t("Password")}
+            placeholder={t("Enter your password")}
             {...register("password")}
             error={!!errors.password}
             helperText={
               errors.password
                 ? errors.password.message
-                : "At least one capital letter required"
+                : t("At least one capital letter required")
             }
             fullWidth
             sx={{
@@ -253,7 +261,7 @@ function RegisterPage() {
               }}
             />
             <Typography variant="body2" color="textSecondary">
-              Are you a Coach?
+              {t("Are you a Coach?")}
             </Typography>
           </Box>
 
@@ -268,23 +276,25 @@ function RegisterPage() {
               mb: { lg: 2, md: 2, xs: 2, sm: 2 },
             }}
           >
-            <InputLabel id="yourTargetLabel">Target</InputLabel>
+            <InputLabel id="yourTargetLabel">{t("Target")}</InputLabel>
             <Select
               labelId="yourTargetLabel"
               id="yourTarget"
               value={target || "Lose weight"}
-              label="Target"
+              label={t("Target")}
               {...register("target")}
             >
-              <MenuItem value="Lose weight">Lose weight</MenuItem>
-              <MenuItem value="Gain weight">Gain weight</MenuItem>
+              <MenuItem value="Lose weight">{t("Lose weight")}</MenuItem>
+              <MenuItem value="Gain weight">{t("Gain weight")}</MenuItem>
               <MenuItem value="Improve flexibility">
-                Improve flexibility
+                {t("Improve flexibility")}
               </MenuItem>
-              <MenuItem value="General fitness">General fitness</MenuItem>
-              <MenuItem value="Build Muscle">Build Muscle</MenuItem>
+              <MenuItem value="General fitness">
+                {t("General fitness")}
+              </MenuItem>
+              <MenuItem value="Build Muscle">{t("Build Muscle")}</MenuItem>
               <MenuItem value="Rehabilitation/Recovery">
-                Rehabilitation/Recovery
+                {t("Rehabilitation/Recovery")}
               </MenuItem>
             </Select>
             {errors.target && (
@@ -301,20 +311,24 @@ function RegisterPage() {
               mb: 2,
             }}
           >
-            <InputLabel id="activity">Activity</InputLabel>
+            <InputLabel id="activity">{t("Activity")}</InputLabel>
             <Select
               labelId="activity"
               id="activity"
               value={activity || "Yoga"}
-              label="Activity"
+              label={t("Activity")}
               {...register("activity")}
             >
-              <MenuItem value="Yoga">Yoga</MenuItem>
-              <MenuItem value="Climbing">Climbing</MenuItem>
-              <MenuItem value="Strength training">Strength training</MenuItem>
-              <MenuItem value="Cross-fit">Cross-fit</MenuItem>
-              <MenuItem value="Cardio Training">Cardio Training</MenuItem>
-              <MenuItem value="Rehabilitation">Rehabilitation</MenuItem>
+              <MenuItem value="Yoga">{t("Yoga")}</MenuItem>
+              <MenuItem value="Climbing">{t("Climbing")}</MenuItem>
+              <MenuItem value="Strength training">
+                {t("Strength training")}
+              </MenuItem>
+              <MenuItem value="Cross-fit">{t("Cross-fit")}</MenuItem>
+              <MenuItem value="Cardio Training">
+                {t("Cardio Training")}
+              </MenuItem>
+              <MenuItem value="Rehabilitation">{t("Rehabilitation")}</MenuItem>
             </Select>
             {errors.activity && (
               <Typography color="error">{errors.activity.message}</Typography>
@@ -333,11 +347,11 @@ function RegisterPage() {
             }}
             disabled={!isValid}
           >
-            Create An Account
+            {t("Create An Account")}
           </Button>
           <Grid item xs={12} md={12}>
             <Typography>
-              Already have an account?{" "}
+              {t("Already have an account?")}
               <Link
                 href="/login"
                 variant="body2"
@@ -348,7 +362,7 @@ function RegisterPage() {
                     theme.palette.mode === "dark" ? "#fff" : "#000",
                 }}
               >
-                LOGIN HERE
+                {t("LOGIN HERE")}
               </Link>
             </Typography>
           </Grid>

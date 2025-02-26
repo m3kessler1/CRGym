@@ -73,7 +73,7 @@ Ensure you have the following installed:
 
 4. Start the backend server:
    ```bash
-   npm run dev
+   npm start
    ```
    The API will be running on `http://localhost:5000`.
 
@@ -99,7 +99,7 @@ Ensure you have the following installed:
 | MongoDB + Mongoose | Database & ODM               |
 | JWT + bcrypt     | Authentication & security      |
 | CORS & dotenv    | Environment & security configs |
-
+| react-i18next   | Language Translation |
 ---
 
 ## 📱 User Journeys

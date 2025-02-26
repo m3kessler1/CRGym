@@ -34,6 +34,17 @@ const AlertComp = () => {
             : "!"
         }`}
       </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          justifyContent: "center",
+          alignItems: "start",
+          fontFamily: "lexend",
+          pl: 4,
+        }}
+      >
+        {t("Using free version of Render so the initial load may take 2-3 minutes.")}
+      </Typography>
     </Alert>
   );
 };

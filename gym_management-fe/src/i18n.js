@@ -146,6 +146,7 @@ i18n.use(initReactI18next).init({
         "We're experiencing technical difficulties. Please try again later.":
           "We're experiencing technical difficulties. Please try again later.",
         "BOOK A WORKOUT": "BOOK A WORKOUT",
+        "Using free version of Render so the initial load may take 2-3 minutes.": "Using free version of Render so the initial load may take 2-3 minutes.",
       },
     },
     hi: {
@@ -289,6 +290,7 @@ i18n.use(initReactI18next).init({
         "We're experiencing technical difficulties. Please try again later.":
           "हमें तकनीकी समस्याओं का सामना करना पड़ रहा है। कृपया बाद में पुनः प्रयास करें।",
         "BOOK A WORKOUT": "वर्कआउट बुक करें",
+        "Using free version of Render so the initial load may take 2-3 minutes.": "रेंडर के मुफ्त संस्करण का उपयोग कर रहे हैं इसलिए प्रारंभिक लोड 2-3 मिनट ले सकता है।",
       },
     },
     tel: {
@@ -431,6 +433,8 @@ i18n.use(initReactI18next).init({
         "We're experiencing technical difficulties. Please try again later.":
           "మాట్లీ తకనికీ సమస్యలు ఉన్నాయి. దయచేసి బారికోలు ప్రయత్నించండి.",
         "BOOK A WORKOUT": "వర్కౌట్ బుక్ చేయండి",
+        "Using free version of Render so the initial load may take 2-3 minutes.":
+          "ప్రారంభిక లోడ్ 2-3 నిమిషాలు పట్టుకోవచ్చు, రెండర్ ఉచిత సంస్కరణాన్ని ఉపయోగిస్తున్నాం.",
       },
     },
   },

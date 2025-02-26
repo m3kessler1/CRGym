@@ -1,6 +1,6 @@
 # 🏋️ Gym Management System
 
-A modern web application for managing gym workouts, coaches, and client interactions. Built with **React, TypeScript, and Material-UI**.
+A modern web application for managing gym workouts, coaches, and client interactions. Built with **React, TypeScript, Material-UI, Node.js, Express, and MongoDB**.
 
 ---
 
@@ -31,14 +31,21 @@ A modern web application for managing gym workouts, coaches, and client interact
   - Track client attendance
   - Receive and review client feedback
 
+### 🔧 For Admins
+- **User & Coach Management**
+  - Approve, suspend, or delete users and coaches
+  - Monitor overall system activity
+  - Manage testimonials and feedback
+
 ---
 
 ## 🚀 Getting Started
 
 ### ✅ Prerequisites
 Ensure you have the following installed:
-- **Vite**
+- **Vite** (for frontend)
 - **Node.js** (v14 or higher)
+- **MongoDB**
 - **npm** or **yarn**
 - **Git**
 
@@ -48,17 +55,33 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/adityasinghz/gym-management.git
    cd gym_management
-   cd gym_management-fe
    ```
-2. Install dependencies:
+
+2. Install dependencies for both frontend and backend:
    ```bash
+   cd gym_management-fe
+   npm install
+   cd ../gym_management-be
    npm install
    ```
 
-3. Run the application:
+3. Create a `.env` file in the backend root directory and add:
+   ```env
+   MONGO_URI=<your_mongodb_connection_string>
+   JWT_SECRET=<your_jwt_secret>
+   ```
+
+4. Start the backend server:
    ```bash
    npm run dev
    ```
+   The API will be running on `http://localhost:5000`.
+
+5. Start the frontend:
+   ```bash
+   npm run dev
+   ```
+   The application will be running on `http://localhost:5173`.
 
 ---
 
@@ -72,9 +95,10 @@ Ensure you have the following installed:
 | React Hook Form + Zod | Form handling & validation  |
 | React Router v6   | Client-side navigation         |
 | Axios            | HTTP client for API requests   |
-| date-fns, Luxon  | Date & time management         |
-| Notistack        | Toast notifications            |
-| JWT + HTTP-Only Cookies | Authentication & security |
+| Node.js + Express | Backend server                 |
+| MongoDB + Mongoose | Database & ODM               |
+| JWT + bcrypt     | Authentication & security      |
+| CORS & dotenv    | Environment & security configs |
 
 ---
 
@@ -90,6 +114,31 @@ Ensure you have the following installed:
 1. **Session Dashboard**: Track upcoming workouts and client bookings.
 2. **Availability Management**: Adjust time slots and update professional details.
 3. **Client Interaction**: Receive ratings, reviews, and feedback from clients.
+
+### 🔹 Admin Flow
+1. **User & Coach Management**: View, approve, or suspend users and coaches.
+2. **Monitor Activity**: Track all bookings, testimonials, and feedback.
+3. **Ensure System Integrity**: Remove spam testimonials or flag inappropriate activities.
+
+---
+
+## 🔗 API Endpoints
+
+### **User Endpoints**
+- `POST /api/users/register` - Register a new user
+- `POST /api/users/login` - Log in a user
+- `GET /api/users/coach` - Get a list of coaches
+- `PUT /api/users/update/:userId` - Update user information
+- `POST /api/users/filter` - Filter coaches based on criteria
+
+### **Workout Endpoints**
+- `POST /api/workouts/book` - Book a workout
+- `GET /api/workouts/:userId/:isCoach` - Get workouts for a user or coach
+- `PATCH /api/workouts/:workoutId/status` - Cancel a workout
+
+### **Testimonial Endpoints**
+- `POST /api/testimonials` - Create a new testimonial
+- `GET /api/testimonials/:coachId` - Get testimonials for a specific coach
 
 ---
 
@@ -115,9 +164,15 @@ Ensure you have the following installed:
 
 ## 🚀 Deployment Options
 
-- **Vercel** (Includes `vercel.json` configuration)
-- **Render** (Includes `_redirects` file for routing)
-- **Custom Hosting** (Compatible with any static hosting service)
+- **Frontend**:
+  - Vercel (`vercel.json` configured)
+  - Render (`_redirects` file for routing)
+  - Any static hosting service
+
+- **Backend**:
+  - Deployed on **Render** or **Railway.app**
+  - MongoDB hosted on **MongoDB Atlas**
+  - Can be hosted on **AWS EC2, Heroku, or DigitalOcean**
 
 ---
 

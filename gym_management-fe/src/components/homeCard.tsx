@@ -16,10 +16,19 @@ import BookedWorkoutDialog from "./bookedWorkoutDialog";
 import StarIcon from "@mui/icons-material/Star";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
+import { getTestimonials } from "../services/testimonialsService";
 
+interface Testimonial {
+  rating: number;
+  date: string;
+  firstName: string;
+  lastName: string;
+  testimonial: string;
+  workoutId: string;
+}
 interface HomeCardProps {
   image: string;
   date: string;
@@ -30,6 +39,7 @@ interface HomeCardProps {
 function HomeCard({ image, date, time, coach }: HomeCardProps) {
   // Create a variable to hold the mapped Grid items
   const token = Cookies.get("authToken") ? true : false;
+  const [totalRatings, setTotalRatings] = useState<Testimonial[]>([]);
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const { t } = useTranslation();
@@ -54,6 +64,33 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
     )
   );
 
+  useEffect(() => {
+    const fetchTotalRatings = async () => {
+      try {
+        const response = await getTestimonials(coach._id);
+        // Extract the testimonials array from the response object
+        const testimonialsArray = response[coach._id] || []; // Fallback to an empty array if undefined
+        if (Array.isArray(testimonialsArray)) {
+          setTotalRatings(testimonialsArray);
+        } else {
+          console.error("Expected an array but got:", testimonialsArray);
+          setTotalRatings([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+        setTotalRatings([]); // Fallback to an empty array on error
+      }
+    };
+    fetchTotalRatings();
+  }, [coach._id]); // Add coach._id as a dependency
+  const cumulativeRating = (totalRatings || []).reduce(
+    (sum: number, data: Testimonial) => sum + data.rating,
+    0
+  );
+  const averageRating =
+    (totalRatings || []).length > 0
+      ? cumulativeRating / (totalRatings || []).length
+      : 0;
   return (
     <Grid item xs={12} md={6}>
       <Card
@@ -97,7 +134,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
                     gap: 0.5,
                   }}
                 >
-                  {5}
+                  {averageRating}
                   <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
                 </Typography>
               </Grid>

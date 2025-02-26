@@ -115,7 +115,7 @@ Ensure you have the following installed:
 2. **Availability Management**: Adjust time slots and update professional details.
 3. **Client Interaction**: Receive ratings, reviews, and feedback from clients.
 
-### 🔹 Admin Flow
+### 🔹 Admin Flow (Upcoming)
 1. **User & Coach Management**: View, approve, or suspend users and coaches.
 2. **Monitor Activity**: Track all bookings, testimonials, and feedback.
 3. **Ensure System Integrity**: Remove spam testimonials or flag inappropriate activities.

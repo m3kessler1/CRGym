@@ -31,7 +31,7 @@ A modern web application for managing gym workouts, coaches, and client interact
   - Track client attendance
   - Receive and review client feedback
 
-### 🔧 For Admins
+### 🔧 For Admins (upcoming)
 - **User & Coach Management**
   - Approve, suspend, or delete users and coaches
   - Monitor overall system activity

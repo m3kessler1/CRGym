@@ -68,7 +68,8 @@ Ensure you have the following installed:
 3. Create a `.env` file in the backend root directory and add:
    ```env
    MONGO_URI=<your_mongodb_connection_string>
-   JWT_SECRET=<your_jwt_secret>
+   PRIVATE_KEY=<your_private_key>
+   PUBLIC_KEY=<your_public_key>
    ```
 
 4. Start the backend server:

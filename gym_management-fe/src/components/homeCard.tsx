@@ -224,7 +224,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="body2" fontWeight={300} fontSize="14px">
-                {t("Also available for this date:")}
+                {t("Also available for this time:")}
               </Typography>
             </Grid>
             <Grid

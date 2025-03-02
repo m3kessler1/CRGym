@@ -117,7 +117,7 @@ const CoachesCard: React.FC<CoachesCardProps> = ({ coach, image }) => {
             <Box sx={{ flexGrow: 1 }} />
 
             <Typography>{averageRating.toFixed(1)}</Typography>
-            <Rating name="read-only" value={averageRating.toFixed(0)} max={1} readOnly />
+            <Rating name="read-only" value={averageRating} max={1} readOnly />
           </Box>
 
           <Box sx={{ pt: 3, height: "60px" }}>

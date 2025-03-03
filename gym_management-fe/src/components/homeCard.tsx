@@ -134,7 +134,7 @@ function HomeCard({ image, date, time, coach }: HomeCardProps) {
                     gap: 0.5,
                   }}
                 >
-                  {averageRating}
+                  {averageRating.toFixed(1)}
                   <StarIcon sx={{ fontSize: "large", color: "#FDD63B" }} />
                 </Typography>
               </Grid>

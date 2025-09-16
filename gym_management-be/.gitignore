@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 private.pem
 public.pem
+private-key.pem
+public-key.pem
+*.pem.backup

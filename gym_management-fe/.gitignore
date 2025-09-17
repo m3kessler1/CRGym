@@ -28,3 +28,5 @@ build
 
 # Render specific
 public/_redirects
+.vercel
+.env*.local
